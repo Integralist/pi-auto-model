@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Task 1 committed, Task 2 verified, commit pending
+- **Status:** In progress; Tasks 1–2 committed and verified, Tasks 3–5 pending
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -573,7 +573,7 @@ accepts Task 1's offline scaffold only, not M1.1 or any slice milestone.
   nearest available smaller physical pair, or safely retains a known pair.
 - **Supports:** M1.2, M1.4; R02–R04, R06, R12–R17, R19, R22, R48, R50
 - **Location:** New `src/policy.ts` and `test/policy.test.ts` only
-- **Status:** Approved payload implemented and verified; commit pending
+- **Status:** Complete; approved payload committed and verified at `50f8af9`
 
 The original four-file location was an upper bound. This task needs only two
 new files: native-dispatch integration belongs to Task 4. Keep the verified
@@ -1467,11 +1467,11 @@ A worker may execute only a task with a complete payload and explicit approval.
 Keep the stable IDs, milestone coverage, coordinator verification/commit gate
 and final independent slice review unchanged.
 
-Task 1 is verified and committed at `3b68e86`. Task 2's approved policy and
-107-test payload are implemented and independently verified; its commit is
-pending. The extension and existing harness remain unchanged.
+Task 1 is verified and committed at `3b68e86`; Task 2's approved policy and
+107-test payload are verified and committed at `50f8af9`. The extension and
+existing harness remain unchanged.
 
-Commit verified Task 2, then compile Task 3's bounded classifier payload against
-the actual policy interface. Task 3 code needs its own edit approval. No later
+Compile Task 3's bounded classifier payload against the committed policy
+interface. Task 3 code needs its own edit approval. No later
 task implementation, future slice, global activation or live provider probe is
 approved. The execution record owns hashes, check evidence and worker telemetry.

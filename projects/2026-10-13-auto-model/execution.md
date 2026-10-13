@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task 2 verified; implementation commit pending, Slice 1 unaccepted.
+- **Status:** Tasks 1–2 committed and verified; Tasks 3–5 pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 2 authorized.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 3 awaiting compilation.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -347,13 +347,13 @@ payloads. Task 2 now includes its exact stub, tests and green policy payload;
 Tasks 3–5 remain contracts awaiting verbatim payloads.
 The user subsequently authorized Task 1 execution under task-at-a-time gates.
 Task 1's exact source/tests/toolchain and approved compiler corrections are
-verified and committed. Task 2's policy/test implementation is verified with
-its commit pending. No slice milestone is accepted.
+verified and committed. Task 2's policy/test implementation is also verified
+and committed. No slice milestone is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
 | `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified and committed: original assertion-red plus normal unit/acceptance/type/load checks |
-| `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified: assertion-red, 107 policy tests, unchanged native baseline, type/load checks; commit pending |
+| `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028 | Contract only |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Contract only |
 | `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
@@ -364,11 +364,14 @@ No scenario ledger row changes from Unverified until checks actually run.
 | --- | --- | --- | --- |
 | Bookkeeping | `setup/bookkeeping` | `f0baef3161d577487228beb004c2c16d93f3fdba` — docs: preserve routing intent and execution evidence | Docs lint, scope, snapshots and ledger inventory checked |
 | Implementation | `slice-1/task-1` | `3b68e8642106f6825da833a154d65f067b1049d2` — test: verify native virtual dispatch without live model calls | Parent `f0baef3`; assertion-red verified; normal unit/acceptance/type/load checks and scoped review passed |
+| Bookkeeping | `slice-1/task-1` | `fdc93b2471f6e2d53ba8710141cce7abba874d46` — docs: preserve the verified Task 1 review checkpoint | Bounded hash/status record, docs/whitespace/identity checks; no source changes |
+| Implementation | `slice-1/task-2` | `50f8af9839720910d1267e7cf44ead269064e716` — feat: keep automatic tier choices exact and downward-only | Parent `fdc93b2`; assertion-red, 107 policy tests, 108 full Vitest tests/Cucumber, type/load, protected scope and 64 downward combinations verified |
 
 Task 1's pre-commit compiler corrections are included in its implementation
-commit; there are no later correction commits. This record's post-commit hash
-update is bounded bookkeeping, indexed by its Git trailers rather than a
-self-recording hash loop.
+commit; there are no later correction commits. Task 2 required no compiler or
+implementation correction. This record's Task 2 post-commit hash/status update
+is bounded bookkeeping, indexed by its Git trailers rather than a self-recording
+hash loop.
 
 Implementation/correction commit keys will be `slice-1/task-N`. Record real
 hashes and subjects after commit success; preserve correction history and
@@ -542,13 +545,14 @@ unit decision evidence does not substitute for Tasks 3–5's public boundaries.
 
 ## Next action
 
-Commit independently verified Task 2 on the authorized branch, including only
-its two new source/test files and coordinator-owned compiled payload/README/
-execution updates. Record the actual implementation hash after success with
-bounded bookkeeping; do not create a self-recording hash loop. Then compile
-only Task 3's classifier payload against the verified policy. Task 3 edits need
-separate approval before another editing worker; no install or global change
-is implied.
+Compile only Task 3's bounded classifier payload against the actual policy
+interface committed at `50f8af9839720910d1267e7cf44ead269064e716`. Its source/
+test/harness proposals require separate edit approval before another worker.
+Tasks 1–2 must not be reimplemented or unmarked merely because a delayed worker
+notification arrives. Their exact hashes, scope and checks are indexed above.
+The bounded Task 2 hash-evidence commit is discoverable through its plan/task/
+bookkeeping trailers; do not create a self-recording hash loop. No installation,
+global change or paid classifier/model smoke probe is implied.
 
 Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
 Sol/xhigh after explicit opt-in. It does not implement tier classification,
