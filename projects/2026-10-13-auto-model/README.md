@@ -113,8 +113,8 @@ baseline preflight. The user approved task-at-a-time execution and Task 1's
 scaffold/test payload and Task 2's two-file policy, both now verified and
 committed. Task 3's bounded classifier is also verified and committed.
 Task 4's native integration and summary-test correction are verified and
-committed. Compile Task 5's acceptance/independent-review payload next; its
-code changes need separate edit approval. Before compiling Slice 2, also
+committed. Task5's acceptance implementation passes full offline checks;
+its verified commit and independent premium read-only review are next. Before compiling Slice 2, also
 read the approved [configuration addendum](./configuration-addendum.md): users
 must be able to change every tier/classifier physical pair through Pi's catalog. The
 [execution record](./execution.md#next-action) owns current authorization

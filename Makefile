@@ -9,7 +9,7 @@ test-unit:
 	./node_modules/.bin/vitest run $(TEST_FILTER)
 
 test-acceptance:
-	NODE_OPTIONS="--import tsx" ./node_modules/.bin/cucumber-js
+	NODE_OPTIONS="--import tsx" ./node_modules/.bin/cucumber-js $(ACCEPTANCE_FILTER)
 
 typecheck:
 	./node_modules/.bin/tsc --noEmit

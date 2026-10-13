@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Tasks 1–4 committed and verified, Task 5 pending
+- **Status:** In progress; Task 5 acceptance implementation verified, premium review pending
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -59,9 +59,10 @@ one complete task payload, implement it, verify it, and commit it before
 compiling the next task. Task 1's payload and local dependency installation are
 approved and verified. Task 2's complete payload was separately approved and
 its implementation is now verified. Task 3's separately approved payload is
-also implemented and independently verified. Task 4's registration decision
-is approved and its exact compiled payload is now separately approved for
-implementation. Task 5 remains a contract awaiting compilation and approval. Whole-slice acceptance stays separate from these task gates.
+also implemented and independently verified. Task 4 and its approved test
+correction are verified and committed. Task 5's acceptance payload is compiled
+and its implementation plus independent read-only review are now approved. Whole-slice acceptance stays
+separate from these task gates.
 
 ## Context for the executor
 
@@ -162,8 +163,9 @@ copies to `1.2.0` consistently with the verified SDK release.
 | M1.4 | Tasks 2, 3, 4, 5 | AC010–AC011, AC023–AC028; exact-effort, invalid-config and keep-current error cases |
 
 Source scenarios are stable keys in [the execution record](./execution.md).
-All task, milestone and scenario outcomes are unverified. This table records
-coverage, not completion.
+Tasks 1–4 have verified evidence indexed in the execution record. Task 5's
+acceptance/review is pending; scenario and milestone acceptance remain open.
+This table records coverage, not completion.
 
 ## Tasks
 
@@ -3291,47 +3293,964 @@ No milestone is accepted here, and no global install/activation occurred.
 ### Task 5: Verify the complete slice through executable acceptance
 
 - **Key:** `slice-1/task-5`
-- **Delivers:** A full offline acceptance gate for the shared skill contract and
-  Pi-specific routing, with reviewable requirement/scenario outcome evidence.
-- **Supports:** M1.1–M1.4; R01–R22, R45–R52, R54, R56, R59–R60
-- **Location:** `features/portable-tiers.feature`,
+- **Delivers:** Full offline boundary acceptance for Slice 1, with stable
+  scenario coverage and a separate independent review before milestone acceptance.
+- **Supports:** M1.1–M1.4; R01–R22, R45–R52, R54–R56, R58–R60;
+  only Slice 1 portions of shared/later requirements
+- **Location:** New `features/portable-tiers.feature`,
   `features/main-routing.feature`, `features/routing-safety.feature`,
-  `features/steps/routing.ts`, `test/support/session.ts`,
-  `test/load-check.test.ts`; coordinator-only updates to this task list and
-  `execution.md`
+  `features/steps/routing.ts` and `test/load-check.test.ts`; one existing
+  `Makefile` acceptance-filter edit
+- **Compiler status:** Six-file acceptance implementation verified; commit and independent review pending
 
-**Test (red):** Port every example of AC001–AC017, AC023–AC028 and AC030 to
-executable Cucumber scenarios. Include all extra Slice 1 ownership/config/error
-cases above. At least one positive dispatch scenario must fail on an assertion
-with routing deliberately stubbed; no scenario may pass through a no-op step,
-skipped hook or mocked routing result. Keep tools/providers/classifier transport
-fake, while running the real SDK, registered extension, loaded resources and
-native dispatch. The application boundary itself is not mocked.
+Preserve every committed production file, existing fixture/test and dependency.
+The fixture already exposes real loaded skills, native registration, SDK session
+lifecycle, tools and fake providers. No harness change is required. This task
+adds executable boundary acceptance, not another implementation of the router.
+Provider responses, tools and classifier transport are fake; native registration,
+input processing, branch state, policy and dispatch execute as real application
+code. Never return a mocked route result in green acceptance.
 
-**Implementation (green):** Supply exact feature text and step definitions
-using the Task 1 harness and final registered extension. Assert concrete
-physical provider/model/effort, classifier payload isolation, ordered fallback,
-request counts only where contract-relevant, transcript isolation and native
-state lifetime. Cover each public validation/error branch. Do not weaken an
-assertion to match the current code. Corrections go through the coordinator and
-same authorized worker with task-linked correction commits.
+### Task 5 scope and coverage
 
-**Verify:** Run `make test`, `make typecheck`, `make load-check` and the unchanged
-worker-policy check:
+Use original scenario keys AC001–AC017, AC023–AC028 and AC030. Preserve all
+original outline examples. Expand compound tool/retry, queue and extension-origin
+cases to prove each branch. AC023 checks tier/classifier settings and the
+`summaryTier` validation path: this schema has no separate summary effort pair.
+AC007 exercises standalone physical classification with unchanged selection,
+transcript/branch and no tools/UI-capable boundary; no popup UI is implemented
+in Slice 1. Actual popup acceptance remains Slice 2, not a fabricated UI result.
+
+Three supplemental outlines check input-handler/resource errors, public config
+errors and classifier retention in both modes. Original IDs and requirements
+are not replaced by these supplemental cases. Existing 223 Vitest tests remain
+part of `make test`, including all Task 4 cancellation/identity/queue/resume/
+reload/tree/fork/shutdown coverage. Do not duplicate those as unit-level Gherkin
+or claim an outline tags a behavior that its steps never exercise.
+
+| Outcome | Evidence after execution |
+| --- | --- |
+| M1.1 | Normal `make test` runs original/native and new tagged Cucumber acceptance; the red mutation below proves dispatch assertions detect a wrong route |
+| M1.2 | AC001–AC011 cover metadata precedence/types, loaded-resource payloads, classified tasks and exact physical pair selection |
+| M1.3 | AC012–AC017 plus existing `request-ownership.test.ts` cover active/sticky/direct paths, queues, cancellation, resource identity and branch/session lifetime |
+| M1.4 | AC006, AC010–AC011, AC023–AC028, AC030 and supplemental public errors; existing policy/classifier suites cover every validated field/failure branch |
+
+This table is a verification map, not accepted milestone progress. The source
+plan and spec remain frozen until coordinator-reviewed acceptance warrants the
+four milestone checkbox updates. The original spec scenarios retain their
+ledger IDs; provider/configuration UI and the approved Slice 2 addendum are not
+implemented here.
+
+### Task 5 exact Makefile edit
+
+Change only the `test-acceptance` recipe, preserving its literal tab:
+
+```diff
+-\tNODE_OPTIONS="--import tsx" ./node_modules/.bin/cucumber-js
++\tNODE_OPTIONS="--import tsx" ./node_modules/.bin/cucumber-js $(ACCEPTANCE_FILTER)
+```
+
+Normal `make test` supplies no filter and must still run every feature. The
+optional filter gives a Make entry point for tagged assertion-red evidence and
+coverage diagnostics; it must not become a permanent exclusion or `--no-strict`.
+
+### Task 5 exact portable-tier scenarios
+
+Create `features/portable-tiers.feature`:
+
+```gherkin
+@slice1
+Feature: Portable skill tiers
+  Background:
+    Given offline Auto is enabled in "model-and-effort" mode
+
+  @AC001
+  Scenario Outline: Declared difficulty selects the configured pair
+    Given a loaded skill declares model-tier "<tier>"
+    When I invoke that skill as an idle slash command
+    Then the main request uses "<model>" at "<effort>"
+    And 0 classifier requests are made
+
+    Examples:
+      | tier     | model       | effort |
+      | trivial  | gpt-6-luna  | high   |
+      | moderate | gpt-6-luna  | high   |
+      | complex  | gpt-6.1-sol | xhigh  |
+      | frontier | gpt-6.1-sol | xhigh  |
+
+  @AC002
+  Scenario: Metadata wins over a misleading familiar name
+    Given the loaded commit skill declares model-tier "complex"
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 0 classifier requests are made
+
+  @AC003
+  Scenario: Metadata strings are trimmed and matched without case
+    Given a loaded skill declares model-tier "  CoMpLeX  "
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 0 classifier requests are made
+
+  @AC004
+  Scenario Outline: Absent or invalid metadata still triggers classification
+    Given a loaded skill has "<metadata>"
+    And the offline classifier returns "complex"
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 1 classifier requests are made
+    And classification receives only the loaded name and description
+
+    Examples:
+      | metadata                    |
+      | no model-tier key           |
+      | an empty model-tier string  |
+      | an unknown model-tier value |
+      | a list model-tier value     |
+      | a numeric model-tier value  |
+
+  @AC005
+  Scenario: Classifier input follows the shared skill contract
+    Given a loaded skill has "no model-tier key"
+    And the offline classifier returns "complex"
+    When I invoke that skill with poison arguments while idle
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And classification receives only the loaded name and description
+    And classifier usage is separate from assistant conversation entries
+
+  @AC006
+  Scenario Outline: An unusable classifier result retains the route
+    Given a loaded skill has "no model-tier key"
+    And classification "<outcome>"
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And classification has no usable tier
+
+    Examples:
+      | outcome                         |
+      | returns no tier                 |
+      | returns an unknown tier         |
+      | returns malformed output        |
+      | fails                           |
+      | times out                       |
+      | has no available physical model |
+
+  @AC007
+  Scenario: Classifier work cannot reroute itself or the conversation
+    Given a loaded skill has "no model-tier key"
+    And the offline classifier returns "complex"
+    When standalone classification runs without starting a main conversation
+    Then classification uses physical Luna at high without tools or a virtual router
+    And selected Auto and its conversation and branch remain unchanged
+
+  @AC008
+  Scenario: The next typed task is classified independently
+    Given a completed declared frontier task used Sol at xhigh
+    And the offline classifier returns "moderate"
+    When I submit "draft a short PR description" while idle
+    Then the main request uses "gpt-6-luna" at "high"
+    And 1 classifier requests are made
+    And classification receives only that typed task
+```
+
+### Task 5 exact main-routing scenarios
+
+Create `features/main-routing.feature`:
+
+```gherkin
+@slice1
+Feature: Main-conversation routing
+  Background:
+    Given offline Auto is enabled in "model-and-effort" mode
+
+  @AC009
+  Scenario Outline: Typed tasks use classified difficulty
+    Given the offline classifier returns "<tier>"
+    When I submit "<request>" while idle
+    Then the main request uses "<model>" at "<effort>"
+    And 1 classifier requests are made
+    And classification receives only that typed task
+
+    Examples:
+      | request                         | tier     | model       | effort |
+      | plan a new feature              | complex  | gpt-6.1-sol | xhigh  |
+      | implement the approved task list | complex  | gpt-6.1-sol | xhigh  |
+      | debug authentication            | complex  | gpt-6.1-sol | xhigh  |
+      | draft a short PR description     | moderate | gpt-6-luna  | high   |
+      | summarize the completed work    | trivial  | gpt-6-luna  | high   |
+
+  @AC010
+  Scenario: Effort-only preserves its fixed physical model
+    Given offline Auto is enabled in "effort-only" mode
+    And the offline classifier returns "moderate"
+    When I submit "draft a short PR description" while idle
+    Then the main request uses "gpt-6.1-sol" at "high"
+    And 1 classifier requests are made
+
+  @AC011
+  Scenario: Effort-only checks effort against its fixed model
+    Given offline Auto is enabled in "effort-only" mode
+    And the fixed Sol model supports high but not xhigh
+    And the offline classifier returns "complex"
+    When I submit "debug authentication" while idle
+    Then the main request uses "gpt-6.1-sol" at "high"
+    And 1 classifier requests are made
+
+  @AC012
+  Scenario Outline: Tool follow-ups and retries retain their route
+    Given a loaded skill declares model-tier "trivial"
+    When a "<event>" requires another native request for that skill
+    Then every main request uses "gpt-6-luna" at "high"
+    And exactly 2 main requests were observed
+    And 0 classifier requests are made
+
+    Examples:
+      | event           |
+      | tool result     |
+      | automatic retry |
+
+  @AC013
+  Scenario: Confirmation retains its route
+    Given a completed declared complex task used Sol at xhigh
+    When I submit "yes" while idle
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 0 classifier requests are made
+
+  @AC014
+  Scenario: Short task intent is not a confirmation
+    Given a completed declared complex task used Sol at xhigh
+    And the offline classifier returns "moderate"
+    When I submit "debug authentication" while idle
+    Then the main request uses "gpt-6-luna" at "high"
+    And 1 classifier requests are made
+    And classification receives only that typed task
+
+  @AC015
+  Scenario Outline: Busy and queued input retain the active route
+    Given a loaded skill declares model-tier "complex"
+    When a routine request is queued as "<delivery>" during that task
+    Then every main request uses "gpt-6.1-sol" at "xhigh"
+    And exactly 2 main requests were observed
+    And 0 classifier requests are made
+
+    Examples:
+      | delivery |
+      | steer    |
+      | followUp |
+
+  @AC016
+  Scenario Outline: Extension-origin work retains the active route
+    Given a completed declared trivial task used Luna at high
+    When an extension submits "<delivery>" work
+    Then the main request uses "gpt-6-luna" at "high"
+    And 0 classifier requests are made
+
+    Examples:
+      | delivery     |
+      | message      |
+      | custom event |
+
+  @AC017
+  Scenario: Direct summary requests do not alter main task state
+    Given a completed declared complex task used Sol at xhigh
+    When a summary uses native virtual-aware dispatch
+    Then the direct summary request uses physical Luna at high
+    And the main branch and restore target are unchanged
+    And a confirmation still uses Sol at xhigh without classification
+```
+
+### Task 5 exact routing-safety scenarios
+
+Create `features/routing-safety.feature`:
+
+```gherkin
+@slice1
+Feature: Exact and safe automatic routing
+  Background:
+    Given offline Auto is enabled in "model-and-effort" mode
+
+  @AC023
+  Scenario Outline: Automatic configuration rejects max
+    Given the automatic "<slot>" setting is max
+    When I submit "new task" while idle
+    Then routing reports an actionable error containing "<field>"
+    And no physical request is dispatched
+
+    Examples:
+      | slot       | field                         |
+      | tier       | config.tiers.trivial.effort   |
+      | classifier | config.classifier.effort      |
+      | summary    | config.summaryTier           |
+
+  @AC024
+  Scenario: An unavailable tier steps down to the nearest smaller pair
+    Given a loaded skill declares model-tier "complex"
+    And the configured complex pair is absent
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6-luna" at "high"
+    And 0 classifier requests are made
+
+  @AC025
+  Scenario: Step-down continues past unavailable smaller tiers
+    Given a loaded skill declares model-tier "frontier"
+    And only trivial is configured to available Sol at high
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "high"
+    And 0 classifier requests are made
+
+  @AC026
+  Scenario: No available smaller tier keeps the current physical pair
+    Given a loaded skill declares model-tier "trivial"
+    And trivial is absent while every larger tier maps to Luna at high
+    When I invoke that skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 0 classifier requests are made
+
+  @AC027
+  Scenario: Invalid routing configuration remains an actionable error
+    Given a physical tier target is the virtual Auto model
+    When I submit "new task" while idle
+    Then routing reports an actionable error containing "virtual target"
+    And no physical request is dispatched
+
+  @AC028
+  Scenario: Keep-current requires a known physical pair
+    Given saved Auto has no active or captured physical evidence
+    And the offline classifier returns "unknown"
+    When I submit "new task" while idle
+    Then routing reports an actionable error containing "Select an available physical model and effort"
+    And no main request is dispatched
+    And 1 classifier requests are made
+
+  @AC030
+  Scenario: A live provider failure does not speculate about tier availability
+    Given a loaded skill declares model-tier "complex"
+    When a "automatic retry" requires another native request for that skill
+    Then every main request uses "gpt-6.1-sol" at "xhigh"
+    And exactly 2 main requests were observed
+    And 0 classifier requests are made
+
+  @S1_ACCEPTED_INPUT
+  Scenario Outline: A changed or consumed input cannot claim an earlier candidate
+    Given a loaded skill declares model-tier "trivial"
+    And a later input handler "<change>"
+    When I invoke that skill as an idle slash command
+    Then no stale candidate is used after "<change>"
+
+    Examples:
+      | change               |
+      | handles the input    |
+      | transforms the input |
+      | changes the resource |
+      | removes the resource |
+
+  @S1_PUBLIC_CONFIG
+  Scenario Outline: Public configuration errors fail before dispatch
+    Given the routing configuration has "<problem>"
+    When I submit "new task" while idle
+    Then routing reports an actionable error containing "<field>"
+    And no physical request is dispatched
+
+    Examples:
+      | problem           | field                          |
+      | wrong version     | config.version                 |
+      | unknown mode      | config.mode                    |
+      | zero deadline     | config.classifier.timeoutMs    |
+      | unknown root key  | config.legacySkills            |
+      | missing tier pair | config.tiers.frontier          |
+
+  @S1_CLASSIFIER_BOTH_MODES
+  Scenario Outline: Classifier failure retains owned evidence in both modes
+    Given offline Auto is enabled in "<mode>" mode
+    And classification "fails"
+    When I submit "new task" while idle
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 1 classifier requests are made
+
+    Examples:
+      | mode             |
+      | model-and-effort |
+      | effort-only      |
+```
+
+### Task 5 exact step definitions
+
+Create `features/steps/routing.ts`. Step helpers below manipulate fixtures and
+transport responses, not route results. Shared `fixture` cleanup is idempotent
+with the existing native-boundary After hook. Scope new hooks to `@slice1`.
+
+```typescript
+import assert from "node:assert/strict";
+import { readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import { After, Before, Given, Then, When } from "@cucumber/cucumber";
+import { ModelRegistry, SessionManager, type ExtensionFactory } from "@earendil-works/pi-coding-agent";
+import {
+  fauxAssistantMessage,
+  fauxToolCall,
+  type AssistantMessage,
+  type FauxResponseFactory,
+  type SimpleStreamOptions,
+  type TranscriptContext,
+} from "@earendil-works/pi-ai";
+import { resolveTaskRoute, type PhysicalPair } from "../../src/policy.ts";
+import { createFixture, type Fixture } from "../../test/support/session.ts";
+
+const sol: PhysicalPair = { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" };
+const luna: PhysicalPair = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };
+
+function mapping(pair: PhysicalPair) {
+  return { provider: pair.provider, model: pair.model, effort: String(pair.effort) };
+}
+
+function policy() {
+  return {
+    version: 1, mode: "model-and-effort", summaryTier: "trivial",
+    tiers: { trivial: mapping(luna), moderate: mapping(luna), complex: mapping(sol), frontier: mapping(sol) },
+    classifier: { ...mapping(luna), maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000 },
+  };
+}
+
+type Observation = {
+  kind: "classifier" | "main" | "direct";
+  provider: string;
+  model: string;
+  api: string;
+  context: TranscriptContext;
+  options?: SimpleStreamOptions;
+};
+type Snapshot = ReturnType<typeof snapshot>;
+type State = {
+  configuration: ReturnType<typeof policy>;
+  name: string;
+  metadata?: unknown;
+  classifier: string;
+  outcome?: string;
+  observations: Observation[];
+  lastTyped?: string;
+  fixedHighOnly?: boolean;
+  noEvidence?: boolean;
+  intercept?: string;
+  mainCount: number;
+  standalone?: Snapshot;
+  beforeDirect?: Snapshot;
+  directReply?: AssistantMessage;
+  standaloneUsage: unknown[];
+  release?: () => void;
+};
+type World = { fixture?: Fixture; routing?: State };
+
+function data(world: World): State {
+  assert.ok(world.routing, "slice1 scenario initialized");
+  return world.routing;
+}
+
+function snapshot(f: Fixture) {
+  return structuredClone({
+    model: f.session.model?.id, effort: f.session.thinkingLevel,
+    branch: f.session.sessionManager.getBranch(), messages: f.session.messages,
+  });
+}
+
+function last(f: Fixture) {
+  const response = f.session.messages.filter((message) => message.role === "assistant").at(-1);
+  assert.ok(response, "native assistant response reached");
+  return response;
+}
+
+function main(s: State) { return s.observations.filter((request) => request.kind === "main"); }
+function classifiers(s: State) { return s.observations.filter((request) => request.kind === "classifier"); }
+
+function gate() {
+  let release!: () => void;
+  const wait = new Promise<void>((resolve) => { release = resolve; });
+  return { wait, release };
+}
+
+function reply(s: State, kind: Observation["kind"], message = fauxAssistantMessage("MAIN_ANSWER")): FauxResponseFactory {
+  return (context, options, _providerState, model) => {
+    s.observations.push({ kind, provider: model.provider, model: model.id, api: model.api, context: structuredClone(context), options });
+    return message;
+  };
+}
+
+async function app(world: World): Promise<Fixture> {
+  if (world.fixture) return world.fixture;
+  const s = data(world);
+  const custom: ExtensionFactory = (pi) => {
+    pi.on("input", (event) => {
+      if (event.text !== "__custom_event__") return;
+      pi.sendMessage({ customType: "offline-acceptance", content: "extension work", display: false }, { triggerTurn: true });
+      return { action: "handled" };
+    });
+  };
+  const intercept: ExtensionFactory = (pi) => {
+    pi.on("input", (event) => {
+      if (!s.intercept || !event.text.startsWith(`/skill:${s.name}`)) return;
+      if (s.intercept === "handles the input") return { action: "handled" };
+      if (s.intercept === "transforms the input") return { action: "transform", text: "changed accepted text" };
+      const file = world.fixture!.skills[0]!.filePath;
+      if (s.intercept === "removes the resource") unlinkSync(file);
+      else writeFileSync(file, readFileSync(file, "utf8").replace("trivial", "frontier"));
+    });
+  };
+  let manager: SessionManager | undefined;
+  if (s.noEvidence) {
+    manager = SessionManager.inMemory();
+    manager.appendModelChange("github-copilot", "auto");
+    manager.appendThinkingLevelChange("xhigh");
+    manager.appendMessage({ role: "user", content: "seed without physical evidence", timestamp: 0 });
+  }
+  world.fixture = await createFixture({
+    configuration: s.configuration,
+    skills: [
+      { name: s.name, description: "Offline sample task", tier: s.metadata, body: "POISON_BODY" },
+      { name: "seed-hard", description: "Hard work", tier: "frontier" },
+      { name: "seed-small", description: "Small work", tier: "trivial" },
+      { name: "seed-complex", description: "Complex work", tier: "complex" },
+    ],
+    extensions: [custom, intercept],
+    tools: ["read"], retry: true, restore: s.noEvidence, sessionManager: manager,
+  });
+  const f = world.fixture;
+  const auto = f.runtime.getModel("github-copilot", "auto");
+  assert.equal(auto?.api, "pi-virtual", "real native registration");
+  if (!s.noEvidence) assert.equal(f.session.model?.id, "gpt-6.1-sol", "loading is opt-in");
+  await f.session.setModel(auto!);
+  assert.equal(f.session.model?.id, "auto");
+  if (s.fixedHighOnly) f.faux.getModel("gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
+  return f;
+}
+
+function transport(s: State): FauxResponseFactory[] {
+  if (s.metadata !== undefined && typeof s.metadata === "string" && ["trivial", "moderate", "complex", "frontier"].includes(s.metadata.trim().toLowerCase())) {
+    return [reply(s, "main")];
+  }
+  if (s.outcome === "has no available physical model") return [reply(s, "main")];
+  let message = fauxAssistantMessage(s.classifier);
+  if (s.outcome === "returns no tier") message = fauxAssistantMessage("");
+  if (s.outcome === "returns an unknown tier") message = fauxAssistantMessage("not-a-tier");
+  if (s.outcome === "returns malformed output") message = fauxAssistantMessage('{"tier":"complex"}');
+  if (s.outcome === "fails") message = fauxAssistantMessage("error", { stopReason: "error", errorMessage: "offline classification failure" });
+  const classify = reply(s, "classifier", message);
+  if (s.outcome !== "times out") return [classify, reply(s, "main")];
+  const delayed = gate(); s.release = delayed.release;
+  return [async (...args) => { const response = await classify(...args); await delayed.wait; return response; }, reply(s, "main")];
+}
+
+async function submit(world: World, value: string, kind: "skill" | "typed") {
+  const s = data(world), f = await app(world);
+  s.mainCount = f.session.messages.filter((message) => message.role === "assistant").length;
+  if (kind === "typed") s.lastTyped = value;
+  const confirmation = /^(yes|ok|proceed)$/i.test(value);
+  f.faux.setResponses(confirmation ? [reply(s, "main")] : transport(s));
+  await f.session.prompt(value);
+}
+
+Before({ tags: "@slice1" }, function (this: World) {
+  this.routing = {
+    configuration: policy(), name: "sample", classifier: "complex",
+    observations: [], mainCount: 0, standaloneUsage: [],
+  };
+});
+
+After({ tags: "@slice1" }, function (this: World) {
+  this.routing?.release?.();
+  this.fixture?.close();
+});
+
+Given("offline Auto is enabled in {string} mode", function (this: World, mode: string) {
+  const s = data(this); assert.equal(this.fixture, undefined, "mode set before fixture creation");
+  s.configuration.mode = mode;
+});
+Given("a loaded skill declares model-tier {string}", function (this: World, tier: string) { data(this).metadata = tier; });
+Given("the loaded commit skill declares model-tier {string}", function (this: World, tier: string) { data(this).name = "commit"; data(this).metadata = tier; });
+Given("a loaded skill has {string}", function (this: World, form: string) {
+  const values: Record<string, unknown> = {
+    "no model-tier key": undefined, "an empty model-tier string": "",
+    "an unknown model-tier value": "unknown", "a list model-tier value": ["complex"],
+    "a numeric model-tier value": 7,
+  };
+  assert.ok(Object.hasOwn(values, form)); data(this).metadata = values[form];
+});
+Given("the offline classifier returns {string}", function (this: World, tier: string) { data(this).classifier = tier; });
+Given("classification {string}", function (this: World, outcome: string) {
+  const s = data(this); s.outcome = outcome;
+  assert.ok(["returns no tier", "returns an unknown tier", "returns malformed output", "fails", "times out", "has no available physical model"].includes(outcome));
+  if (outcome === "times out") s.configuration.classifier.timeoutMs = 10;
+  if (outcome === "has no available physical model") s.configuration.classifier.model = "absent";
+});
+Given("a completed declared frontier task used Sol at xhigh", async function (this: World) {
+  const s = data(this), f = await app(this);
+  f.faux.setResponses([reply(s, "main")]); await f.session.prompt("/skill:seed-hard");
+  assert.equal(last(f).model, "gpt-6.1-sol"); assert.equal(last(f).thinkingLevel, "xhigh"); s.observations = [];
+});
+Given("a completed declared complex task used Sol at xhigh", async function (this: World) {
+  const s = data(this), f = await app(this);
+  f.faux.setResponses([reply(s, "main")]); await f.session.prompt("/skill:seed-complex");
+  assert.equal(last(f).model, "gpt-6.1-sol"); assert.equal(last(f).thinkingLevel, "xhigh"); s.observations = [];
+});
+Given("a completed declared trivial task used Luna at high", async function (this: World) {
+  const s = data(this), f = await app(this);
+  f.faux.setResponses([reply(s, "main")]); await f.session.prompt("/skill:seed-small");
+  assert.equal(last(f).model, "gpt-6-luna"); assert.equal(last(f).thinkingLevel, "high"); s.observations = [];
+});
+Given("the fixed Sol model supports high but not xhigh", function (this: World) { data(this).fixedHighOnly = true; });
+Given("the automatic {string} setting is max", function (this: World, slot: string) {
+  const s = data(this);
+  if (slot === "tier") s.configuration.tiers.trivial.effort = "max";
+  else if (slot === "classifier") s.configuration.classifier.effort = "max";
+  else { assert.equal(slot, "summary"); s.configuration.summaryTier = "max"; }
+});
+Given("the configured complex pair is absent", function (this: World) { data(this).configuration.tiers.complex.model = "absent"; });
+Given("only trivial is configured to available Sol at high", function (this: World) {
+  const s = data(this);
+  for (const tier of ["frontier", "complex", "moderate"] as const) s.configuration.tiers[tier].model = "absent";
+  s.configuration.tiers.trivial = { ...sol, effort: "high" };
+});
+Given("trivial is absent while every larger tier maps to Luna at high", function (this: World) {
+  const s = data(this); s.configuration.tiers.trivial.model = "absent";
+  for (const tier of ["moderate", "complex", "frontier"] as const) s.configuration.tiers[tier] = { ...luna };
+});
+Given("a physical tier target is the virtual Auto model", function (this: World) { data(this).configuration.tiers.frontier.model = "auto"; });
+Given("saved Auto has no active or captured physical evidence", function (this: World) { data(this).noEvidence = true; });
+Given("a later input handler {string}", function (this: World, change: string) { data(this).intercept = change; });
+Given("the routing configuration has {string}", function (this: World, problem: string) {
+  const s = data(this);
+  if (problem === "wrong version") s.configuration.version = 2;
+  else if (problem === "unknown mode") s.configuration.mode = "unknown";
+  else if (problem === "zero deadline") s.configuration.classifier.timeoutMs = 0;
+  else if (problem === "unknown root key") Object.assign(s.configuration, { legacySkills: {} });
+  else { assert.equal(problem, "missing tier pair"); delete (s.configuration.tiers as Record<string, unknown>).frontier; }
+});
+
+When("I invoke that skill as an idle slash command", async function (this: World) { await submit(this, `/skill:${data(this).name}`, "skill"); });
+When("I invoke that skill with poison arguments while idle", async function (this: World) { await submit(this, `/skill:${data(this).name} POISON_ARGUMENTS`, "skill"); });
+When("I submit {string} while idle", async function (this: World, value: string) { await submit(this, value, "typed"); });
+When("standalone classification runs without starting a main conversation", async function (this: World) {
+  const s = data(this), f = await app(this); s.standalone = snapshot(f);
+  f.faux.setResponses([reply(s, "classifier", fauxAssistantMessage(s.classifier))]);
+  await resolveTaskRoute(s.configuration, {
+    task: { kind: "skill", name: s.name, description: "Offline sample task", content: readFileSync(f.skills[0]!.filePath, "utf8") },
+    current: sol, captured: sol,
+  }, new ModelRegistry(f.runtime), { onClassifierUsage: (record) => s.standaloneUsage.push(record) });
+});
+When("a {string} requires another native request for that skill", async function (this: World, event: string) {
+  const s = data(this), f = await app(this);
+  if (event === "tool result") {
+    f.faux.setResponses([
+      reply(s, "main", fauxAssistantMessage([fauxToolCall("read", { path: f.skills[1]!.filePath })], { stopReason: "toolUse" })),
+      reply(s, "main"),
+    ]);
+  } else {
+    assert.equal(event, "automatic retry");
+    f.faux.setResponses([reply(s, "main", fauxAssistantMessage("failure", { stopReason: "error", errorMessage: "429 rate limit" })), reply(s, "main")]);
+  }
+  await f.session.prompt(`/skill:${s.name}`);
+  if (event === "tool result") assert.ok(f.session.messages.some((message) => message.role === "toolResult"));
+  assert.equal(last(f).stopReason, "stop");
+});
+When("a routine request is queued as {string} during that task", async function (this: World, delivery: string) {
+  assert.ok(delivery === "steer" || delivery === "followUp");
+  const s = data(this), f = await app(this), started = gate(), finish = gate(); s.release = finish.release;
+  const active = reply(s, "main");
+  f.faux.setResponses([async (...args) => { const response = await active(...args); started.release(); await finish.wait; return response; }, reply(s, "main")]);
+  const running = f.session.prompt(`/skill:${s.name}`);
+  await started.wait; await f.session.prompt("draft a short PR", { streamingBehavior: delivery });
+  finish.release(); await running;
+  assert.equal(last(f).stopReason, "stop");
+});
+When("an extension submits {string} work", async function (this: World, delivery: string) {
+  const s = data(this), f = await app(this); f.faux.setResponses([reply(s, "main")]);
+  if (delivery === "message") await f.session.prompt("debug authentication", { source: "extension" });
+  else { assert.equal(delivery, "custom event"); await f.session.prompt("__custom_event__"); await f.session.waitForIdle(); }
+});
+When("a summary uses native virtual-aware dispatch", async function (this: World) {
+  const s = data(this), f = await app(this); s.beforeDirect = snapshot(f);
+  f.faux.setResponses([reply(s, "direct")]);
+  s.directReply = await new ModelRegistry(f.runtime).streamSimple(f.runtime.getModel("github-copilot", "auto")!, {
+    messages: [{ role: "user", content: "summary", timestamp: Date.now() }],
+  }).result();
+});
+
+Then("the main request uses {string} at {string}", function (this: World, model: string, effort: string) {
+  const s = data(this), f = this.fixture!;
+  assert.equal(last(f).stopReason, "stop"); assert.equal(last(f).provider, "github-copilot");
+  assert.equal(last(f).model, model); assert.equal(last(f).thinkingLevel, effort);
+  assert.ok(main(s).length > 0, "physical main provider reached");
+  const request = main(s).at(-1)!;
+  assert.equal(request.provider, "github-copilot"); assert.equal(request.model, model); assert.equal(request.options?.reasoning, effort);
+  assert.notEqual(request.api, "pi-virtual"); assert.deepEqual(f.errors, []);
+});
+Then("every main request uses {string} at {string}", function (this: World, model: string, effort: string) {
+  const requests = main(data(this)); assert.ok(requests.length > 0);
+  for (const request of requests) { assert.equal(request.provider, "github-copilot"); assert.equal(request.model, model); assert.equal(request.options?.reasoning, effort); assert.notEqual(request.api, "pi-virtual"); }
+});
+Then("exactly {int} main requests were observed", function (this: World, count: number) { assert.equal(main(data(this)).length, count); });
+Then("{int} classifier requests are made", function (this: World, count: number) {
+  const records = classifiers(data(this)); assert.equal(records.length, count);
+  for (const record of records) {
+    const user = record.context.messages.find((message) => message.role === "user"); assert.equal(typeof user?.content, "string");
+    const parsed = JSON.parse(user!.content as string); assert.ok(parsed.kind === "typed" || parsed.kind === "skill");
+    assert.notEqual(record.api, "pi-virtual"); assert.equal(record.model, "gpt-6-luna"); assert.equal(record.options?.reasoning, "high");
+  }
+});
+Then("classification receives only the loaded name and description", function (this: World) {
+  const s = data(this), records = classifiers(s); assert.equal(records.length, 1);
+  const user = records[0]!.context.messages.find((message) => message.role === "user");
+  assert.deepEqual(JSON.parse(user!.content as string), { kind: "skill", name: s.name, description: "Offline sample task" });
+  assert.ok(!JSON.stringify(records[0]!.context).includes("POISON_BODY"));
+  assert.ok(!JSON.stringify(records[0]!.context).includes("POISON_ARGUMENTS"));
+});
+Then("classification receives only that typed task", function (this: World) {
+  const s = data(this), records = classifiers(s); assert.equal(records.length, 1);
+  const user = records[0]!.context.messages.find((message) => message.role === "user");
+  assert.deepEqual(JSON.parse(user!.content as string), { kind: "typed", text: s.lastTyped });
+  assert.ok(!JSON.stringify(records[0]!.context).includes("POISON_BODY"));
+});
+Then("classifier usage is separate from assistant conversation entries", function (this: World) {
+  const f = this.fixture!, s = data(this);
+  const entries = f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom" && entry.customType === "pi-auto-model.classifier-usage");
+  assert.equal(entries.length, 1);
+  assert.equal(f.session.messages.filter((message) => message.role === "assistant").length - s.mainCount, 1);
+  assert.ok(!f.session.messages.some((message) => message.role === "assistant" && JSON.stringify(message.content).includes('"text":"complex"')));
+});
+Then("classification has no usable tier", function (this: World) {
+  const s = data(this); assert.ok(s.outcome);
+  assert.equal(classifiers(s).length, s.outcome === "has no available physical model" ? 0 : 1);
+  assert.equal(main(s).length, 1);
+});
+Then("classification uses physical Luna at high without tools or a virtual router", function (this: World) {
+  const records = classifiers(data(this)); assert.equal(records.length, 1);
+  const request = records[0]!;
+  assert.equal(request.model, "gpt-6-luna"); assert.equal(request.options?.reasoning, "high"); assert.notEqual(request.api, "pi-virtual");
+  assert.deepEqual(request.context.messages.flatMap((message) => message.role === "system" ? message.toolsAdded ?? [] : []), []);
+  assert.equal(request.options?.toolChoice, "none"); assert.equal(request.options?.maxRetries, 0);
+  assert.equal(data(this).standaloneUsage.length, 1);
+});
+Then("selected Auto and its conversation and branch remain unchanged", function (this: World) {
+  assert.deepEqual(snapshot(this.fixture!), data(this).standalone); assert.equal(this.fixture!.session.model?.id, "auto");
+});
+Then("the direct summary request uses physical Luna at high", function (this: World) {
+  const s = data(this), requests = s.observations.filter((request) => request.kind === "direct"); assert.equal(requests.length, 1);
+  assert.equal(requests[0]!.model, "gpt-6-luna"); assert.equal(requests[0]!.options?.reasoning, "high");
+  assert.equal(s.directReply?.model, "gpt-6-luna"); assert.equal(s.directReply?.stopReason, "stop");
+  assert.equal(classifiers(s).length, 0);
+});
+Then("the main branch and restore target are unchanged", function (this: World) { assert.deepEqual(snapshot(this.fixture!), data(this).beforeDirect); });
+Then("a confirmation still uses Sol at xhigh without classification", async function (this: World) {
+  const s = data(this), f = this.fixture!; f.faux.setResponses([reply(s, "main")]); await f.session.prompt("yes");
+  assert.equal(last(f).model, "gpt-6.1-sol"); assert.equal(last(f).thinkingLevel, "xhigh"); assert.equal(classifiers(s).length, 0);
+});
+Then("routing reports an actionable error containing {string}", function (this: World, field: string) {
+  const response = last(this.fixture!); assert.equal(response.stopReason, "error"); assert.ok(response.errorMessage?.includes(field));
+});
+Then("no physical request is dispatched", function (this: World) { assert.deepEqual(data(this).observations, []); assert.equal(this.fixture!.faux.state.callCount, 0); });
+Then("no main request is dispatched", function (this: World) { assert.equal(main(data(this)).length, 0); });
+Then("no stale candidate is used after {string}", async function (this: World, change: string) {
+  const s = data(this), f = this.fixture!;
+  if (change === "handles the input") assert.equal(f.faux.state.callCount, 0);
+  else { assert.equal(last(f).model, "gpt-6.1-sol"); assert.equal(last(f).thinkingLevel, "xhigh"); assert.equal(f.faux.state.callCount, 1); }
+  f.faux.setResponses([reply(s, "main")]); await f.session.prompt("later extension message", { source: "extension" });
+  assert.equal(last(f).model, "gpt-6.1-sol"); assert.equal(last(f).thinkingLevel, "xhigh"); assert.equal(classifiers(s).length, 0);
+});
+```
+
+### Task 5 exact load and native-state verification
+
+Create `test/load-check.test.ts`:
+
+```typescript
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { SessionManager, VIRTUAL_MODEL_STATE_ENTRY } from "@earendil-works/pi-coding-agent";
+import { expect, test } from "vitest";
+import { createFixture } from "./support/session.ts";
+
+test("the manifest extension entry is importable without enabling automation", async () => {
+  const manifest = JSON.parse(readFileSync("package.json", "utf8")) as { pi: { extensions: string[] }; dependencies?: unknown };
+  expect(manifest.dependencies).toBeUndefined();
+  expect(manifest.pi.extensions).toHaveLength(1);
+  for (const entry of manifest.pi.extensions) {
+    const loaded: unknown = (await import(pathToFileURL(resolve(entry)).href)).default;
+    expect(typeof loaded).toBe("function");
+  }
+  const f = await createFixture();
+  try {
+    expect(f.session.model?.id).toBe("gpt-6.1-sol");
+    expect(f.runtime.getModel("github-copilot", "auto")?.api).toBe("pi-virtual");
+    expect(f.faux.state.callCount).toBe(0); expect(f.errors).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("successful native state is portable JSON containing physical current and captured pairs", async () => {
+  const f = await createFixture({ skills: [{ name: "small", description: "Small", tier: "trivial" }] });
+  try {
+    await f.session.setModel(f.runtime.getModel("github-copilot", "auto")!);
+    f.respond(); await f.session.prompt("/skill:small");
+    const entry = f.session.sessionManager.getBranch().findLast((item) => item.type === "custom" && item.customType === VIRTUAL_MODEL_STATE_ENTRY);
+    assert.ok(entry?.type === "custom");
+    const decoded = JSON.parse(JSON.stringify(entry.data)) as { state: unknown };
+    expect(decoded.state).toEqual({
+      version: 1,
+      current: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
+      captured: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
+    });
+    expect(f.session.messages.some((message) => message.role === "custom")).toBe(false);
+  } finally { f.close(); }
+});
+
+test.each([
+  { label: "null", value: null },
+  { label: "unknown version", value: { version: 2, current: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" } } },
+  { label: "virtual current", value: { version: 1, current: { provider: "github-copilot", model: "auto", effort: "high" } } },
+  { label: "automatic max", value: { version: 1, current: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "max" } } },
+])("invalid saved native state $label cannot fabricate physical evidence", async ({ value }) => {
+  const manager = SessionManager.inMemory();
+  manager.appendModelChange("github-copilot", "auto");
+  manager.appendThinkingLevelChange("xhigh");
+  manager.appendCustomEntry(VIRTUAL_MODEL_STATE_ENTRY, { provider: "github-copilot", modelId: "auto", state: value });
+  manager.appendMessage({ role: "user", content: "seed", timestamp: 0 });
+  const f = await createFixture({ restore: true, sessionManager: manager });
+  try {
+    expect(f.session.model?.id).toBe("auto");
+    f.respond("unknown"); await f.session.prompt("new task");
+    const response = f.session.messages.filter((message) => message.role === "assistant").at(-1)!;
+    expect(response.stopReason).toBe("error");
+    expect(response.errorMessage).toMatch(/Select an available physical model and effort/);
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+```
+
+### Task 5 temporary red mutation
+
+Write the exact feature/step/load test payload first. The new steps must resolve
+and reach actual native requests. Prove AC001 catches wrong dispatch before
+counting this verification task green.
+
+Temporarily add this factory immediately before `async function app` in the
+new `features/steps/routing.ts`:
+
+```typescript
+const baselineStub: ExtensionFactory = (pi) => {
+  pi.registerVirtualModel({
+    provider: "github-copilot", id: "auto", name: "Acceptance red stub",
+    thinkingLevels: ["high", "xhigh"],
+    route(_request, ctx) {
+      const model = ctx.modelRegistry.find("github-copilot", "gpt-6.1-sol");
+      assert.ok(model && model.api !== "pi-virtual");
+      return { model, thinkingLevel: "xhigh" };
+    },
+  });
+};
+```
+
+Temporarily change only that new file's fixture factory list from
+`extensions: [custom, intercept],` to
+`extensions: [custom, intercept, baselineStub],`. This deliberately replaces
+Auto in the red fixture using Pi's approved virtual-registration test seam.
+It never edits production code or a user's installed model. Native request
+transport and session processing still run; the result must be wrong on an
+observable assertion, not undefined steps, compiler or registration errors.
 
 ```bash
+make typecheck
+make test-acceptance ACCEPTANCE_FILTER='--tags @AC001'
+```
+
+Expected red: the trivial/moderate examples dispatch Sol/xhigh and fail the
+asserted Luna/high physical pair. The tagged scenarios must reach the actual
+provider; preserve complete output and exit status. Complex/frontier examples
+can still pass, demonstrating the assertions discriminate by required pair.
+
+**Green:** Remove the temporary factory completely and restore the exact list
+`extensions: [custom, intercept],`. Keep every feature and assertion unchanged.
+Dead stub code must not remain. The ordinary registered extension and all final
+new files must match the green snippets above.
+
+### Task 5 verification and independent review gate
+
+Run the unchanged/full targets and the approved optional filter:
+
+```bash
+make test-acceptance ACCEPTANCE_FILTER='--tags @slice1 --format json:/tmp/pi-auto-model-slice1-acceptance.json'
+make test
+make typecheck
+make load-check
 make -C /Users/mmcdonnell/code/agent-skills check-execute-plan
 ```
 
-Record command exit codes, baseline comparisons and unavailable checks.
-Inspect the cumulative slice diff and protected source state. Obtain independent
-read-only premium review before accepting M1.1–M1.4. No live model/classifier,
-global installation, settings or popup probes are authorized by this slice.
+Expected: all original 223 plus six new Vitest tests pass. The three features
+expand to 56 new examples (45 for the 24 original Slice 1 keys and 11 supplemental
+cases); with the original native feature, normal `make test` runs 57 Cucumber
+scenarios. Every example must pass with no skipped, pending, ambiguous or
+undefined steps. JSON output must account for every
+original Slice 1 key/example and supplemental case; an outline is not covered
+merely because its title/tag occurs in a file. Validate dispatched physical
+pairs and no-chat/usage/ownership assertions from real offline outcomes.
+Record commands, true exits and protected-state comparisons, including baseline
+worker-policy check (19/19 already passed during compilation). No global install,
+live classifier/model call or popup smoke check is authorized.
 
-**Compiler completion:** Supply all verbatim feature/step files and exact final
-commands before launch. Verify each scenario key/example and every M1 outcome
-has executable evidence. Mark tasks only after checks and commits; mark plan
-milestones only after independent review and slice acceptance.
+The implementation worker applies only the six stated test/Make files and
+returns before review/acceptance; it does not change existing tests, extension,
+policy, fixture, plan milestones, docs, Git index or task checkboxes. If acceptance
+finds a production defect, return it to the coordinator; corrections need their
+own exact proposal/approval and task-linked commit.
+
+After coordinator inspection and independent rerun, commit the verified Task 5
+test change. Then conduct read-only premium review of the complete Slice 1
+production/test boundary, not only these new acceptance files:
+
+1. Gather the cumulative scoped diff once and save it with source SHA, allowed
+   files, approved decisions, spec/plan/task/addendum context and actual test
+   evidence. Preserve original source revisions; label the configuration
+   addendum as future Slice 2 scope, not missing Slice 1 implementation.
+2. Follow `code-review`: behavior/tests, security, reliability, maintainability
+   and spec/plan adherence. Use explicit premium Sol/xhigh, no fallback and
+   40 turns per read-only reviewer. Large compiler/lockfile diffs use per-file
+   shards; every changed file must be reviewed or explicitly accounted for.
+3. Check every reviewer completed; retry budget-limited incomplete work at 80
+   on the same model/effort with the saved checkpoint. Report exhaustion with
+   the required warning. Independently try to refute findings before presenting
+   them; incomplete review or unresolved material contracts blocks acceptance.
+4. Propose verified corrections separately; implementation workers cannot
+   accept milestones or silently fix tests. Run all affected/full checks and
+   record correction commits before accepting proven outcomes.
+5. Only when complete acceptance and independent review establish M1.1–M1.4,
+   mark those four source milestone checkboxes and update their evidence/actual
+   hashes in the coordinator. Preserve initial plan/spec snapshots and document
+   permitted checkbox-only plan drift; do not rewrite original requirements,
+   archive the project or start Slice 2 implicitly.
+
+**Compiler preflight:** Red and green TypeScript variants both pass in memory
+with zero diagnostics against the actual installed SDK/compiler options.
+Installed Gherkin parsing expands 56 examples; all 324 steps match exactly one
+expression, with every selected original outline example accounted for. The
+unchanged 223-test/Cucumber/type/load baseline and 19 worker-policy checks pass.
+Logs: `/tmp/pi-auto-model-task5-compile.8r3Uk4`. No Task 5 feature/test/Makefile
+implementation was written or executed. This is preflight, not acceptance.
+
+The review/conditional evidence update is part of the task gate, not delegated
+implementation authority. If a checkbox update is not covered by approval,
+propose it separately. Full project completion, owned-plugin compatibility,
+configuration UI, global activation and deployment remain future slices.
+
+**Implementation verified:** Coordinator rerun passes229 Vitest tests,
+57 Cucumber scenarios/497 runtime steps, typecheck/module load and19 worker-policy
+tests. Tagged JSON accounts for56 passing new scenarios/492 steps,45 original-key
+examples and11 supplemental cases, with no undefined/pending/non-passed steps.
+The compiler's324 matched steps excluded runtime hooks. Required red rejected
+Sol for trivial/moderate and passed complex/frontier controls; stub removed.
+Protected files are unchanged. All final snippets match except table-space-only
+alignment in one feature, with unchanged data. The worker wrote the temporary
+red fixture on first creation rather than adding it separately; the specified
+red/green and final source still hold. No test assertion or production change.
+Logs: `/tmp/pi-auto-model-task5.jvb4oC`. Commit before independent premium review.
+Task5 remains unchecked until review/findings are resolved; source milestone
+checkbox updates need separate coordinator approval.
 
 - [ ] Task 5 complete
 
@@ -3350,8 +4269,12 @@ Its approved early registration, same-ID deployment constraint and direct-summar
 test observation are recorded above; dependencies and original plan/spec remain
 unchanged.
 
-Compile Task 5's complete acceptance/review payload against these committed
-interfaces. That next task needs its own edit approval. The configuration addendum is approved future Slice 2 scope only;
-it does not authorize configuration UI or provider changes now.
+Task 5's six-file acceptance payload and premium read-only review gate are
+were approved and the acceptance implementation is now independently verified.
+Commit it before the five-dimensional premium read-only review of the complete
+Slice1 diff. Scenario execution is verified; complete milestone acceptance and
+source checkbox changes remain pending.
+The configuration addendum is approved future Slice 2 scope only; it does not
+authorize configuration UI or provider changes now.
 No later task implementation, future slice, global activation or live provider
 probe is approved. The execution record owns hashes, checks and worker telemetry.

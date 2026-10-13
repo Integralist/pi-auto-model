@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Tasks 1–4 committed and verified; Task 5 pending, Slice 1 unaccepted.
+- **Status:** Task 5 acceptance implementation verified; commit and independent review pending.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 5 awaiting compilation.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 5 authorized.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -73,6 +73,15 @@
 18. The user approved the single direct-summary test-observation correction:
     record fake-provider model/options.reasoning and assert the same Luna/high
     pair there. No production routing, other assertions or dependencies change.
+19. After Task 4's verified commits, the user said approve in response to the
+    next step of Task 5 compilation and a later edit proposal. This approves
+    coordinator task/README/execution compilation only; no acceptance test
+    edits, review launch or milestone marking is inferred before that proposal.
+20. The user subsequently approved Task 5's six-file acceptance implementation
+    and independent read-only premium review. The editing worker may change
+    only the stated new tests/features and Make filter; production, fixtures,
+    dependencies and original specs stay protected. Review findings and source
+    milestone edits remain separate per-edit gates.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -391,7 +400,8 @@ payloads. Task 2 now includes its exact stub, tests and green policy payload;
 Task 3 now includes its exact asynchronous boundary/types/stub, classifier
 unit/native tests and green payload. Task 4 now includes its approved
 registration decision and exact seven-file stub/harness/origin/test/green
-payload; Task 5 remains a contract awaiting compilation.
+payload; Task 5 now includes its exact six-file acceptance payload, temporary
+assertion-red mutation and separate independent premium review gate.
 The user subsequently authorized Task 1 execution under task-at-a-time gates.
 Task 1's exact source/tests/toolchain and approved compiler corrections are
 verified and committed. Task 2's policy/test implementation is also verified
@@ -406,7 +416,7 @@ No slice milestone is accepted.
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified and committed: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified and committed: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load |
-| `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
+| `slice-1/task-5` | M1.1–M1.4 | All 24 Slice 1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance implementation verified: 229 Vitest/57 Cucumber; commit and premium review pending |
 
 No scenario ledger row changes from Unverified until checks actually run.
 
@@ -922,24 +932,122 @@ coordinator-owned; workers do not edit them. No live provider query, account
 change, global install or Slice 2 coding is authorized. All added acceptance
 rows remain Unverified; Slice 2 still waits for independent Slice 1 acceptance.
 
+## Task 5 compiler checkpoint
+
+Compiled from clean HEAD `805883a120576e5d5b79e6decc115b1d9a96b9a5`, with
+native routing at `be2fdf7`. Only coordinator-owned task/README/execution
+artifacts change; no new feature/test/Makefile edit, dependency, worker/reviewer
+or commit was created. Protected plan/spec/addendum and source hashes remain
+unchanged. Compiler log root: `/tmp/pi-auto-model-task5-compile.8r3Uk4`.
+
+Proposed six-file scope: three new `.feature` files, new routing step definitions,
+new manifest/native-state test suite, and one Makefile argument passthrough for
+optional tagged acceptance checks. Normal `make test` remains unfiltered and
+strict. Existing production code, fixture, tests, feature and dependency pins
+are preserved. Red proof temporarily replaces only the new fixture's virtual
+router using a compiled native-registration stub, then removes it completely;
+it never mutates production or leaves a test bypass behind.
+
+The new Gherkin maps every original Slice 1 key AC001–AC017, AC023–AC028 and
+AC030, preserving all original outline examples and expanding compound tool,
+retry, queued and extension-origin branches. That is 45 original-key examples,
+plus 11 supplemental public-config/input/resource/both-mode failure examples.
+There are 56 new scenarios, 57 including the existing native boundary. Six new
+Vitest cases cover manifest opt-in loading, serialized native physical state
+and invalid saved-state evidence; expected total after implementation is 229.
+All existing 223 unit/native/ownership tests still run, not mocked by Gherkin.
+
+The full review gate uses independent read-only premium Sol/xhigh reviewers,
+no fallback, 40 turns per dimension and a same-settings 80-turn retry if
+budget-limited/incomplete. Every changed file/outcome must be accounted for,
+findings independently challenged, and material contradictions resolved before
+milestone acceptance. Verified fixes and plan-checkbox changes stay with the
+coordinator under per-edit approval; nothing here accepts M1.1–M1.4 or starts
+Slice 2, configuration UI, plugin work, global activation or paid probes.
+
+| Compiler check | Outcome | Evidence under compiler checkpoint |
+| --- | --- | --- |
+| Red plus full test/source context | Pass: zero TypeScript diagnostics | `compiler-type-preflight.log`, in-memory TypeScript 7.0.2 API |
+| Green plus same context | Pass: zero diagnostics | Same overlay; actual Pi 1.2.0 declarations/options |
+| Gherkin syntax and definition resolution | Pass: 56 examples/324 steps, each matches exactly one expression | `gherkin-and-definition-preflight.log`, installed Cucumber parser/expressions; existing support patterns included |
+| Original scenario/outline inventory | Pass: 44 original keys found, all 24 selected Slice 1 keys and their outline counts preserved | Same parser report; supplemental IDs do not replace source keys |
+| Existing normal checks | Pass: 223 Vitest tests, Cucumber scenario/five reported steps, typecheck and module load | `existing-baseline-checks.log`, exit 0 |
+| Unchanged worker-policy suite | Pass: 19/19 | `worker-policy-baseline.log`; read-only agent-skills revision `7a59b81a85064dc70baa9bd3cddaa0af2f709d48` |
+| Source/dependency/original contract integrity | Pass: all hashes match | `protected-source.sha256` |
+| New behavioral red/green and premium review | Not run | Implementation/review approval required |
+| Docs/IDs/links/coverage/whitespace | Checked before approval gate | Only three coordinator files change |
+
+Current Cucumber docs cross-check tagged hooks and optional CLI filters;
+installed types/parser establish the compiled API and step grammar. No behavior
+was executed from document snippets. No worker was spawned, so no retry or
+budget evidence changed. Later review will still judge actual behavior and
+public error completeness, not compiler labels or predicted test counts.
+
+## Task 5 acceptance implementation outcome
+
+Only the six allowed test/Make files changed. Steps/load tests and two feature
+files exactly match compiled snippets; the main-routing table has space-only
+alignment differences, with unchanged values/tags/steps. Makefile adds only
+`$(ACCEPTANCE_FILTER)`; normal tests remain unfiltered. The temporary stub is
+fully removed. The worker initially wrote it into the new step file rather
+than adding it in a later edit; required assertion-red and final green still
+hold. All19 protected hashes match. Production/fixture/dependencies unchanged.
+
+| Check | Outcome | Evidence under `/tmp/pi-auto-model-task5.jvb4oC` |
+| --- | --- | --- |
+| Compiling red fixture | Pass: typecheck exit0 | `worker-typecheck-red.log` |
+| Required native behavioral red | Verified: exit2; trivial/moderate rejected Sol instead of Luna, complex/frontier controls passed | `worker-red.log` |
+| Worker assigned checks | Pass: exit0 each;229 Vitest/57 full Cucumber,19 policy checks | `worker-make-test.log`, other worker logs |
+| Coordinator tagged acceptance | Pass:56 scenarios/492 runtime steps, exit0 | `coordinator-acceptance.json`, `coordinator-tagged-acceptance.log` |
+| Original-key/extra coverage | Pass:24 keys/45 original examples plus11 supplemental; no non-passed statuses | Coordinator JSON inventory |
+| Coordinator full checks | Pass:229 Vitest/57 Cucumber/497 runtime steps, type/load exit0 | `coordinator-final-checks.log` |
+| Worker-policy checks | Pass:19/19, exit0 | `coordinator-worker-policy.log` |
+| Scope/payload/docs/IDs/links/whitespace/secrets | Verified before scoped commit | Protected hashes and complete source inspection |
+
+Runtime step counts include hooks; compiler324 matched steps excluded them.
+The worker doc-hash audit detected only the coordinator's execution launch
+append, not a worker edit. No assertion/contract or production correction was
+needed. Task5 remains review-pending and unchecked; source milestones are not
+accepted or approved for marking yet.
+
 ## Next action
 
-Compile only Task 5's complete Slice 1 acceptance and independent-review
-payload against native routing at `be2fdf76dc16589d8795d48533a6d2074a90c9d9`.
-Tasks 1–4 are committed and verified; preserve them when delayed worker notices
-arrive. Exact feature/step/error-coverage proposals need separate edit approval
-before another worker. After complete checks and independent premium review,
-accept only proven M1.1–M1.4 outcomes and update source milestones under the
-existing gate. No installation, activation or provider account change is implied.
+Commit verified Task5 acceptance and coordinator-owned compilation/evidence
+updates, then gather the complete Slice1 diff/context once and launch five
+read-only Sol/xhigh dimensions.40 turns each, same-settings80-turn retry for
+budget-limited incomplete work. Verify findings before proposing fixes. Keep
+Task5/source milestones open; no install/activation/provider change implied.
+
+Historical launch: Execute approved [Task 5](./tasks-slice-1.md#task-5-verify-the-complete-slice-through-executable-acceptance)
+with one strict Luna/xhigh worker, 60 turns and no fallback: only the six
+acceptance test/Make-filter files. Prove tagged assertion-red, remove the stub
+completely and run normal checks. Checkpoint/log root:
+`/tmp/pi-auto-model-task5.jvb4oC`; parent HEAD
+`805883a120576e5d5b79e6decc115b1d9a96b9a5`, authorized branch
+`integralist/auto-model`, index empty. Only coordinator-owned compilation docs
+pre-exist. All source/fixture/dependency/plan/spec/addendum hashes are protected;
+only the listed Makefile recipe can change among existing source. Baseline
+223-test/Cucumber/type/load and worker-policy suite pass. Retry at 120 only for
+budget-limited incomplete work; material runtime/compiler defects return here.
+Worker `b516827b-cf59-4bef-977a-ce80de4f70e4` (`task5-acceptance`) launched
+with strict Copilot Luna/xhigh, no fallback and60 turns. It returned COMPLETE;
+protected source unchanged and all assigned checks/coverage pass. Transcript
+`2026-10-13T17-04-48-439Z_01a13639-5137-77f6-8232-f95679b02488.jsonl`
+records Luna/xhigh on21 assistant turns, ending with stop/no errors. No budget
+exhaustion/fallback/retry occurred; recorded settings are not gateway internals.
+Coordinator source/check verification passes; commit precedes premium review.
+Material review fixes and source milestone changes need their own approval.
+Tasks 1–4 stay committed; no install, activation or provider account change.
 
 The configuration addendum is separately committed at `3ec6b35`; compile it
 with Slice 2 only after Slice 1 acceptance. This record's bounded Task 4 hash
 update is indexed through plan/task/bookkeeping trailers rather than recording
 its own hash.
-The original behavioral red remains valid. Task 5 and Slice 2 coding are not
-approved; the configuration addendum records future scope only.
+The original behavioral red remains valid. Task 5 implementation/read-only
+review are approved, but review fixes, milestone marking and Slice 2 coding
+are not. The configuration addendum records future scope only.
 
-Tasks 1–3 stay verified; do not repeat them because delayed worker notices
+Tasks 1–4 stay verified; do not repeat them because delayed worker notices
 arrive. No install, host patch, global activation, paid probe or later task
 implementation is authorized. Milestones and original scenario rows remain
 unaccepted. Do not create a self-recording hash loop.
