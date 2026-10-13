@@ -54,6 +54,7 @@ function fixture(message: AssistantMessage = response()) {
   const registry: Parameters<typeof resolveTaskRoute>[2] = {
     find: (provider, id) => fake.models.find((model) => model.provider === provider && model.id === id),
     hasConfiguredAuth: (model) => available.has(model.id),
+    getAvailable: () => fake.models.filter((model) => available.has(model.id)),
     streamSimple: transport,
   };
   return { fake, available, transport, registry };

@@ -23,6 +23,7 @@ import autoModel from "../../extensions/auto-model.ts";
 type Options = {
   skills?: { name: string; description: string; tier?: unknown; body?: string }[];
   extensions?: ExtensionFactory[];
+  beforeExtensions?: ExtensionFactory[];
   configuration?: unknown;
   sessionManager?: SessionManager;
   restore?: boolean;
@@ -76,7 +77,7 @@ export async function createFixture(options: Options = {}) {
         resourceLoaderOptions: {
           noExtensions: true, noSkills: true, noPromptTemplates: true,
           noThemes: true, noContextFiles: true,
-          extensionFactories: [(pi) => autoModel(pi, options.configuration), ...(options.extensions ?? [])],
+          extensionFactories: [...(options.beforeExtensions ?? []), (pi) => autoModel(pi, options.configuration), ...(options.extensions ?? [])],
           skillsOverride: () => ({ skills, diagnostics: [] }),
         },
       });

@@ -17,6 +17,8 @@ type Candidate = {
   sessionId: string;
   lastUserId?: string;
   generation: number;
+  imageMimes?: string[];
+  startingMessage?: { text: string; timestamp: number };
 };
 const provider = "github-copilot";
 const modelId = "auto";
@@ -34,18 +36,24 @@ function physical(model: Model<Api> | undefined, level: ModelThinkingLevel | und
   return { provider: model.provider, model: model.id, effort: level as AutomaticEffort };
 }
 
-function pair(value: unknown, ctx: ExtensionContext): PhysicalPair | undefined {
+function pair(value: unknown, ctx: ExtensionContext, requireSupportedEffort = true): PhysicalPair | undefined {
   if (!value || typeof value !== "object") return undefined;
   const candidate = value as Record<string, unknown>;
   if (typeof candidate.provider !== "string" || typeof candidate.model !== "string" || typeof candidate.effort !== "string") return undefined;
-  return physical(ctx.modelRegistry.find(candidate.provider, candidate.model), candidate.effort as ModelThinkingLevel);
+  const model = ctx.modelRegistry.find(candidate.provider, candidate.model);
+  const level = candidate.effort as AutomaticEffort;
+  if (!model || model.api === "pi-virtual" || !efforts.includes(level)) return undefined;
+  return requireSupportedEffort ? physical(model, level) : {
+    provider: model.provider, model: model.id, effort: level,
+  };
 }
 
 function state(value: unknown, ctx: ExtensionContext): State | undefined {
   if (!value || typeof value !== "object" || (value as { version?: unknown }).version !== 1) return undefined;
   const raw = value as { current?: unknown; captured?: unknown };
-  const current = pair(raw.current, ctx);
-  return current ? { version: 1, current, captured: pair(raw.captured, ctx) } : undefined;
+  // Saved pairs establish identity; actual route evidence is validated separately.
+  const current = pair(raw.current, ctx, false);
+  return current ? { version: 1, current, captured: pair(raw.captured, ctx, false) } : undefined;
 }
 
 function branchState(ctx: ExtensionContext): State | undefined {
@@ -53,6 +61,27 @@ function branchState(ctx: ExtensionContext): State | undefined {
     if (entry.type !== "custom" || entry.customType !== VIRTUAL_MODEL_STATE_ENTRY || !entry.data || typeof entry.data !== "object") continue;
     const raw = entry.data as { provider?: unknown; modelId?: unknown; state?: unknown };
     if (raw.provider === provider && raw.modelId === modelId) return state(raw.state, ctx);
+  }
+  return undefined;
+}
+
+function branchCurrent(ctx: ExtensionContext): PhysicalPair | undefined {
+  for (const entry of ctx.sessionManager.getBranch().toReversed()) {
+    if (entry.type === "message" && entry.message.role === "assistant"
+      && entry.message.stopReason !== "error" && entry.message.stopReason !== "aborted") {
+      const observed = physical(
+        ctx.modelRegistry.find(entry.message.provider, entry.message.model), entry.message.thinkingLevel,
+      );
+      if (observed) return observed;
+    }
+    if (entry.type === "custom" && entry.customType === VIRTUAL_MODEL_STATE_ENTRY
+      && entry.data && typeof entry.data === "object") {
+      const raw = entry.data as { provider?: unknown; modelId?: unknown; state?: unknown };
+      if (raw.provider === provider && raw.modelId === modelId) {
+        const current = pair(state(raw.state, ctx)?.current, ctx);
+        if (current) return current;
+      }
+    }
   }
   return undefined;
 }
@@ -74,6 +103,26 @@ function selectedPhysical(ctx: ExtensionContext): PhysicalPair | undefined {
     captured = physical(model, effort) ?? captured;
   }
   return captured;
+}
+
+function startingTextMatches(candidate: Candidate, value: string): boolean {
+  if (value === candidate.expected) return true;
+  if (!candidate.imageMimes?.length) return false;
+  const prefix = candidate.expected + "\n\n";
+  if (!value.startsWith(prefix)) return false;
+  const hints = value.slice(prefix.length).split("\n");
+  if (!hints.length || hints.length > candidate.imageMimes.length * 2) return false;
+  return hints.every((hint) => {
+    if (hint === "[Image omitted: could not be converted to a supported inline image format.]"
+      || hint === "[Image omitted: could not be resized below the inline image size limit.]") return true;
+    const converted = /^\[Image converted from ([^\r\n]+) to (image\/(?:png|jpeg|gif|webp))\.\]$/.exec(hint);
+    if (converted) return candidate.imageMimes!.includes(converted[1]!);
+    const dimensions = /^\[Image: original (\d+)x(\d+), displayed at (\d+)x(\d+)\. Multiply coordinates by (\d+\.\d{2}) to map to original image\.\]$/.exec(hint);
+    if (!dimensions) return false;
+    const [width, height, displayedWidth, displayedHeight] = dimensions.slice(1, 5).map(Number);
+    return [width, height, displayedWidth, displayedHeight].every((number) => Number.isSafeInteger(number) && number! > 0)
+      && (width! / displayedWidth!).toFixed(2) === dimensions[5];
+  });
 }
 
 function confirmation(value: string) {
@@ -100,27 +149,37 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
     provider, id: modelId, name: "Auto", thinkingLevels: ["high", "xhigh"],
     async route(request, ctx) {
       const saved = state(request.state, ctx) ?? branchState(ctx);
-      const current = physical(request.previous?.model, request.previous?.thinkingLevel) ?? saved?.current;
+      const current = branchCurrent(ctx) ?? physical(request.previous?.model, request.previous?.thinkingLevel) ?? pair(saved?.current, ctx);
       const startup = saved?.captured ?? captured;
       if (request.reason === "direct") {
         return resolveRoute(configuration, { direct: true, current, captured: startup }, ctx.modelRegistry);
       }
       const failed = request.reason === "retry" ? request.failed : undefined;
-      const sticky = failed ?? (request.reason === "continuation" ? request.previous : undefined);
-      const stickyPair = physical(sticky?.model, sticky?.thinkingLevel);
-      if (sticky && stickyPair) {
+      const stickyPair = failed ? physical(failed.model, failed.thinkingLevel)
+        : request.reason === "continuation" ? current : undefined;
+      if (stickyPair) {
         request.signal?.throwIfAborted();
-        return { model: sticky.model, thinkingLevel: stickyPair.effort, state: request.state };
+        return {
+          model: ctx.modelRegistry.find(stickyPair.provider, stickyPair.model)!,
+          thinkingLevel: stickyPair.effort, state: request.state,
+        };
       }
       const candidate = request.reason === "user" ? accepted : undefined;
       accepted = undefined;
-      const entry = lastUser(ctx);
-      const latest = request.messages.findLast((message) => message.role === "user");
+      const branch = ctx.sessionManager.getBranch();
+      const boundary = candidate?.lastUserId
+        ? branch.findIndex((entry) => entry.id === candidate.lastUserId) : -1;
+      const entry = candidate?.startingMessage ? branch.slice(boundary + 1).find(
+        (entry) => entry.type === "message" && entry.message.role === "user",
+      ) : undefined;
+      const starting = candidate?.startingMessage;
+      const represented = starting && request.messages.some((message) => message.role === "user"
+        && message.timestamp === starting.timestamp && text(message.content) === starting.text);
       const owned = candidate && candidate.generation === generation && candidate.sessionId === activeSession
         && activeSession === ctx.sessionManager.getSessionId() && entry?.type === "message"
         && entry.message.role === "user" && entry.id !== candidate.lastUserId
-        && text(entry.message.content) === candidate.expected
-        && text(latest?.content) === candidate.expected;
+        && entry.message.timestamp === starting?.timestamp
+        && text(entry.message.content) === starting?.text && represented;
       const version = generation;
       const sessionId = ctx.sessionManager.getSessionId();
       const userEntryId = owned ? entry.id : undefined;
@@ -146,9 +205,6 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
 
   pi.on("session_start", (_event, ctx) => restore(ctx));
   pi.on("session_tree", (_event, ctx) => restore(ctx));
-  pi.on("session_before_tree", () => { invalidate(); });
-  pi.on("session_before_switch", () => { invalidate(); });
-  pi.on("session_before_fork", () => { invalidate(); });
   pi.on("session_shutdown", () => { invalidate(); activeSession = ""; captured = undefined; });
   pi.on("agent_end", () => { raw = undefined; accepted = undefined; });
   pi.on("model_select", (event, ctx) => {
@@ -182,6 +238,16 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
     raw = { expected, task, path, sessionId: ctx.sessionManager.getSessionId(), lastUserId: lastUser(ctx)?.id, generation };
   });
 
+  pi.on("message_start", (event, ctx) => {
+    if (event.message.role !== "user" || !accepted || accepted.startingMessage) return;
+    if (accepted.generation !== generation || accepted.sessionId !== ctx.sessionManager.getSessionId()) return;
+    const startingText = text(event.message.content);
+    // Preserve the entire accepted task. Only source-defined, bounded image notes
+    // can follow it; an earlier event handler cannot supply a replacement identity.
+    if (!startingTextMatches(accepted, startingText)) { accepted = undefined; return; }
+    accepted.startingMessage = { text: startingText, timestamp: event.message.timestamp };
+  });
+
   pi.on("before_agent_start", (event, ctx) => {
     accepted = undefined;
     const candidate = raw; raw = undefined;
@@ -191,6 +257,7 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
       try { if (readFileSync(candidate.path, "utf8") !== candidate.task.content) return; }
       catch { return; }
     }
+    candidate.imageMimes = event.images?.map((image) => image.mimeType.split(";")[0]!.trim().toLowerCase());
     accepted = candidate;
   });
 }

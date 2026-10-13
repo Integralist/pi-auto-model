@@ -14,7 +14,7 @@ export type PhysicalPair = {
   model: string;
   effort: AutomaticEffort;
 };
-export type RoutingRegistry = Pick<ModelRegistry, "find" | "hasConfiguredAuth">;
+export type RoutingRegistry = Pick<ModelRegistry, "find" | "hasConfiguredAuth" | "getAvailable">;
 export type RouteInput = {
   skillContent?: string;
   classifiedTier?: unknown;
@@ -176,6 +176,17 @@ function evidence(value: PhysicalPair | undefined, registry: RoutingRegistry): R
   return { model, thinkingLevel: value.effort, source: "current" };
 }
 
+function available(model: Model<Api>, registry: RoutingRegistry): boolean {
+  try {
+    return registry.hasConfiguredAuth(model) && registry.getAvailable().some(
+      (candidate) => candidate.api !== "pi-virtual"
+        && candidate.provider === model.provider && candidate.id === model.id,
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function resolveRoute(
   rawConfiguration: unknown,
   input: RouteInput,
@@ -193,7 +204,7 @@ export function resolveRoute(
       const tier = tiers[index]!;
       const candidate = config.tiers[tier];
       const model = fixed ?? registry.find(candidate.provider, candidate.model);
-      if (!model || model.api === "pi-virtual" || !registry.hasConfiguredAuth(model)) continue;
+      if (!model || model.api === "pi-virtual" || !available(model, registry)) continue;
       if (!getSupportedThinkingLevels(model).includes(candidate.effort)) continue;
       return { model, thinkingLevel: candidate.effort, tier, source: "tier" };
     }
@@ -274,7 +285,7 @@ async function classifyTask(
   let model: Model<Api> | undefined;
   try {
     model = registry.find(pair.provider, pair.model);
-    if (!model || model.api === "pi-virtual" || !registry.hasConfiguredAuth(model)) return outcome("unavailable");
+    if (!model || model.api === "pi-virtual" || !available(model, registry)) return outcome("unavailable");
     if (!getSupportedThinkingLevels(model).includes(pair.effort)) return outcome("unavailable");
   } catch {
     return outcome("error");
@@ -312,6 +323,20 @@ async function classifyTask(
       reasoning: pair.effort === "off" ? undefined : pair.effort,
       maxTokens, maxRetries: 0, toolChoice: "none", cacheRetention: "none",
       signal: controller.signal,
+      onPayload(payload) {
+        if (!isRecord(payload)) throw new Error("Classifier payload has no verifiable output limit");
+        const limits = [
+          payload.max_tokens, payload.max_output_tokens, payload.max_completion_tokens, payload.maxTokens,
+          isRecord(payload.config) ? payload.config.maxOutputTokens : undefined,
+          isRecord(payload.generationConfig) ? payload.generationConfig.maxOutputTokens : undefined,
+          isRecord(payload.inferenceConfig) ? payload.inferenceConfig.maxTokens : undefined,
+          isRecord(payload.options) ? payload.options.maxTokens : undefined,
+        ].filter((value) => value !== undefined);
+        if (!limits.length || limits.some((value) => typeof value !== "number"
+          || !Number.isSafeInteger(value) || value <= 0 || value > maxTokens)) {
+          throw new Error("Classifier payload exceeds its configured output limit");
+        }
+      },
     }).result().then((message) => {
       const usage = structuredClone(message.usage);
       try {

@@ -1,14 +1,14 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task 5 acceptance committed; independent review complete, eight verified findings block Slice 1 acceptance.
+- **Status:** Task5 corrections verified; all eight findings cleared, source milestone ticks pending approval.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 5 authorized.
-- **Accepted slices:** none.
+- **Current slice:** Slice1 Task5 verified; [task document](./tasks-slice-1.md).
+- **Accepted slices:** Source milestones remain unticked pending explicit approval.
 
 ## Authorization
 
@@ -82,6 +82,20 @@
     only the stated new tests/features and Make filter; production, fixtures,
     dependencies and original specs stay protected. Review findings and source
     milestone edits remain separate per-edit gates.
+21. The user asked to continue until the extension is built. The standing
+    fresh-per-diff gate still applies; no global install, push or paid probe is
+    implied. Mechanical read-only API/peer/package fact research may continue.
+22. The user approved the exact six-file combined F1–F8 correction diff at
+    `/tmp/pi-auto-model-corrections-proposal.T6xF76/proposed.diff`, including
+    seventeen regressions. No test-expectation or dependency change outside
+    that payload is inferred; newly found fixture mismatches return for approval.
+23. The user approved the one-line F8 fixture correction to retain explicit
+    xhigh support while disabling high. It changes setup only; no expected pair,
+    routing assertion, production behavior or dependency was changed.
+24. The user approved the exact three-file F2/F6 follow-up diff and requested
+    a concise remaining-work summary. The extension, optional beforeExtensions
+    fixture seam and eight tests may change only as proposed. Source milestone
+    marks and Slice2 implementation still need their own concrete edit approval.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -228,7 +242,8 @@ integration and live worker behavior have not been verified.
 Stable keys below cover prose constraints and unsliced requirements. They
 supplement, rather than replace, the scenario and milestone ledgers.
 `S1` through `S4` name source slices; only S1 execution is authorized.
-Task mappings and actual outcome evidence are pending compilation.
+Task5 establishes the Slice1 portions with offline acceptance and completed
+review. Later-slice portions and unsliced final outcomes remain pending.
 
 | Key | Scope | Original requirement | Source |
 | --- | --- | --- | --- |
@@ -307,36 +322,36 @@ is accepted based on this inventory; compiled tasks name the keys they cover.
 
 | Key | Scope | Original scenario | Evidence |
 | --- | --- | --- | --- |
-| AC001 | S1 | Declared difficulty selects the configured pair | Unverified |
-| AC002 | S1 | Metadata wins over a misleading familiar name | Unverified |
-| AC003 | S1 | Metadata strings are trimmed and matched without case | Unverified |
-| AC004 | S1 | Absent or invalid metadata still triggers classification | Unverified |
-| AC005 | S1 | Classifier input follows the shared skill contract | Unverified |
-| AC006 | S1 | An unusable classifier result retains the route | Unverified |
-| AC007 | S1 | Classifier work cannot reroute itself or the conversation | Unverified |
-| AC008 | S1 | The next typed task is classified independently | Unverified |
-| AC009 | S1 | Typed tasks use classified difficulty | Unverified |
-| AC010 | S1 | Effort-only preserves its fixed physical model | Unverified |
-| AC011 | S1 | Effort-only checks effort against its fixed model | Unverified |
-| AC012 | S1 | Tool follow-ups and retries retain their route | Unverified |
-| AC013 | S1 | Confirmation retains its route | Unverified |
-| AC014 | S1 | Short task intent is not a confirmation | Unverified |
-| AC015 | S1 | Busy and queued input retain the active route | Unverified |
-| AC016 | S1 | Extension-origin work retains the active route | Unverified |
-| AC017 | S1 | Direct summary requests do not alter main task state | Unverified |
+| AC001 | S1 | Declared difficulty selects the configured pair | Verified offline: Task5 acceptance + cleared correction review |
+| AC002 | S1 | Metadata wins over a misleading familiar name | Verified offline: Task5 acceptance + cleared correction review |
+| AC003 | S1 | Metadata strings are trimmed and matched without case | Verified offline: Task5 acceptance + cleared correction review |
+| AC004 | S1 | Absent or invalid metadata still triggers classification | Verified offline: Task5 acceptance + cleared correction review |
+| AC005 | S1 | Classifier input follows the shared skill contract | Verified offline: Task5 acceptance + cleared correction review |
+| AC006 | S1 | An unusable classifier result retains the route | Verified offline: Task5 acceptance + cleared correction review |
+| AC007 | S1 | Classifier work cannot reroute itself or the conversation | Verified offline: Task5 acceptance + cleared correction review |
+| AC008 | S1 | The next typed task is classified independently | Verified offline: Task5 acceptance + cleared correction review |
+| AC009 | S1 | Typed tasks use classified difficulty | Verified offline: Task5 acceptance + cleared correction review |
+| AC010 | S1 | Effort-only preserves its fixed physical model | Verified offline: Task5 acceptance + cleared correction review |
+| AC011 | S1 | Effort-only checks effort against its fixed model | Verified offline: Task5 acceptance + cleared correction review |
+| AC012 | S1 | Tool follow-ups and retries retain their route | Verified offline: Task5 acceptance + cleared correction review |
+| AC013 | S1 | Confirmation retains its route | Verified offline: Task5 acceptance + cleared correction review |
+| AC014 | S1 | Short task intent is not a confirmation | Verified offline: Task5 acceptance + cleared correction review |
+| AC015 | S1 | Busy and queued input retain the active route | Verified offline: Task5 acceptance + cleared correction review |
+| AC016 | S1 | Extension-origin work retains the active route | Verified offline: Task5 acceptance + cleared correction review |
+| AC017 | S1 | Direct summary requests do not alter main task state | Verified offline: Task5 acceptance + cleared correction review |
 | AC018 | S2 | Disabling restores both original settings | Unverified |
 | AC019 | S2 | Manual choices win | Unverified |
 | AC020 | S2 | Resume and tree navigation retain branch state | Unverified |
 | AC021 | S2 | Fresh sessions preserve the enabled preference | Unverified |
 | AC022 | S2 | Controls during work wait for a safe boundary | Unverified |
-| AC023 | S1 | Automatic configuration rejects max | Unverified |
-| AC024 | S1 | An unavailable tier steps down to the nearest smaller pair | Unverified |
-| AC025 | S1 | Step-down continues past unavailable smaller tiers | Unverified |
-| AC026 | S1 | No available smaller tier keeps the current physical pair | Unverified |
-| AC027 | S1 | Invalid routing configuration remains an actionable error | Unverified |
-| AC028 | S1 | Keep-current requires a known physical pair | Unverified |
+| AC023 | S1 | Automatic configuration rejects max | Verified offline: Task5 acceptance + cleared correction review |
+| AC024 | S1 | An unavailable tier steps down to the nearest smaller pair | Verified offline: Task5 acceptance + cleared correction review |
+| AC025 | S1 | Step-down continues past unavailable smaller tiers | Verified offline: Task5 acceptance + cleared correction review |
+| AC026 | S1 | No available smaller tier keeps the current physical pair | Verified offline: Task5 acceptance + cleared correction review |
+| AC027 | S1 | Invalid routing configuration remains an actionable error | Verified offline: Task5 acceptance + cleared correction review |
+| AC028 | S1 | Keep-current requires a known physical pair | Verified offline: Task5 acceptance + cleared correction review |
 | AC029 | S2 | Manual thinking changes effort without selecting another model | Unverified |
-| AC030 | S1 | A live provider failure does not speculate about tier availability | Unverified |
+| AC030 | S1 | A live provider failure does not speculate about tier availability | Verified offline: Task5 acceptance + cleared correction review |
 | AC031 | S2 | Switch feedback stays out of the conversation | Unverified |
 | AC032 | S3 | Each changed plugin works without the router | Unverified |
 | AC033 | S3 | Generic native virtual models are supported independently | Unverified |
@@ -362,16 +377,17 @@ is accepted based on this inventory; compiled tasks name the keys they cover.
 
 ## Milestone ledger
 
-Keys and outcomes remain distinct from executable task IDs. All source
-checkboxes remain unchecked; task evidence contributes to them, but no milestone
-or slice has passed its complete acceptance/review gate.
+Keys and outcomes remain distinct from executable task IDs. Slice1's complete
+offline acceptance/review gate now passes. All source checkboxes remain unticked
+until their explicit edit approval; later outcomes are unverified. The four
+checkbox-only proposal changes no requirement or source milestone wording.
 
 | Key | Slice | Source outcome | Task/evidence mapping |
 | --- | --- | --- | --- |
-| M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Task 1 baseline verified; Task 5's full tier/classifier boundary evidence pending |
-| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Tasks 2–4 policy/classifier/owned main dispatch verified; full executable acceptance/review pending Task 5 |
-| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Tasks 3–4 adapter/lifecycle/branch/continuation/native state verified offline; complete acceptance/review pending Task 5 |
-| M1.4 | S1 | Availability/effort/error safety in both modes | Tasks 2–4 exact-effort/fallback/classifier/integrated safety evidence verified; complete public-error acceptance/review pending Task 5 |
+| M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Verified:254 Vitest/57 Cucumber/497 steps and original plus correction assertion-red; marker approval pending |
+| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Verified:all Slice1 tagged examples, corrected input/image/steering ownership and completed independent review; marker approval pending |
+| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Verified:native request/lifecycle/branch/direct boundaries, failed evidence/veto/reload regressions and focused review; marker approval pending |
+| M1.4 | S1 | Availability/effort/error safety in both modes | Verified:filtered availability, effective adapter output ceilings, exact pairs and both-mode safety/retention; marker approval pending |
 | M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled; approved R61–R65/AC045–AC052 configuration command addition also required |
 | M2.2 | S2 | Persistence and physical restoration | Not compiled; configuration addendum's atomic policy persistence also required |
 | M2.3 | S2 | State/restoration/lifecycle failures | Not compiled |
@@ -408,7 +424,8 @@ verified and committed. Task 2's policy/test implementation is also verified
 and committed. Task 3's classifier adapter and tests are independently verified
 and committed. Task 4's owned native-routing implementation and approved
 summary-observation correction are independently verified and committed.
-No slice milestone is accepted.
+Task5 and its correction outcome are verified; source milestone checkbox edits
+remain behind the explicit approval gate.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
@@ -416,9 +433,10 @@ No slice milestone is accepted.
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified and committed: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified and committed: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load |
-| `slice-1/task-5` | M1.1–M1.4 | All 24 Slice 1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance tests committed; five review dimensions/three verification passes complete; eight findings open, task/milestones unaccepted |
+| `slice-1/task-5` | M1.1–M1.4 | All24 Slice1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance tests committed; approved correction payload verified at254 tests/57 scenarios; complete full/focused review clears all eight findings; correction commit pending |
 
-No scenario ledger row changes from Unverified until checks actually run.
+The24 Slice1 scenario rows below are verified offline through current acceptance
+and completed review. Later rows remain Unverified; no live rollout is implied.
 
 | Kind | Task key | Actual hash/subject | Verification |
 | --- | --- | --- | --- |
@@ -434,8 +452,9 @@ No scenario ledger row changes from Unverified until checks actually run.
 | Bookkeeping | `slice-1/task-4` | `805883a120576e5d5b79e6decc115b1d9a96b9a5` — docs: resume acceptance work from verified native routing | Actual hash/status checkpoint; normal checks and protected source preserved |
 | Implementation | `slice-1/task-5` | `e3253e2a5145409e260eb7942c142682d3e903de` — test: prove native routing through complete Slice 1 acceptance | Assertion-red,229 Vitest/57 Cucumber/type/load/19 policy checks verified; acceptance implementation only, independent review finds eight open issues |
 
-Task 1's pre-commit compiler corrections are included in its implementation
-commit; there are no later correction commits. Task 2 required no compiler or
+Task1's pre-commit compiler corrections are included in its implementation
+commit. Task5's approved aggregate F1–F8 correction is verified and awaits the
+coordinator commit; its real identity is recorded only after Git succeeds. Task 2 required no compiler or
 implementation correction. Task 3 also required no compiler or implementation
 correction. Task 4's separately approved pre-commit summary-test observation
 correction is included in its implementation commit; no production requirement
@@ -1087,16 +1106,129 @@ image-input reports duplicate across dimensions. F7 and F8 are reclassified Low;
 F3's unconditional saved-state suggestion was refuted by a newer-physical-response
 counterexample, while its stale-success defect remains confirmed.
 
+## Combined F1–F8 correction checkpoint
+
+The user approved the exact six-file diff against
+`1dfe23d6b597371ea489b548d5efeb1420c947cf`. Worker
+`7a8360a6-70d2-49dd-a9d0-841332ae53d3` applied it byte-for-byte, with the
+approved signature-only registry stub/fixture fields before behavioral red.
+Red: fourteen new assertions failed and three controls passed. Green: sixteen
+of seventeen new cases pass; full Vitest245/246 and Cucumber57/57 pass.
+Typecheck/module load and nineteen worker-policy checks pass. All28 protected
+hashes matched before coordinator-only evidence updates; index empty, no commit.
+
+Worker returned BLOCKED, normal stop after24 Luna/xhigh turns at budget60,
+no fallback/errors/exhaustion. Checkpoint/logs:
+`/tmp/pi-auto-model-corrections.z9HKlN`. All correction content still matches
+`proposal.json`; no additional code fix is applied. Main independently reran
+targeted/native acceptance/type/load and diagnosed the remaining F8 fixture:
+`{ high: null }` also removes explicit xhigh support in Pi1.2.0. The scenario
+requires xhigh to remain a valid retained pair. SDK helper evidence:
+`node_modules/@earendil-works/pi-ai/dist/models.js:680–689`.
+
+The user approved that fixture map as `{ high: null, xhigh: "xhigh" }`.
+Worker `c4794661-62b2-4297-b4fb-22e300942b0f` applied only that line and returned
+COMPLETE; all17 new tests,246 total Vitest,57 Cucumber/497 steps, type/load and
+19 worker-policy checks pass. Coordinator independent reruns confirm the same.
+The six files match the original proposal plus approved line exactly. All25
+unrelated protected source files remain unchanged; the three coordinator docs
+have explicitly authorized evidence updates. Original behavioral red remains
+preserved. Logs: `worker-f8-*.log`, `coordinator-final-*.log` in the checkpoint.
+
+Fixture worker records Luna/xhigh on9 assistant turns, normal stop, no errors
+or exhaustion at budget30. No worker retry/model substitution occurred. This
+is a setup correction, not a weakened expectation. The prior in-memory diagnostic
+is in `coordinator-f8-fixture-diagnostic.log`; no paid provider probe occurred.
+
+Parallel read-only fact inventories cover Slice2 controls/picker and peer/package
+boundaries, not implementation. They are scratch evidence under this checkpoint;
+future exact proposals still need approval. No later slice was edited or accepted.
+
+## Focused correction review — two residual cases
+
+Three independent premium Sol/xhigh passes completed at budget40, normal stop
+with no errors/exhaustion/fallback. Policy pass15 turns clears F1/F7; ownership
+pass16 turns clears F4/F5 but retains F2; evidence pass12 turns clears F3/F8 but
+retains F6. All six correction files were reviewed by all three groups; exact
+source remained unchanged during review. Packet:
+`/tmp/pi-auto-model-correction-review.Uro9GO`, with immutable source copies,
+tracked diff,34 source hash records, raw JSON and recorded telemetry. No retry
+was needed; recorded settings do not establish opaque gateway internals.
+
+Main independently reproduced both retained cases using the real offline SDK:
+
+| Finding | Verified residual behavior | Bounded follow-up |
+| --- | --- | --- |
+| F2 | An earlier-loaded message_start mutator replaces the original task with REPLACED_TASK; Auto snapshots that rewrite as if it were normalized input and uses the original trivial/classified tier. Later mutation is rejected, so extension order matters. | Require unchanged complete accepted task text. Permit only source-defined bounded image-note suffixes with an actual accepted attachment; reject arbitrary replacement/appended instructions before binding identity. Test rewriting extensions both before and after Auto, with current image/steering controls preserved. |
+| F6 | Saved current=Sol/xhigh and captured=Sol/xhigh, followed by lost xhigh support and reload, loses captured identity although a fresh high tier remains valid. Supported-current/high case already passes. | Validate historical stored identities independently; revalidate current evidence for actual dispatch/retention. Preserve physical/schema/non-max guards and add both last-xhigh and earlier-high/current-xhigh reload cases. |
+
+Evidence: `coordinator-residual-repros.log`; no repository changes or real
+provider calls. The findings are two narrower residuals, not two new issue IDs.
+F1,F3,F4,F5,F7,F8 are cleared by focused review; F2/F6 remain open. The correction
+batch is not committed yet because accepting these paths would contradict the
+original routing contract. Task5/M1.1–M1.4 stay unaccepted and source plan/spec
+hashes remain frozen.
+
+A three-file follow-up proposal is compiled, not applied:
+`/tmp/pi-auto-model-residual-proposal.nIMVNH/proposed.diff` and `proposal.json`.
+It touches the extension, adds optional beforeExtensions ordering in the existing
+offline fixture, and adds eight regression cases to the new review suite.
+In-memory TypeScript preflight has zero diagnostics against all current sources
+and tests. This is compiler proof only; new behavior/red/green has not run.
+The image allowance checks preserved task text, bounded hint count, exact known
+omission/conversion/dimension syntax, accepted MIME provenance and dimension
+scale arithmetic from Pi1.2.0 source. It does not accept an arbitrary prefix
+match, invent a new user entry or trust transformed text as its own proof.
+Unknown future hint formats safely retain the physical pair.
+
+## F2/F6 follow-up verified outcome
+
+The approved three-file payload was applied exactly by worker
+`4940bf75-5f4c-4f39-8edb-8381fafba458`, preserving the prior approved correction
+and all31 protected hashes. Fixture/new tests compile; behavioral red reaches
+six failing assertions with nineteen controls passing. Final targeted25/25,
+full254 Vitest,57 Cucumber/497 steps, typecheck, module load and19 worker-policy
+checks pass. Coordinator independent reruns confirm these outcomes. Checkpoint:
+`/tmp/pi-auto-model-residual-fixes.lxhB9D`, with exact proposal, baseline snapshots,
+worker command index/red/green and coordinator logs. No assertions changed.
+
+Worker returned COMPLETE after21 recorded Luna/xhigh turns at budget45,
+normal stop with no errors/exhaustion/fallback. A fresh focused Sol/xhigh reviewer
+`ce3073ba-9cfa-4649-a454-10ee55998bb6` returned COMPLETE after25 turns at budget50,
+normal stop with no errors/exhaustion/fallback. All3 files were reviewed and
+all34 source hashes remained fixed during review. Its thirty evidence groups
+include79 independent native diagnostic cases and80 adjacent maintained tests.
+It clears F2/F6 with no findings or unfinished work. Final review packet:
+`/tmp/pi-auto-model-residual-review.srNVjA`, including source snapshot, raw JSON,
+worker/reviewer transcript telemetry and case accounting. No retry was needed.
+Recorded model/effort metadata do not establish opaque gateway internals.
+
+The review verifies complete accepted text, both rewriting-extension orders,
+finalized timestamp/request representation, initial steering, eight required
+image controls plus actual conversion/multiple-attachment formats and negative
+hint grammar cases. It verifies unsupported historical current/captured effort
+across reload/JSON resume, supported-current controls, exact physical retention,
+invalid/removed/virtual/max identity rejection, active branch evidence and
+all-unavailable safety. Future image-note formats safely retain the current
+route. Later post-route trusted context transformations and live provider
+entitlement/effective effort/cancellation/billing are not newly claimed tested.
+
+F1–F8 are now cleared across completed independent reviews. Task5's offline
+correction outcome is verified; source M1.1–M1.4 markers are not edited yet.
+Original plan/spec bytes remain frozen. Correction commit precedes any later
+implementation worker; no empty commit or self-recording hash loop is needed.
+
 ## Next action
 
-Compile/propose bounded correction packets, starting with F1's known model
-availability checks and offline filtered-model tests. Production/test edits
-need fresh approval; the read-only review authorization does not grant fixes.
-Then address owned-input/image/early-steer, evidence/lifecycle/captured identity,
-effective classifier budget and the missing effort-only regression. Keep the
-stable Task5 key and link correction commits/findings; rerun affected/full
-acceptance and focused premium review before Task5/M1.1–M1.4 acceptance.
-Do not mark source milestones, enable globally, push or start Slice2 yet.
+Commit the verified task-linked correction and record its actual hash/subject.
+Approve the four checkbox-only M1.1–M1.4 changes proposed in
+`/tmp/pi-auto-model-residual-fixes.lxhB9D/milestone-proposed.diff`, then compile
+one combined Slice2 controls/configuration proposal from the approved addendum.
+Three build stages remain: controls/model picker and saved state; independently
+installable plugin compatibility; packaging/documentation and controlled
+installation/rollback checks. Paid probes, live focus smoke, cross-repository
+edits and global activation need their explicit gates. No later implementation
+or release is implied by this passing routing-core checkpoint.
 
 Historical launch: Execute approved [Task 5](./tasks-slice-1.md#task-5-verify-the-complete-slice-through-executable-acceptance)
 with one strict Luna/xhigh worker, 60 turns and no fallback: only the six
@@ -1124,8 +1256,10 @@ with Slice 2 only after Slice 1 acceptance. This record's bounded Task 4 hash
 update is indexed through plan/task/bookkeeping trailers rather than recording
 its own hash.
 The original behavioral red remains valid. Task 5 implementation/read-only
-review are approved, but review fixes, milestone marking and Slice 2 coding
-are not. The configuration addendum records future scope only.
+review, the combined correction diff and one-line F8 fixture fix are approved.
+The F2/F6 follow-up is now approved, applied and independently reviewed.
+Milestone marking and Slice2 implementation are not yet approved. The
+configuration addendum records future scope only.
 
 Tasks 1–4 stay verified; do not repeat them because delayed worker notices
 arrive. No install, host patch, global activation, paid probe or later task

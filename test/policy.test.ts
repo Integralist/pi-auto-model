@@ -44,6 +44,7 @@ function fixture() {
   const registry: RoutingRegistry = {
     find: (name, id) => catalog.get(`${name}/${id}`),
     hasConfiguredAuth: (model) => authenticated.has(model.provider),
+    getAvailable: () => [...catalog.values()].filter((model) => authenticated.has(model.provider)),
   };
   return { catalog, authenticated, registry };
 }

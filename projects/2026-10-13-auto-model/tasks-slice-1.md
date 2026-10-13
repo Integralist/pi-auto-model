@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** Review blocked; acceptance tests committed, eight verified findings need corrections
+- **Status:** Task5 corrections verified;254 tests/57 scenarios pass, all eight findings cleared
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -3302,7 +3302,7 @@ No milestone is accepted here, and no global install/activation occurred.
   `features/steps/routing.ts` and `test/load-check.test.ts`; one existing
   `Makefile` acceptance-filter edit
 - **Compiler status:** Acceptance implementation committed at `e3253e2`;
-  premium review/verification complete, eight findings open
+  approved corrections verified; completed full/focused review clears all findings
 
 Preserve every committed production file, existing fixture/test and dependency.
 The fixture already exposes real loaded skills, native registration, SDK session
@@ -4257,7 +4257,7 @@ See [the independent review](./execution.md#slice-1-independent-review).
 Correction source/test edits and later source milestone checkboxes need new
 coordinator/user approval; no correction is authorized by review alone.
 
-- [ ] Task 5 complete
+- [x] Task 5 complete
 
 ## Compiler gate and next action
 
@@ -4274,13 +4274,16 @@ Its approved early registration, same-ID deployment constraint and direct-summar
 test observation are recorded above; dependencies and original plan/spec remain
 unchanged.
 
-Task 5's six-file acceptance payload and premium read-only review gate are
-were approved and acceptance implementation is committed at `e3253e2`.
-Five-dimensional premium review and three adversarial batches completed; eight
-verified findings block acceptance despite229 tests/57 scenarios passing.
-Compile/propose F1 first, preserving all confirmed contracts and existing tests.
-Corrections need explicit edit approval and task-linked verification/commits;
-Task5 and source milestones remain open.
+Task5 acceptance is committed at `e3253e2`. Independent review and adversarial
+verification identified eight findings. Their combined exact six-file correction
+diff, one-line F8 fixture correction and three-file F2/F6 follow-up are approved
+and applied exactly. Original plus correction assertion-red is preserved.
+Coordinator checks pass254 Vitest and57 acceptance scenarios/497 steps.
+Completed full/focused premium review clears all eight findings. Task5's offline
+outcome is verified; see [the checkpoint](./execution.md#f2f6-follow-up-verified-outcome).
+Commit the inspected task-linked correction before any later implementation.
+Source M1.1–M1.4 checkbox edits still need approval; plan/spec remain frozen and
+all later slices/global install/paid probes are outside this correction authority.
 The configuration addendum is approved future Slice 2 scope only; it does not
 authorize configuration UI or provider changes now.
 No later task implementation, future slice, global activation or live provider
