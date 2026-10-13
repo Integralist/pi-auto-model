@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Task 5 acceptance implementation verified, premium review pending
+- **Status:** Review blocked; acceptance tests committed, eight verified findings need corrections
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -3301,7 +3301,8 @@ No milestone is accepted here, and no global install/activation occurred.
   `features/main-routing.feature`, `features/routing-safety.feature`,
   `features/steps/routing.ts` and `test/load-check.test.ts`; one existing
   `Makefile` acceptance-filter edit
-- **Compiler status:** Six-file acceptance implementation verified; commit and independent review pending
+- **Compiler status:** Acceptance implementation committed at `e3253e2`;
+  premium review/verification complete, eight findings open
 
 Preserve every committed production file, existing fixture/test and dependency.
 The fixture already exposes real loaded skills, native registration, SDK session
@@ -4249,8 +4250,12 @@ alignment in one feature, with unchanged data. The worker wrote the temporary
 red fixture on first creation rather than adding it separately; the specified
 red/green and final source still hold. No test assertion or production change.
 Logs: `/tmp/pi-auto-model-task5.jvb4oC`. Commit before independent premium review.
-Task5 remains unchecked until review/findings are resolved; source milestone
-checkbox updates need separate coordinator approval.
+Task5 remains unchecked. Five premium reviewers and three adversarial verifier
+batches completed with eight confirmed findings: F1–F6 Medium routing defects,
+F7 Low effective classifier bound, F8 Low missing effort-only acceptance case.
+See [the independent review](./execution.md#slice-1-independent-review).
+Correction source/test edits and later source milestone checkboxes need new
+coordinator/user approval; no correction is authorized by review alone.
 
 - [ ] Task 5 complete
 
@@ -4270,10 +4275,12 @@ test observation are recorded above; dependencies and original plan/spec remain
 unchanged.
 
 Task 5's six-file acceptance payload and premium read-only review gate are
-were approved and the acceptance implementation is now independently verified.
-Commit it before the five-dimensional premium read-only review of the complete
-Slice1 diff. Scenario execution is verified; complete milestone acceptance and
-source checkbox changes remain pending.
+were approved and acceptance implementation is committed at `e3253e2`.
+Five-dimensional premium review and three adversarial batches completed; eight
+verified findings block acceptance despite229 tests/57 scenarios passing.
+Compile/propose F1 first, preserving all confirmed contracts and existing tests.
+Corrections need explicit edit approval and task-linked verification/commits;
+Task5 and source milestones remain open.
 The configuration addendum is approved future Slice 2 scope only; it does not
 authorize configuration UI or provider changes now.
 No later task implementation, future slice, global activation or live provider

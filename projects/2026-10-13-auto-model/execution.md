@@ -1,6 +1,6 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task 5 acceptance implementation verified; commit and independent review pending.
+- **Status:** Task 5 acceptance committed; independent review complete, eight verified findings block Slice 1 acceptance.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
@@ -416,7 +416,7 @@ No slice milestone is accepted.
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified and committed: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified and committed: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load |
-| `slice-1/task-5` | M1.1–M1.4 | All 24 Slice 1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance implementation verified: 229 Vitest/57 Cucumber; commit and premium review pending |
+| `slice-1/task-5` | M1.1–M1.4 | All 24 Slice 1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance tests committed; five review dimensions/three verification passes complete; eight findings open, task/milestones unaccepted |
 
 No scenario ledger row changes from Unverified until checks actually run.
 
@@ -431,6 +431,8 @@ No scenario ledger row changes from Unverified until checks actually run.
 | Bookkeeping | `slice-1/task-3` | `2f3ef4037103931540bff78258a0e47d1c583b61` — docs: resume routing integration from the verified classifier | Bounded hash/status record; normal checks/docs/protected scope verified; no source change |
 | Bookkeeping | `slice-2/configuration-scope` | `3ec6b35b805161bd6f3cfe9bb715eeb86951cc87` — docs: keep automatic routing open to users' own model providers | Separate approved 184-line addendum; docs/links/keys/protected source verified, implementation pending |
 | Implementation | `slice-1/task-4` | `be2fdf76dc16589d8795d48533a6d2074a90c9d9` — feat: bind automatic model routes to the task that owns them | Parent `3ec6b35` is scope-only; code base `2f3ef40`; assertion-red, 30 routing/17 ownership/223 total Vitest/Cucumber/type/load/protected scope verified |
+| Bookkeeping | `slice-1/task-4` | `805883a120576e5d5b79e6decc115b1d9a96b9a5` — docs: resume acceptance work from verified native routing | Actual hash/status checkpoint; normal checks and protected source preserved |
+| Implementation | `slice-1/task-5` | `e3253e2a5145409e260eb7942c142682d3e903de` — test: prove native routing through complete Slice 1 acceptance | Assertion-red,229 Vitest/57 Cucumber/type/load/19 policy checks verified; acceptance implementation only, independent review finds eight open issues |
 
 Task 1's pre-commit compiler corrections are included in its implementation
 commit; there are no later correction commits. Task 2 required no compiler or
@@ -1010,13 +1012,91 @@ append, not a worker edit. No assertion/contract or production correction was
 needed. Task5 remains review-pending and unchecked; source milestones are not
 accepted or approved for marking yet.
 
+## Slice 1 independent review
+
+- **Source:** `e3253e2a5145409e260eb7942c142682d3e903de`, branch
+  `integralist/auto-model`, cumulative base `f0baef3`;27 changed files.
+- **Assessment:** Acceptance test implementation is verified and committed,
+  but eight demonstrated findings block Task5 and milestone acceptance.
+- **Pass:** All five dimensions COMPLETE; every file accounted, every changed
+  file reviewed by at least one applicable dimension. Three adversarial
+  verification batches COMPLETE; all eight distinct findings confirmed.
+- **Settings:** All five reviewers and three verifiers record premium Copilot
+  Sol/xhigh and normal stop, no errors/fallback/exhaustion. Initial reviewer
+  budgets40, verifier batches50; no retry required. Recorded settings are not
+  opaque provider gateway evidence.
+- **Packet:** `/tmp/pi-auto-model-slice1-review.wi1QKG`; full once-gathered diff,
+  per-file shards, original intent context, raw result/verdict/telemetry JSON,
+  coverage audit and `verified-summary.json`. Diff ANSI was removed from the
+  saved packet before shard reads; no source revision or diff boundary changed.
+
+### Actionable items
+
+All findings refer to the reviewed source above. The six Medium items are
+runtime routing defects. The two Low items are a configured generation-bound
+issue and maintained-test gap. None is a proven credential compromise.
+
+| Key | Severity | Evidence | Verified defect and smallest correction |
+| --- | --- | --- | --- |
+| F1 | Medium | `src/policy.ts:195–198,276–278`; spec:114–131 | Catalog/auth checks ignore credential-filtered model availability. Native snapshot can exclude Sol or Luna while routing/classifier still dispatch it. Check exact provider/model membership in the available snapshot for new candidates/classifier; preserve sticky retry/known keep-current. Add filtered native-model regression cases. |
+| F2 | Medium | `extensions/auto-model.ts:119–129,184–195`; spec:70–96 | Host-generated image resize/conversion/omission hints change text after acceptance; valid skills/typed tasks lose ownership and retain the wrong pair. Reconcile only verified host changes, keeping exact accepted/resource/provenance/session guards. Add image cases and the arbitrary-transform negative control; do not accept arbitrary prefixes. |
+| F3 | Medium | `extensions/auto-model.ts:102–113`; spec:91–98,124–128 | Latest successful response can predate the active failed/aborted task. Luna success → Sol failure → confirmation dispatches old Luna. Choose freshest validated active-branch physical evidence, keeping failed-pair retry precedence. Do not blindly prefer saved state: a newer successful physical response can legitimately outrank it. |
+| F4 | Medium | `extensions/auto-model.ts:115–129`; spec:70–77 | Steering queued during before_agent_start becomes the last user before dispatch, causing the accepted starting task to lose its tier. Bind the starting task's own new persisted entry and its request representation, not the last user. Add early-steer and inverse-pair native cases. |
+| F5 | Medium | `extensions/auto-model.ts:90–92,150–152`; plan:226–234 | Auto aborts classification on a vetoable switch/fork event even when a later handler cancels the transition. Session stays unchanged but its main task fails. Defer destructive invalidation to committed native abort/shutdown/replacement boundaries; retain actual transition cancellation guards and add veto tests. |
+| F6 | Medium | `extensions/auto-model.ts:31–48,94–104`; spec:324–331 | Removing historical captured xhigh support then reloading discards a still-known Sol identity, although current Sol/high and requested high are valid. Separate captured model identity/schema validation from exact dispatch/retention effort checks. Add effort-only catalog-drift reload regression. |
+| F7 | Low | `src/policy.ts:302–336`; spec:97–101 | SDK adapter expansion can exceed configured classifier output allowance: budget-based Anthropic high/64 permits16448; Responses floors1 to16. Reject incompatible effective payloads before transport, keeping configured effort and nonfatal retention; no global SDK change. Offline adapter-payload tests required. |
+| F8 | Low | `test/policy.test.ts:225–266`, `test/tier-routing.test.ts:219–226`; plan:249–251 | All-unavailable retention lacks a maintained effort-only boundary test. Independent missing-case reproduction works, so no production defect is asserted. Add exact native test exhausting fixed-model candidate efforts while preserving a valid known current pair; one main request and no classifier/step-up. |
+
+Source references are repository-relative; SDK behavior was checked in installed
+Pi/pi-ai1.2.0 code and offline native reproductions. Main coordinator independently
+reproduced filtered availability, image omission versus no-image control,
+failed-task confirmation, initial steering, vetoed replacement and effort-drift
+reload; logs are `coordinator-routing-observations.log` and
+`coordinator-boundary-observations.log` in the packet. An initial combined
+scratch script stopped on its own assertion/setup assumption and was not counted
+as verification; the isolated reruns established the retained observations.
+F7 was rechecked through adapter/source arithmetic, with no live transport or
+security exploit test. F8's working missing case is in its verifier evidence.
+All32 frozen source hashes and clean tree were preserved during review/verification.
+
+### Informational / no action needed
+
+Tasks1–4 checkpoints and Task5 tests remain valid historical evidence, not
+proof these uncovered paths are correct. No duplicate-virtual collision fix is
+requested: the user explicitly accepted that native deployment constraint.
+The approved model picker/configuration addendum is future Slice2 scope, not
+missing Slice1 implementation. Maintenance review found no actionable item.
+No source spec/plan rewrite, global setting, provider credential, dependency,
+paid request or project archival occurred.
+
+### Open questions
+
+Live account entitlement/provider-effective model effort and server-side
+cancellation/billing after abort remain unverified; settling them requires a
+separately authorized live probe. They are not offline acceptance claims.
+F7 is confirmed as a bounded-work contract defect but not as an established
+security vulnerability: trusted configuration selects budgets/model/effort,
+untrusted task text cannot change them, default Luna/high64 is unaffected,
+and no disclosure/escalation/actual expenditure was proved. Severity is Low,
+not a security-compromise claim. No unrefuted High security unknown remains.
+
+### Dropped by verification
+
+None. Ten original reports collapse to eight findings because availability and
+image-input reports duplicate across dimensions. F7 and F8 are reclassified Low;
+F3's unconditional saved-state suggestion was refuted by a newer-physical-response
+counterexample, while its stale-success defect remains confirmed.
+
 ## Next action
 
-Commit verified Task5 acceptance and coordinator-owned compilation/evidence
-updates, then gather the complete Slice1 diff/context once and launch five
-read-only Sol/xhigh dimensions.40 turns each, same-settings80-turn retry for
-budget-limited incomplete work. Verify findings before proposing fixes. Keep
-Task5/source milestones open; no install/activation/provider change implied.
+Compile/propose bounded correction packets, starting with F1's known model
+availability checks and offline filtered-model tests. Production/test edits
+need fresh approval; the read-only review authorization does not grant fixes.
+Then address owned-input/image/early-steer, evidence/lifecycle/captured identity,
+effective classifier budget and the missing effort-only regression. Keep the
+stable Task5 key and link correction commits/findings; rerun affected/full
+acceptance and focused premium review before Task5/M1.1–M1.4 acceptance.
+Do not mark source milestones, enable globally, push or start Slice2 yet.
 
 Historical launch: Execute approved [Task 5](./tasks-slice-1.md#task-5-verify-the-complete-slice-through-executable-acceptance)
 with one strict Luna/xhigh worker, 60 turns and no fallback: only the six
