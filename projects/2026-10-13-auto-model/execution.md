@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Tasks 1–2 committed and verified; Tasks 3–5 pending, Slice 1 unaccepted.
+- **Status:** Task 3 independently verified; implementation commit pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 3 awaiting compilation.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 3 authorized.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -44,6 +44,13 @@
 11. The user subsequently approved Task 2's exact two-file implementation.
     Only new `src/policy.ts` and `test/policy.test.ts` may be edited by its
     strict Luna/xhigh worker. Dependencies, extension and harness stay unchanged.
+12. After Task 2's verified commits, the user asked to proceed with Task 3
+    compilation. This authorizes its task/README/evidence-document update only;
+    source/test implementation and another editing worker need explicit approval.
+13. The user subsequently approved Task 3's exact three-file implementation:
+    existing `src/policy.ts` plus new classifier unit/native-boundary tests.
+    The strict Luna/xhigh worker may apply only that compiled payload; harness,
+    dependencies, extension wiring and paid probes stay outside its authority.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -316,9 +323,9 @@ checkboxes remain unchecked; no milestone has verified implementation evidence.
 | Key | Slice | Source outcome | Task/evidence mapping |
 | --- | --- | --- | --- |
 | M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Task 1 baseline verified; Task 5's full tier/classifier boundary evidence pending |
-| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Task 2 policy decisions verified; classifier/native dispatch/full acceptance pending Tasks 3–5 |
-| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Tasks 3–5; scope mapped, payloads/evidence pending |
-| M1.4 | S1 | Availability/effort/error safety in both modes | Task 2 exact-effort/downward/keep-current/config decisions verified; integrated safety pending Tasks 3–5 |
+| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Tasks 2–3 policy/classifier decisions verified; owned main dispatch/full acceptance pending Tasks 4–5 |
+| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Task 3 signal/deadline adapter verified; lifecycle/branch/continuation/native state pending Tasks 4–5 |
+| M1.4 | S1 | Availability/effort/error safety in both modes | Tasks 2–3 exact-effort/fallback/classifier error decisions verified; integrated safety pending Tasks 4–5 |
 | M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled |
 | M2.2 | S2 | Persistence and physical restoration | Not compiled |
 | M2.3 | S2 | State/restoration/lifecycle failures | Not compiled |
@@ -344,17 +351,20 @@ Five stable task scopes and milestone mappings are saved in
 [tasks-slice-1.md](./tasks-slice-1.md). Task 1 includes proposed verbatim
 scaffold, stub, red test, baseline green registration, harness and Cucumber
 payloads. Task 2 now includes its exact stub, tests and green policy payload;
-Tasks 3–5 remain contracts awaiting verbatim payloads.
+Task 3 now includes its exact asynchronous boundary/types/stub, classifier
+unit/native tests and green payload. Tasks 4–5 remain contracts awaiting
+verbatim payloads.
 The user subsequently authorized Task 1 execution under task-at-a-time gates.
 Task 1's exact source/tests/toolchain and approved compiler corrections are
 verified and committed. Task 2's policy/test implementation is also verified
-and committed. No slice milestone is accepted.
+and committed. Task 3's classifier adapter and tests are independently
+verified, with the implementation commit pending. No slice milestone is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
 | `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified and committed: original assertion-red plus normal unit/acceptance/type/load checks |
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
-| `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028 | Contract only |
+| `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope; commit pending |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Contract only |
 | `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
 
@@ -543,16 +553,128 @@ Task 2 adds callable policy decisions, not native integration or classifier
 execution. All original scenario ledger rows and M1.1–M1.4 remain unaccepted;
 unit decision evidence does not substitute for Tasks 3–5's public boundaries.
 
+## Task 3 compiler checkpoint
+
+Compiled from clean HEAD `38f5ea3c4323289e65d4b3225158be04e1624774`, using
+Task 2's committed `resolveRoute` and private config/frontmatter/physical-evidence
+helpers. Only coordinator-owned task/README/execution documents change in this
+pass. No source file, dependency, global setting, worker or new commit was
+added. Log/snapshot root: `/tmp/pi-auto-model-task3-compile.6p4yTF`.
+
+Proposed implementation scope is existing `src/policy.ts` plus new
+`test/classifier.test.ts` and `test/classifier-boundary.test.ts`. The prior
+four-file task scope was an upper bound; the public registry can wrap the
+existing fixture runtime without editing its harness. Preserve all native
+extension wiring and dependency pins until their own tasks/approvals.
+
+Add the async policy entry point for an already eligible typed task or resolved
+skill resource. It validates config, bypasses valid metadata/direct/absent task,
+and dispatches only the exact physical classifier with no tools, retries or
+session cache sharing. Bound serialized input/output/deadline, reject unusable
+responses, retain physical evidence, and expose usage separately. Request and
+lifecycle cancellation settle uncooperative waits and discard late tiers.
+Late observed usage can still reach an isolated observer without mutating the
+returned route. Observer failures are non-fatal; unknown usage is not zero.
+
+Task 4 still owns resolving actual loaded skills/slash commands, input identity,
+lifecycle-event and generation guards, and native route/state dispatch. The
+Task 3 native tests exercise real ModelRegistry/fake-provider classification
+while proving selection/transcript/branch state stay unchanged, not full main
+router integration or live entitlement. No original requirement, scenario key
+or milestone outcome is renamed, weakened or accepted here.
+
+| Compiler check | Outcome | Evidence |
+| --- | --- | --- |
+| Public nested dispatch and physical/virtual behavior | Verified from installed Pi 1.2.0 registry/runtime/types; current docs cross-check | ModelRegistry `streamSimple`, pi-ai `Context`/`Usage`/result stream, virtual-model direct path |
+| Stub plus both test files | Pass: zero type/syntax diagnostics | `compiler-type-preflight.log`; TypeScript 7.0.2 in-memory overlay includes existing policy/native tests and fixture |
+| Green plus both test files | Pass: zero diagnostics | Same overlay; no code files written or classification requests sent |
+| Existing normal Make targets | Pass: 108 Vitest tests, Cucumber scenario/five reported steps, typecheck/load | `existing-baseline-checks.log`, exit 0 |
+| Protected source/dependency/spec/plan hashes | Pass: all unchanged | `protected-source.sha256` |
+| Task 3 assertion-red/green/native classifier tests | Not run | Implementation approval required |
+| Docs/scope/links/task keys/milestones/whitespace | Checked before approval gate | Only three coordinator documents modified |
+
+No subagent was spawned for this compiler pass; no retry/budget record changes.
+Compilation preflight does not establish runtime classification correctness or
+Task 3 completion. Required red remains a typed moderate task retaining Sol
+under the stub instead of routing Luna/high from classification.
+
+## Task 3 launch checkpoint
+
+Authorized branch: `integralist/auto-model`; parent HEAD:
+`38f5ea3c4323289e65d4b3225158be04e1624774`. Index is empty; only previously
+approved coordinator-owned task compilation/README/execution edits pre-exist.
+The two classifier test files are absent at launch. Existing `src/policy.ts`
+may receive only the approved import/types and appended stub/green addition.
+Saved checkpoint/log root: `/tmp/pi-auto-model-task3.xRnmNB`.
+
+The committed 108-test/native Cucumber/type/load baseline passes before launch.
+`protected-source.before.sha256` snapshots the old policy plus protected files;
+`protected-unchanged.sha256` excludes only the authorized policy edit. Worker
+must preserve every existing other implementation/fixture/dependency/spec file.
+
+Task 3 worker launched:
+`764e2072-69f8-456e-8746-9bdce8894c28` (`task3-classifier`), requested strict
+`github-copilot/gpt-6-luna`, `xhigh`, no fallback, 60 turns. Only the approved
+three files were editable. The worker returned COMPLETE with all assigned
+checks passing and no code/test deviations. The coordinator inspected actual
+files, reran each target and confirmed unrelated-source preservation. No
+budget retry or fallback occurred.
+
+Its saved transcript records Copilot Luna/xhigh on all 18 assistant turns,
+ending normally with stop and no error outcomes:
+`2026-10-13T14-21-34-487Z_01a135a3-df97-77f6-8232-f95065123dde.jsonl`
+in this repository's local Pi session directory. This verifies recorded worker
+settings, not opaque gateway internals. No turn-limit exhaustion was observed.
+The worker's auxiliary coordinator-document hash audit flagged execution.md
+because the coordinator had appended this launch record after its initial
+snapshot; the worker did not edit it. README/task snapshots and all protected
+unrelated source hashes matched. This expected coordinator edit is not a test
+failure or scope violation.
+
+## Task 3 verified outcome
+
+Changed only the authorized source/test scope: appended classifier types,
+helpers and `resolveTaskRoute` to `src/policy.ts`, plus two exact new classifier
+test files. Existing Task 2 implementation differs only by the approved Usage
+import and appended code. The coordinator read the three files, matched their
+full contents against the approved payload and found no compiler or
+implementation correction needed. Existing harness/extension/dependency pins
+and plan/spec hashes remain unchanged. Only the previously approved
+coordinator-owned compilation/README/execution updates accompany this task.
+
+| Check | Outcome | Evidence under checkpoint root |
+| --- | --- | --- |
+| Compiling stub plus full tests | Pass: typecheck exit 0 | `worker-typecheck-stub.log`, `worker-results.log` |
+| Required behavioral red | Verified: make exit 2; fresh typed task expected Luna/high/moderate/tier, stub retained Sol/xhigh/current | `worker-red.log:50–74`; command result index |
+| Worker unit/native/full/type/load | Pass: exit 0 each, 61 unit/seven native/176 total Vitest and Cucumber scenario | `worker-classifier-unit.log`, `worker-classifier-boundary.log`, `worker-test.log`, `worker-typecheck.log`, `worker-load-check.log` |
+| Coordinator classifier unit/native targets | Pass: exit 0 each, 61/61 and 7/7 | `coordinator-classifier-unit.log`, `coordinator-classifier-boundary.log` |
+| Coordinator full normal targets | Pass: exit 0; 176 Vitest tests, existing Cucumber scenario/five reported steps, typecheck/module load | `coordinator-final-checks.log` |
+| Serialized-input invariant | Pass: 360 combinations over 120 caps and typed/skill escaped/Unicode data, 242 in-memory adapter responses, zero real provider calls | `coordinator-input-bound-invariant.log` |
+| Exact approved additions and protected files | Pass: policy/tests match snippets byte-for-byte; all unrelated hashes unchanged | Coordinator source comparison, `protected-unchanged.sha256` |
+| Docs/scope/whitespace/secret checks | Pass before task commit | Complete source/updated docs and staged-diff inspection |
+
+This proves bounded physical classifier dispatch, strict output, usage
+isolation, cancellation/deadline behavior and unchanged conversation/branch/
+selection in the existing native fixture. Task 4 still owns eligibility,
+loaded-resource identity, lifecycle-event/generation guards, native route
+state and durable usage storage. All original scenario acceptance rows and
+slice milestones remain unaccepted; these adapter results do not claim
+installed/global activation, live model behavior or whole-slice acceptance.
+
 ## Next action
 
-Compile only Task 3's bounded classifier payload against the actual policy
-interface committed at `50f8af9839720910d1267e7cf44ead269064e716`. Its source/
-test/harness proposals require separate edit approval before another worker.
-Tasks 1–2 must not be reimplemented or unmarked merely because a delayed worker
+Commit independently verified Task 3 on the authorized branch, including only
+its inspected policy addition/two tests and coordinator-owned compiled-payload/
+README/execution changes. Record the actual hash with bounded bookkeeping,
+then compile Task 4's ownership/native-routing payload against these actual
+interfaces. Task 4 implementation needs its own edit approval before another
+worker. No install, global change, extension activation or paid probe is implied.
+
+Tasks 1–2 must not be reimplemented or unmarked because a delayed worker
 notification arrives. Their exact hashes, scope and checks are indexed above.
-The bounded Task 2 hash-evidence commit is discoverable through its plan/task/
-bookkeeping trailers; do not create a self-recording hash loop. No installation,
-global change or paid classifier/model smoke probe is implied.
+The bounded Task 2 evidence commit is discoverable through its plan/task/
+bookkeeping trailers; do not create a self-recording hash loop. No global
+change, paid classifier/model probe or later-task implementation is implied.
 
 Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
 Sol/xhigh after explicit opt-in. It does not implement tier classification,
