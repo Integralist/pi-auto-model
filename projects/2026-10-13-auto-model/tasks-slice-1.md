@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Task 1 verified, Tasks 2–5 awaiting compilation
+- **Status:** In progress; Task 1 committed and verified, Tasks 2–5 awaiting compilation
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -803,7 +803,7 @@ scenario unchanged. The user approved flattening `cucumber.mjs`; its matching
 snippet is corrected above. Keep assertions and permanent Make commands
 unchanged.
 
-Task 1's config correction is applied and all normal checks pass. Commit the
-verified Task 1 source/tests/toolchain and evidence, then compile Task 2's
-payload against these actual interfaces. Task 2 code needs its own edit
+Task 1 is verified and committed at `3b68e86`; the execution record owns its
+full hash and review index. Compile Task 2's payload against those committed
+interfaces. Task 2 code needs its own edit
 approval. No later task, future slice or global activation is approved.

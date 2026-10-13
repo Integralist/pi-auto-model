@@ -1,6 +1,6 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task 1 verified; implementation commit pending, Slice 1 unaccepted.
+- **Status:** Task 1 committed and verified; Tasks 2–5 pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
@@ -340,11 +340,11 @@ scaffold, stub, red test, baseline green registration, harness and Cucumber
 payloads. Tasks 2–5 are bounded contracts awaiting their verbatim payloads.
 The user subsequently authorized Task 1 execution under task-at-a-time gates.
 Task 1's exact source/tests/toolchain and approved compiler corrections are
-verified; the implementation commit is pending. No slice milestone is accepted.
+verified and committed. No slice milestone is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
-| `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified: original assertion-red plus normal unit/acceptance/type/load checks; commit pending |
+| `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified and committed: original assertion-red plus normal unit/acceptance/type/load checks |
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028 | Contract only |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028 | Contract only |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Contract only |
@@ -355,6 +355,12 @@ No scenario ledger row changes from Unverified until checks actually run.
 | Kind | Task key | Actual hash/subject | Verification |
 | --- | --- | --- | --- |
 | Bookkeeping | `setup/bookkeeping` | `f0baef3161d577487228beb004c2c16d93f3fdba` — docs: preserve routing intent and execution evidence | Docs lint, scope, snapshots and ledger inventory checked |
+| Implementation | `slice-1/task-1` | `3b68e8642106f6825da833a154d65f067b1049d2` — test: verify native virtual dispatch without live model calls | Parent `f0baef3`; assertion-red verified; normal unit/acceptance/type/load checks and scoped review passed |
+
+Task 1's pre-commit compiler corrections are included in its implementation
+commit; there are no later correction commits. This record's post-commit hash
+update is bounded bookkeeping, indexed by its Git trailers rather than a
+self-recording hash loop.
 
 Implementation/correction commit keys will be `slice-1/task-N`. Record real
 hashes and subjects after commit success; preserve correction history and
@@ -446,12 +452,13 @@ This isolates client-version-dependent resolution, not the exact upstream patch.
 
 ## Next action
 
-Commit verified Task 1 on the authorized branch, including its inspected
-source/tests/toolchain and coordinator-owned task/evidence updates. Record the
-actual implementation hash after success, using a bounded bookkeeping commit
-if needed; do not create a self-recording hash loop. Then compile/propose only
-Task 2, keeping the existing per-edit gate. No next editing worker may launch
-before this verified task is committed.
+Compile/propose only Task 2 in `tasks-slice-1.md`, against committed Task 1
+interfaces at `3b68e8642106f6825da833a154d65f067b1049d2`. Its tier policy,
+normalization, configuration/availability/error tests and exact payload need
+coordinator compilation and per-edit approval before a new editing worker.
+The implementation checkpoint and original setup are indexed above; the
+bounded hash-evidence commit is discoverable through the same plan/task
+trailers. Do not create a self-recording hash loop.
 
 Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
 Sol/xhigh after explicit opt-in. It does not implement tier classification,
