@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Tasks 1–2 committed, Task 3 verified, commit pending
+- **Status:** In progress; Tasks 1–3 committed and verified, Tasks 4–5 pending
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -1308,7 +1308,7 @@ before Task 3.
 - **Supports:** M1.2–M1.4; R05, R07, R09–R10, R14, R19, R45, R50, R52
 - **Location:** Existing `src/policy.ts`; new `test/classifier.test.ts` and
   `test/classifier-boundary.test.ts` only
-- **Status:** Approved payload implemented and verified; commit pending
+- **Status:** Complete; approved payload committed and verified at `4d10a9e`
 
 Keep the extension, dependencies and `test/support/session.ts` unchanged.
 The existing fixture already supplies a native runtime and fake provider;
@@ -2290,9 +2290,9 @@ Task 1 is verified and committed at `3b68e86`; Task 2's approved policy and
 107-test payload are verified and committed at `50f8af9`. The extension and
 existing harness remain unchanged.
 
-Task 3's approved classifier addition and two test files are implemented and
-independently verified; its commit is pending. The harness, dependency pins
-and native extension are unchanged. Commit Task 3 before compiling Task 4's
-ownership/native integration payload. That payload needs its own edit approval.
+Task 3's approved classifier addition and two test files are independently
+verified and committed at `4d10a9e`. The harness, dependency pins and native
+extension are unchanged. Compile Task 4's ownership/native integration payload
+against the committed policy/classifier; its code needs a separate edit approval.
 No later task implementation, future slice, global activation or live provider
 probe is approved. The execution record owns hashes, checks and worker telemetry.

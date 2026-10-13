@@ -110,8 +110,9 @@ stashes, and this project's edits.
 Resume from [the saved Slice 1 task list](./tasks-slice-1.md), not from another
 baseline preflight. The user approved task-at-a-time execution and Task 1's
 scaffold/test payload and Task 2's two-file policy, both now verified and
-committed. Task 3's bounded classifier is independently verified; record its
-commit before compiling Task 4. Tasks 4–5 still need compilation and approval. The
+committed. Task 3's bounded classifier is also verified and committed.
+Compile Task 4's ownership/native-routing payload next; Tasks 4–5 still need
+compilation and edit approval. The
 [execution record](./execution.md#next-action) owns current authorization
 and verification/commit gates. Keep the feature opt-in until plugin
 compatibility and rollback are verified.
