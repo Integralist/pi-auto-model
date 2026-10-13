@@ -1,6 +1,6 @@
 # Pi Auto Model — Handoff
 
-- **Status:** Planning; implementation has not started.
+- **Status:** Implementation in progress; Slice 1 has not been accepted.
 - **Owner:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -34,7 +34,8 @@ support for native virtual models without importing, installing, or requiring
 | --- | --- | --- |
 | [Specification](./spec.md) | Behavior and acceptance criteria | Draft |
 | [Implementation plan](./plan.md) | Architecture, source ownership, slices, rollout | Planning |
-| [Execution record](./execution.md) | Authorization, requirements, checks, commits | Baseline recorded |
+| [Execution record](./execution.md) | Authorization, requirements, checks, commits | Active |
+| [Slice 1 tasks](./tasks-slice-1.md) | Stable task scope, coverage and implementation payloads | In progress |
 | [Native routing decision](../../docs/adr/ADR-0001.md) | Dispatch ownership and alternatives | Proposed |
 
 ## Start a fresh session
@@ -106,6 +107,10 @@ stashes, and this project's edits.
 
 ## Next action
 
-In the new source directory, compile Slice 1 from
-[the implementation plan](./plan.md#slice-1-native-main-conversation-routing).
-Keep the feature opt-in until plugin compatibility and rollback are verified.
+Resume from [the saved Slice 1 task list](./tasks-slice-1.md), not from another
+baseline preflight. The user approved task-at-a-time execution and Task 1's
+scaffold/test payload with local development dependencies. Tasks 2–5 still need
+compiled payloads and per-edit approval. The
+[execution record](./execution.md#next-action) owns current authorization
+and verification/commit gates. Keep the feature opt-in until plugin
+compatibility and rollback are verified.

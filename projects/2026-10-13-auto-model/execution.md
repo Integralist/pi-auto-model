@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** In progress; setup only, implementation has not started.
+- **Status:** Task 1 verified; implementation commit pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; no executable task document yet.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 1 authorized.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -21,6 +21,23 @@
    setup/bookkeeping commits.
 4. The user approved this setup: execution record, proposed ADR/index,
    glossary, and handoff/README links. Per-edit approvals remain in force.
+5. In the original session the user approved the task-document/README/execution
+   mapping update, then explicitly said to proceed after it stalled. Recovery
+   resumes those documentation edits only; no implementation approval is inferred.
+6. In the resumed session the user approved task-at-a-time compilation/execution
+   and Task 1's exact scaffold/test payload plus local development dependency
+   installation. Existing branch, Luna/xhigh strict worker and per-task commit
+   authorization remain unchanged. Tasks 2–5 still need per-edit approval.
+7. The user approved a one-off npm 11.21.0 diagnostic against the unchanged
+   manifest. It passed with peer checks and scripts disabled. Resume the already
+   approved local Task 1 install through that client; do not upgrade global npm,
+   weaken peer checks, change versions or enable dependency install scripts.
+8. The user approved replacing the two incorrect SDK-setter return assertions
+   with awaited selection and explicit selected-Auto assertions. All physical
+   dispatch expectations remain unchanged; matching task snippets are refreshed.
+9. The user approved removing Cucumber's extra ESM default-profile wrapper.
+   Only `cucumber.mjs` and its matching task snippet change; tests and Make
+   commands stay strict and unchanged.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -98,7 +115,50 @@ one retry at 120 after inspecting partial edits. Launch one editing worker at
 a time. Requested/resolved settings and observable transcript/provider metadata
 will be recorded separately; substitution blocks progress.
 
-No workers launched. No implementation/correction retry attempts occurred.
+Task 1 worker launched in the resumed session:
+`e18451b3-ea28-41b9-8bb9-5e7ab31dd5c5` (`task1-scaffold`). Requested settings:
+`github-copilot/gpt-6-luna`, `xhigh`, strict no fallback, 60 turns. The worker
+returned BLOCKED after installing dependencies failed; its lifecycle completed,
+but Task 1 did not. The saved worker transcript records Copilot GPT-6 Luna
+and `xhigh` at startup and on all eight assistant turns, ending with stop rather
+than an error or budget-exhaustion marker. Transcript file:
+`2026-10-13T12-09-40-651Z_01a1352b-1e2b-77f6-8232-f946eb8364e0.jsonl`
+in this repository's local Pi session directory. This verifies recorded worker
+settings, not opaque provider gateway internals. No second implementation
+worker or budget retry was launched before the diagnostic approval.
+
+After the successful npm 11.21.0 trial, continuation worker
+`90120a61-d197-463f-86d9-fc3aa75ba506` (`task1-complete`) launched with the same
+strict Copilot Luna/xhigh settings and 60-turn budget. It continues only the
+remaining Task 1 install/red/green/check scope. It returned BLOCKED on a
+compiled test/API mismatch after completing local install, assertion-red and
+green source/acceptance files. Its saved transcript records Copilot Luna/xhigh
+on all 12 assistant turns, ending normally with stop. Transcript:
+`2026-10-13T12-23-20-689Z_01a13537-a171-77f6-8232-f949e987bc6f.jsonl`.
+No budget exhaustion or substitution was observed. This was an
+environmental-block continuation, not a budget retry.
+
+After explicit approval of the setter assertions, bounded correction worker
+`e6e7ebc3-5d20-468d-89bd-07bf35815889` (`task1-setter-fix`) launched with strict
+Copilot Luna/xhigh and a 60-turn budget. It applied exactly the two approved
+test edits and returned BLOCKED when Cucumber discovered no step imports.
+Native Vitest, typecheck and load-check passed in its report. No turn-limit
+exhaustion was reported; this is the first bounded compiler-test correction.
+The coordinator independently confirmed the native unit test passed. Its saved
+transcript records Luna/xhigh on seven assistant turns, ending normally with
+stop: `2026-10-13T12-30-46-024Z_01a1353e-6d08-77f6-8232-f94a0520b2cd.jsonl`.
+
+After config approval, bounded worker
+`d71d887b-e354-4757-ac10-ad84b50db6cf` (`task1-config-fix`) launched with strict
+Copilot Luna/xhigh and 60 turns. Only the approved `cucumber.mjs` wrapper
+removal was editable. It returned COMPLETE with all normal Make checks at
+exit 0; only the config changed. The saved transcript records Luna/xhigh on
+five assistant turns, ending normally with stop:
+`2026-10-13T12-37-01-067Z_01a13544-260b-77f6-8232-f94c178784e8.jsonl`.
+The coordinator reran all three normal targets and confirmed exit 0. No worker
+hit its turn budget, changed models or staged/committed files. The four worker
+passes used 60-turn caps; no budget retry was needed. Two compiler corrections
+were individually approved and verified.
 
 ## Baseline checks
 
@@ -249,10 +309,10 @@ checkboxes remain unchecked; no milestone has verified implementation evidence.
 
 | Key | Slice | Source outcome | Task/evidence mapping |
 | --- | --- | --- | --- |
-| M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Not compiled |
-| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Not compiled |
-| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Not compiled |
-| M1.4 | S1 | Availability/effort/error safety in both modes | Not compiled |
+| M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Task 1 baseline verified; Task 5's full tier/classifier boundary evidence pending |
+| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Tasks 2–5; scope mapped, payloads/evidence pending |
+| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Tasks 3–5; scope mapped, payloads/evidence pending |
+| M1.4 | S1 | Availability/effort/error safety in both modes | Tasks 2–5; scope mapped, payloads/evidence pending |
 | M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled |
 | M2.2 | S2 | Persistence and physical restoration | Not compiled |
 | M2.3 | S2 | State/restoration/lifecycle failures | Not compiled |
@@ -274,21 +334,132 @@ can use synthetic routers independently; Slice 4 waits for Slices 1–3.
 
 ## Tasks, commits and review index
 
-No executable tasks have been compiled or delegated. There are no task
-checkboxes or implementation commits.
+Five stable task scopes and milestone mappings are saved in
+[tasks-slice-1.md](./tasks-slice-1.md). Task 1 includes proposed verbatim
+scaffold, stub, red test, baseline green registration, harness and Cucumber
+payloads. Tasks 2–5 are bounded contracts awaiting their verbatim payloads.
+The user subsequently authorized Task 1 execution under task-at-a-time gates.
+Task 1's exact source/tests/toolchain and approved compiler corrections are
+verified; the implementation commit is pending. No slice milestone is accepted.
+
+| Task key | Supports | Scenario coverage after integration | Compiler state |
+| --- | --- | --- | --- |
+| `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified: original assertion-red plus normal unit/acceptance/type/load checks; commit pending |
+| `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028 | Contract only |
+| `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028 | Contract only |
+| `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Contract only |
+| `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
+
+No scenario ledger row changes from Unverified until checks actually run.
 
 | Kind | Task key | Actual hash/subject | Verification |
 | --- | --- | --- | --- |
-| Bookkeeping | `setup/bookkeeping` | Pending setup commit | Docs lint, scope, snapshots and ledger inventory checked |
+| Bookkeeping | `setup/bookkeeping` | `f0baef3161d577487228beb004c2c16d93f3fdba` — docs: preserve routing intent and execution evidence | Docs lint, scope, snapshots and ledger inventory checked |
 
 Implementation/correction commit keys will be `slice-1/task-N`. Record real
 hashes and subjects after commit success; preserve correction history and
 task-to-milestone mappings. A verified-but-uncommitted task blocks the next
 launch. No milestone or slice is accepted from a commit alone.
 
+## Session recovery — 2026-10-13
+
+Reviewed original session `01a134a3-1b0c-705b-a828-1c174ee3e2e8` and the desktop
+screenshot named `Screenshot 2026-10-13 at 12.57.03.png`. Its recorded history
+shows repeated read-only SDK/context calls after task-document approval, but
+no task-document write and no implementation worker launch.
+
+| Evidence | Observation |
+| --- | --- |
+| Original JSONL line 144 | User approved task-document/index/evidence update |
+| Original JSONL lines 154–155 | Tool call finished; next assistant request ended with `Connection error.` |
+| Original JSONL lines 163–165 | Offline native probe succeeded; later assistant request ended with `terminated` |
+| Original JSONL lines 170–174 | No running subagents reported; task document remained unwritten |
+| Original JSONL lines 175–182 | User said proceed; another read-only call finished, then user aborted the stalled turn |
+| Original JSONL line 185 | User reported only a Working spinner; no later completed assistant record |
+
+The JSONL is under the local Pi session directory for this repository. Errors
+are observed request outcomes, not proof of provider/gateway root cause. The
+final spinner's cause is unverified. The repeated context-reading/no-output
+pattern is established; recovery should use the saved compiler checkpoint
+rather than repeat that preflight.
+
+Recovery rechecked branch `integralist/auto-model`, HEAD `f0baef3`, pre-existing
+execution-record changes, current plan/spec hashes and original snapshot hashes.
+All hashes match the recorded values. The successful offline probe used native
+fake-provider registration and an awaited no-network runtime refresh; its
+selected Auto/physical Luna-high observations are carried into the task context.
+No new SDK/model requests, dependency installation or implementation tests ran
+in recovery. npm metadata lookup selected Node-24 types and tsx pins only.
+
+Task 1's proposed payload is not runtime-verified. Code snippets in the draft
+are not implementation files, and documentation checks do not accept any
+routing behavior. Recovery adds no implementation/correction retry attempt.
+
+## Task 1 partial outcome
+
+The worker created nine approved files: `package.json`, `.gitignore`,
+`Makefile`, `tsconfig.json`, `vitest.config.ts`, `cucumber.mjs`,
+`extensions/auto-model.ts`, `test/support/session.ts` and
+`test/native-boundary.test.ts`. That first attempt left the compiling empty
+stub, without a lockfile, installed dependencies or acceptance files. Protected
+coordinator documents were preserved.
+
+The second worker installed approved local dependencies through one-off npm
+11.21.0, generated the lockfile, proved the required missing-Auto red assertion,
+then applied baseline registration and Cucumber feature/steps. Global npm is
+still 11.5.1, Node is 24.6.0 and dependency pins/peer checks are unchanged.
+No staging or commit occurred; Task 1 remains unaccepted.
+
+| Attempt/check | Outcome | Evidence |
+| --- | --- | --- |
+| Worker `make deps`, npm 11.5.1 | Fail: make exit 2, npm exit 1; Arborist null `edgesOut` during Vitest peer resolution | Checkpoint `worker-deps.log`; npm log `2026-10-13T12_10_18_598Z-debug-0.log` |
+| Coordinator explicit Vite 7.3.7 dry-run | Fail: exit 1, same resolver error | Checkpoint `coordinator-vite-dry-run.log` |
+| Coordinator original-manifest dry-run with installed npm 10.9.4, same Node 24.6.0 | Fail: exit 1, same resolver error | Checkpoint `coordinator-alternate-npm-dry-run.log` |
+| User-approved one-off npm 11.21.0 dry-run, unchanged manifest | Pass: exit 0; resolved 246 packages; no install, lockfile or peer-check bypass | Checkpoint `coordinator-npm11-version.log`, `coordinator-npm11-dry-run.log` |
+| Package manifest integrity after diagnostic trials | Pass: unchanged SHA-256 `dda18c82dcd3613488350d2c40485192d43ee96d65ca5ee78de5839ecbd287f1` | No lockfile/node_modules created |
+| Checks before second worker | Not run | Initial dependency block was never counted as behavioral red |
+| Second worker local `make deps` via one-off npm 11.21.0 | Pass: exit 0, scripts disabled, unchanged pins | Checkpoint `worker-continuation-deps.log` |
+| Stub assertion-red | Verified: make exit 2; registered native Auto was undefined | Checkpoint `worker-continuation-red.log` |
+| Second worker `make test` | Fail: exit 2, compiled assertion incorrectly expects SDK setModel to return true; acceptance not reached | Checkpoint `worker-continuation-test.log` |
+| Coordinator `make typecheck` before setter correction | Pass: exit 0 | Checkpoint `coordinator-typecheck.log` |
+| Setter correction worker `make test` | Partial: native Vitest passes; Cucumber all four steps undefined; make exits 2 | Checkpoint `worker-setter-test.log` |
+| Setter correction worker `make typecheck` / `make load-check` | Pass: exit 0 each | Checkpoint `worker-setter-typecheck.log`, `worker-setter-load-check.log` |
+| Coordinator native unit check after setter correction | Pass: exit 0, one native dispatch test | Checkpoint `coordinator-native-unit.log` |
+| Cucumber configuration introspection | Verified: resolved importPaths is empty due to nested ESM default | Public loadConfiguration API, no file edits |
+| Coordinator explicit-import acceptance diagnostic | Pass: exit 0; one scenario, five reported steps including cleanup | Checkpoint `coordinator-cucumber-explicit-import.log` |
+| Coordinator `make load-check` | Pass: exit 0; Extension module loads | Checkpoint `coordinator-load-check.log` |
+| Installed direct dependency inventory | Pass: approved seven pins, no peer error from npm ls | `npm ls --depth=0`, exit 0 |
+| Final config worker Make checks | Pass: test/typecheck/load-check each exit 0, no CLI bypass | Checkpoint `worker-config-*.log` |
+| Coordinator final normal `make test typecheck load-check` | Pass: exit 0; native test 1/1, Cucumber scenario 1/1, typecheck and module load | Checkpoint `coordinator-final-checks.log` |
+| Task payload/source, dependency scope and lockfile | Pass: nine directly matched file payloads; approved corrections; seven pinned dev deps, host packages only peers, registry-only lock | Coordinator source/JSON checks |
+| Coordinator docs/whitespace/secret scan and original hashes | Pass; plan/spec unchanged, no secrets or unrelated staged files | Coordinator checks before task commit |
+
+Checkpoint/log root: `/tmp/pi-auto-model-task1.Xwg5lM`. Stack evidence locates
+the exception in npm's Arborist `#loadPeerSet`, not application code. Optional
+peer traversal reached a Vitest 5 browser peer while resolving the pinned
+Vitest 4 set, but the exact null-parent cause is not established. The explicit
+Vite-pin hypothesis did not resolve it, and alternate installed npm did not
+isolate it to npm 11.5.1. After three failures, execution paused for a diagnostic
+decision. The user-approved npm 11.21.0 trial then resolved the same manifest
+successfully: the failing clients were npm 10.9.4/11.5.1, while 11.21.0 passed.
+This isolates client-version-dependent resolution, not the exact upstream patch.
+
 ## Next action
 
-Verify and commit this approved setup. Then inspect the remaining live seams
-and compile only `tasks-slice-1.md` on the selected coordinator. Propose that
-document and each task's edits before implementation. No future slice or
-activation is authorized.
+Commit verified Task 1 on the authorized branch, including its inspected
+source/tests/toolchain and coordinator-owned task/evidence updates. Record the
+actual implementation hash after success, using a bounded bookkeeping commit
+if needed; do not create a self-recording hash loop. Then compile/propose only
+Task 2, keeping the existing per-edit gate. No next editing worker may launch
+before this verified task is committed.
+
+Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
+Sol/xhigh after explicit opt-in. It does not implement tier classification,
+ordered availability, ownership/lifecycle safety, controls or popups. M1.1–M1.4
+and all original scenarios remain unaccepted until later tasks and independent
+slice review prove them. Public error-branch/full-slice coverage remains in
+Tasks 2–5; this baseline check is not release acceptance.
+
+No later task implementation, push, global installation, activation or paid
+model/classifier smoke probe is authorized. Original plan/spec hashes and
+startup snapshots remain unchanged; no archival action is authorized.
