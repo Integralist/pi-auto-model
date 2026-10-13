@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task 1 committed and verified; Tasks 2–5 pending, Slice 1 unaccepted.
+- **Status:** Task 2 verified; implementation commit pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 1 authorized.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 2 authorized.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -38,6 +38,12 @@
 9. The user approved removing Cucumber's extra ESM default-profile wrapper.
    Only `cucumber.mjs` and its matching task snippet change; tests and Make
    commands stay strict and unchanged.
+10. After Task 1's verified commits, the user asked to continue Task 2
+    compilation. This authorizes the task/evidence-document update, not its
+    implementation edits, dependency changes or a new editing worker.
+11. The user subsequently approved Task 2's exact two-file implementation.
+    Only new `src/policy.ts` and `test/policy.test.ts` may be edited by its
+    strict Luna/xhigh worker. Dependencies, extension and harness stay unchanged.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -310,9 +316,9 @@ checkboxes remain unchecked; no milestone has verified implementation evidence.
 | Key | Slice | Source outcome | Task/evidence mapping |
 | --- | --- | --- | --- |
 | M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Task 1 baseline verified; Task 5's full tier/classifier boundary evidence pending |
-| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Tasks 2–5; scope mapped, payloads/evidence pending |
+| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Task 2 policy decisions verified; classifier/native dispatch/full acceptance pending Tasks 3–5 |
 | M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Tasks 3–5; scope mapped, payloads/evidence pending |
-| M1.4 | S1 | Availability/effort/error safety in both modes | Tasks 2–5; scope mapped, payloads/evidence pending |
+| M1.4 | S1 | Availability/effort/error safety in both modes | Task 2 exact-effort/downward/keep-current/config decisions verified; integrated safety pending Tasks 3–5 |
 | M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled |
 | M2.2 | S2 | Persistence and physical restoration | Not compiled |
 | M2.3 | S2 | State/restoration/lifecycle failures | Not compiled |
@@ -337,15 +343,17 @@ can use synthetic routers independently; Slice 4 waits for Slices 1–3.
 Five stable task scopes and milestone mappings are saved in
 [tasks-slice-1.md](./tasks-slice-1.md). Task 1 includes proposed verbatim
 scaffold, stub, red test, baseline green registration, harness and Cucumber
-payloads. Tasks 2–5 are bounded contracts awaiting their verbatim payloads.
+payloads. Task 2 now includes its exact stub, tests and green policy payload;
+Tasks 3–5 remain contracts awaiting verbatim payloads.
 The user subsequently authorized Task 1 execution under task-at-a-time gates.
 Task 1's exact source/tests/toolchain and approved compiler corrections are
-verified and committed. No slice milestone is accepted.
+verified and committed. Task 2's policy/test implementation is verified with
+its commit pending. No slice milestone is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
 | `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified and committed: original assertion-red plus normal unit/acceptance/type/load checks |
-| `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028 | Contract only |
+| `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified: assertion-red, 107 policy tests, unchanged native baseline, type/load checks; commit pending |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028 | Contract only |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Contract only |
 | `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
@@ -450,15 +458,97 @@ decision. The user-approved npm 11.21.0 trial then resolved the same manifest
 successfully: the failing clients were npm 10.9.4/11.5.1, while 11.21.0 passed.
 This isolates client-version-dependent resolution, not the exact upstream patch.
 
+## Task 2 compiler checkpoint
+
+Compiled against clean HEAD `fdc93b2` and Task 1's actual public SDK dependencies.
+Only `tasks-slice-1.md`, this execution record and the handoff link update change
+in compilation. No worker, implementation file, dependency change or new commit
+was made. Task 1's checked state and source hashes remain intact.
+
+The proposed implementation is limited to new `src/policy.ts` and
+`test/policy.test.ts`. Native extension wiring and dispatch/harness changes are
+explicitly deferred to Task 4; classifier execution and ownership remain in
+Tasks 3–4. The two-file scope covers raw metadata, supplied tier decisions,
+strict version-1 config, exact catalog/auth/effort availability, downward-only
+fallback, retained physical evidence, effort-only and direct-summary selection.
+The original milestone IDs/scenarios/requirements remain unchanged. No unit
+outcome is being used as native-dispatch or slice acceptance evidence.
+
+| Compiler check | Outcome | Evidence |
+| --- | --- | --- |
+| Public SDK exports/signatures and exact effort list | Verified from installed Pi/pi-ai 1.2.0 source/declarations | ModelRegistry `find`/`hasConfiguredAuth`, `parseFrontmatter`, `getSupportedThinkingLevels` |
+| Stub, tests and green TypeScript syntax | Pass in memory | Existing esbuild parser; three task-document blocks |
+| Stub-plus-tests typecheck | Pass: zero diagnostics | Installed TypeScript 7.0.2 sync API with in-memory filesystem, real compiler options and dependency declarations |
+| Green-plus-tests typecheck | Pass: zero diagnostics | Same overlay; no files written, no behavior run |
+| Red/green policy tests | Not run | Task 2 implementation approval still required |
+| Documentation lint, links, task keys and coverage | Checked before presenting approval gate | No source/spec changes |
+
+The preflight avoids the original Task 1 compiler/API mistakes but does not
+prove runtime behavior. Required red proof remains the stub returning Sol/xhigh
+when the declared trivial test expects Luna/high. Public classifier/dispatch,
+lifecycle and release evidence remain pending. No subagent was spawned during
+this compilation, so no worker retry or budget record changes.
+
+## Task 2 launch checkpoint
+
+Authorized branch: `integralist/auto-model`; parent HEAD:
+`fdc93b2471f6e2d53ba8710141cce7abba874d46`. Index is empty; only previously
+approved coordinator-owned task compilation/README/execution edits pre-exist.
+Task 2 implementation files are absent at launch. Saved checkpoint/log root:
+`/tmp/pi-auto-model-task2.jVVLsu`. The existing native unit/Cucumber,
+typecheck and load-check baseline passes; source/manifest/lockfile/plan/spec
+hashes are saved in `protected-source.sha256`. Worker must preserve them.
+
+Task 2 worker launched:
+`ad8e2c8c-e65d-4f6a-9915-3482d303387d` (`task2-policy`), requested strict
+`github-copilot/gpt-6-luna`, `xhigh`, no fallback, 60 turns. Only the two new
+files were editable. The worker returned COMPLETE: original assertion-red,
+107 policy tests and all normal Make checks passed; both files match the
+approved payload exactly. No deviation, dependency/source-scope expansion,
+staging or commit occurred. The coordinator independently confirmed these
+checks and protected-source hashes. No budget retry was needed.
+
+Its saved session transcript records Copilot Luna/xhigh on 14 assistant turns,
+ending normally with stop and no error outcomes:
+`2026-10-13T12-58-02-578Z_01a13557-65d2-77f6-8232-f94eb5787c48.jsonl`
+in this repository's local Pi session directory. This establishes recorded
+worker settings/completion, not opaque provider gateway internals. No fallback
+or turn-limit exhaustion was observed.
+
+## Task 2 verified outcome
+
+Added only `src/policy.ts` and `test/policy.test.ts` for the policy boundary.
+The coordinator read both entire files and matched them byte-for-byte to the
+approved compiled green/test payloads. Existing implementation, extension,
+harness, feature files, manifest/lockfile, plan and spec remain unchanged.
+Pre-existing coordinator-owned compiler/task/evidence changes are included in
+this task's scoped bookkeeping; no unrelated user hunks exist in these files.
+
+| Check | Outcome | Evidence under checkpoint root |
+| --- | --- | --- |
+| Compiling stub typecheck | Pass: exit 0 | `worker-typecheck-stub.log` |
+| Required behavioral red | Verified: make exit 2; declared trivial expected Luna/high/trivial/tier, stub returned Sol/xhigh/current | `worker-red.log:123–147`, final `COMMAND_EXIT=2` |
+| Worker policy unit/full test/type/load targets | Pass: exit 0 each, 107 policy tests; total 108 Vitest and existing Cucumber scenario | `worker-policy-unit.log`, `worker-make-test.log`, `worker-typecheck-green.log`, `worker-load-check.log` |
+| Coordinator policy unit | Pass: exit 0, 107/107 | `coordinator-policy-unit.log` |
+| Coordinator normal full targets | Pass: exit 0; 108 Vitest tests, one Cucumber scenario/five reported steps, typecheck and module load | `coordinator-final-checks.log` |
+| Exhaustive downward availability invariant | Pass: all 64 tier/availability combinations; zero provider calls | `coordinator-downward-invariant.log` |
+| Exact approved payload and protected hashes | Pass: two files match snippets; protected-source checksums all unchanged | Coordinator source comparison, `protected-source.sha256` |
+| Docs/scope/whitespace/secret checks | Pass before task commit | Coordinator lint, links/task keys/milestones, complete source and staged diff inspection |
+
+The current extension still runs Task 1's explicit-opt-in Sol/xhigh baseline.
+Task 2 adds callable policy decisions, not native integration or classifier
+execution. All original scenario ledger rows and M1.1–M1.4 remain unaccepted;
+unit decision evidence does not substitute for Tasks 3–5's public boundaries.
+
 ## Next action
 
-Compile/propose only Task 2 in `tasks-slice-1.md`, against committed Task 1
-interfaces at `3b68e8642106f6825da833a154d65f067b1049d2`. Its tier policy,
-normalization, configuration/availability/error tests and exact payload need
-coordinator compilation and per-edit approval before a new editing worker.
-The implementation checkpoint and original setup are indexed above; the
-bounded hash-evidence commit is discoverable through the same plan/task
-trailers. Do not create a self-recording hash loop.
+Commit independently verified Task 2 on the authorized branch, including only
+its two new source/test files and coordinator-owned compiled payload/README/
+execution updates. Record the actual implementation hash after success with
+bounded bookkeeping; do not create a self-recording hash loop. Then compile
+only Task 3's classifier payload against the verified policy. Task 3 edits need
+separate approval before another editing worker; no install or global change
+is implied.
 
 Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
 Sol/xhigh after explicit opt-in. It does not implement tier classification,

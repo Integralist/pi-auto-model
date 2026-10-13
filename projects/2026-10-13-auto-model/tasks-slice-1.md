@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Task 1 committed and verified, Tasks 2–5 awaiting compilation
+- **Status:** In progress; Task 1 committed, Task 2 verified, commit pending
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -57,9 +57,9 @@ Before marking the whole list done:
 The user approved a task-at-a-time workflow after recovery: compile and approve
 one complete task payload, implement it, verify it, and commit it before
 compiling the next task. Task 1's payload and local dependency installation are
-approved. Tasks 2–5 remain contracts, not executable instructions; each needs
-its own compiled payload and per-edit approval. Whole-slice acceptance stays
-separate from these task gates.
+approved and verified. Task 2's complete payload was separately approved and
+its implementation is now verified. Tasks 3–5 remain contracts awaiting
+compilation and approval. Whole-slice acceptance stays separate from these task gates.
 
 ## Context for the executor
 
@@ -571,51 +571,733 @@ accepts Task 1's offline scaffold only, not M1.1 or any slice milestone.
 - **Key:** `slice-1/task-2`
 - **Delivers:** One policy boundary that normalizes skill tiers and selects the
   nearest available smaller physical pair, or safely retains a known pair.
-- **Supports:** M1.2, M1.4; R02–R06, R11–R19, R22, R48, R50
-- **Location:** `src/policy.ts`, `test/policy.test.ts`,
-  `test/support/session.ts`, `test/tier-routing.test.ts`
+- **Supports:** M1.2, M1.4; R02–R04, R06, R12–R17, R19, R22, R48, R50
+- **Location:** New `src/policy.ts` and `test/policy.test.ts` only
+- **Status:** Approved payload implemented and verified; commit pending
 
-**Stub / Signature:** Compile exact exported TypeScript types for the four
-ordered tiers; scalar physical pair; version-1 policy; captured physical pair;
-classifier result; eligible intent; and one route-decision function. Keep
-parsing, confirmation, candidate lookup and error details private unless an
-actual caller needs them. Validation receives unknown JSON, not a trusted cast.
+The original four-file location was an upper bound. This task needs only two
+new files: native-dispatch integration belongs to Task 4. Keep the verified
+extension, session harness, feature files, manifests and dependency pins intact.
+Requirements shared with classification, retries or ownership remain pending
+in Tasks 3–5; these unit tests do not accept their native-dispatch scenarios.
 
-**Test (red):** Use concrete policy-call expectations for AC001–AC004,
-AC010–AC011, AC023–AC028, including:
+**Public boundary:** `resolveRoute(configuration, input, registry)` returns a
+physical model, exact effort, selected fallback tier or retained-evidence
+source. It receives unknown configuration, raw content from an already resolved
+loaded skill, an already obtained classifier result, and current/captured
+physical evidence. All parsing, validation and downward selection are private.
+Task 3 owns obtaining the classifier result; Task 4 owns input eligibility and
+loaded-skill resolution. Do not add speculative classifier/ownership types now.
 
-| Input / condition | Required result |
-| --- | --- |
-| Each valid scalar tier | Exact default pair |
-| `"  CoMpLeX  "` | Complex tier |
-| Missing/empty/unknown/list/number metadata | Absent tier; classifier path remains eligible |
-| Familiar skill named commit, metadata complex | Sol/xhigh; no name override |
-| Complex absent, moderate available | Moderate pair; never frontier |
-| Frontier/complex/moderate absent, trivial present | Trivial configured pair |
-| Trivial absent, known current Sol/xhigh | Keep current; never step up |
-| Fixed Sol, complex effort unsupported, moderate high supported | Sol/high |
-| No active/captured physical evidence and no usable tier | Actionable physical-selection error |
-| `max` in tier/classifier; invalid summary tier/mode/schema/bounds | Actionable config error before dispatch |
-| Virtual target, conflicting or malformed exact pair | Actionable config error |
-| Unsupported exact effort | Unavailable candidate, not a silently clamped request |
+**Configuration choices:** Undefined configuration uses the spec's default
+pairs. An explicitly supplied version-1 object must contain exactly `version`,
+`tiers`, `classifier`, `summaryTier` and `mode`, with all four tiers present.
+This prevents a typo or legacy per-skill override from silently taking effect.
+Pairs use separate `provider`, `model`, and `effort` fields. Classifier bounds
+are positive safe integers: `maxInputChars`, `maxOutputTokens`, `timeoutMs`.
+Default bounds are 12,000 characters, 64 output tokens and 10,000 milliseconds;
+they are configuration limits, not estimates or classifier execution here.
+Automatic efforts may be Pi-supported levels other than `max`; defaults remain
+high/xhigh. Direct summaries derive effort from `summaryTier`, not a separate
+conflicting summary pair.
 
-**Implementation (green):** Validate every configuration field and reject
-unknown/conflicting structures. Normalize valid strings with trim/lowercase;
-other metadata types are absent. Read raw frontmatter with the public parser.
-Resolve only configured physical pairs with catalog/auth availability and exact
-supported effort. In effort-only mode substitute the captured model before
-checking each effort. Walk the ordered tier list downward only. Do not perform
-live entitlement probes. Keep-current uses physical evidence, not Auto.
+**Evidence:** Pi 1.2.0 publicly exports `parseFrontmatter` and `ModelRegistry`.
+`ModelRegistry.find` and `hasConfiguredAuth` are synchronous catalog/auth checks
+(`dist/core/model-registry.d.ts:27–32`). Pi-ai's
+`getSupportedThinkingLevels` lists exact accepted efforts
+(`dist/models.d.ts:267`; `dist/models.js:680–690`). Use that membership check,
+not clamping. Missing catalog/auth makes a candidate unavailable; a known
+virtual target is an actionable configuration error even in an unused tier.
+No live entitlement probe or new dependency is involved.
 
-**Verify:** `make test` and `make typecheck` exit 0. Public-boundary dispatch
-cases independently assert exact model and effort after Task 4 integration.
-Unit tests must not assert helper-call choreography.
+**Retained evidence:** Prefer valid current physical evidence over valid
+captured evidence. Evidence must resolve to a non-virtual catalog model and an
+exact supported non-max effort; an invalid current pair may fall back to valid
+captured evidence. Retention does not speculate about fresh entitlement or
+quota. In effort-only mode the captured model identity is required; check each
+tier effort against that model, not the configured tier model. Current evidence
+from a different model cannot replace that fixed model. These guards do not
+implement lifecycle or branch ownership; Task 4 must supply owned evidence.
 
-**Compiler completion:** Supply verbatim types, validation/route implementation,
-stubs, table-driven tests and exact expected assertion-red failures. Confirm
-all later tasks use identical exported names and signatures.
+### Task 2 stub and assertion-red
 
-- [ ] Task 2 complete
+Create `src/policy.ts` with these public types and the compiling stub:
+
+```typescript
+import type { Api, Model, ModelThinkingLevel } from "@earendil-works/pi-ai";
+import type { ModelRegistry } from "@earendil-works/pi-coding-agent";
+
+export type Tier = "trivial" | "moderate" | "complex" | "frontier";
+export type AutomaticEffort = Exclude<ModelThinkingLevel, "max">;
+export type PhysicalPair = {
+  provider: string;
+  model: string;
+  effort: AutomaticEffort;
+};
+export type RoutingRegistry = Pick<ModelRegistry, "find" | "hasConfiguredAuth">;
+export type RouteInput = {
+  skillContent?: string;
+  classifiedTier?: unknown;
+  current?: PhysicalPair;
+  captured?: PhysicalPair;
+  direct?: boolean;
+};
+export type RouteDecision = {
+  model: Model<Api>;
+  thinkingLevel: AutomaticEffort;
+  tier?: Tier;
+  source: "tier" | "current" | "captured";
+};
+
+export function resolveRoute(
+  _configuration: unknown,
+  _input: RouteInput,
+  registry: RoutingRegistry,
+): RouteDecision {
+  return {
+    model: registry.find("github-copilot", "gpt-6.1-sol")!,
+    thinkingLevel: "xhigh",
+    source: "current",
+  };
+}
+```
+
+Add the complete test file below, then run:
+
+```bash
+make test-unit TEST_FILTER=test/policy.test.ts
+```
+
+Required red proof: `declared trivial selects its exact default pair` reaches
+`resolveRoute` and asserts Luna/high/trivial/tier, but the stub returns
+Sol/xhigh/current. Preserve that assertion failure and real exit code.
+Import/type/parser setup errors do not count. Run `make typecheck` before the
+red check if needed to distinguish compilation from behavior.
+
+### Task 2 exact tests
+
+Create `test/policy.test.ts`:
+
+```typescript
+import { fauxProvider, type Api, type Model } from "@earendil-works/pi-ai";
+import { describe, expect, test } from "vitest";
+import {
+  resolveRoute,
+  type PhysicalPair,
+  type RouteDecision,
+  type RoutingRegistry,
+} from "../src/policy.ts";
+
+const luna: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6-luna", effort: "high",
+};
+const sol: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh",
+};
+
+function configuration() {
+  return {
+    version: 1,
+    mode: "model-and-effort",
+    summaryTier: "trivial",
+    tiers: {
+      trivial: { ...luna }, moderate: { ...luna },
+      complex: { ...sol }, frontier: { ...sol },
+    },
+    classifier: {
+      ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000,
+    },
+  };
+}
+
+function fixture() {
+  const provider = fauxProvider({
+    provider: "github-copilot",
+    models: ["gpt-6-luna", "gpt-6.1-sol", "tiny", "small", "large", "huge"]
+      .map((id) => ({ id, reasoning: true })),
+  });
+  const catalog = new Map<string, Model<Api>>();
+  for (const model of provider.models) {
+    model.thinkingLevelMap = { high: "high", xhigh: "xhigh" };
+    catalog.set(`${model.provider}/${model.id}`, model);
+  }
+  const authenticated = new Set(["github-copilot"]);
+  const registry: RoutingRegistry = {
+    find: (name, id) => catalog.get(`${name}/${id}`),
+    hasConfiguredAuth: (model) => authenticated.has(model.provider),
+  };
+  return { catalog, authenticated, registry };
+}
+
+function view(decision: RouteDecision) {
+  return {
+    provider: decision.model.provider,
+    model: decision.model.id,
+    effort: decision.thinkingLevel,
+    tier: decision.tier,
+    source: decision.source,
+  };
+}
+
+function skill(value: unknown) {
+  return `---\nname: commit\nmetadata:\n  model-tier: ${JSON.stringify(value)}\n---\nInstructions are task data.`;
+}
+
+function altered(path: string, value: unknown) {
+  const raw = configuration();
+  let parent: Record<string, unknown> = raw;
+  const keys = path.split(".");
+  for (const key of keys.slice(0, -1)) {
+    parent = parent[key] as Record<string, unknown>;
+  }
+  parent[keys.at(-1)!] = value;
+  return raw;
+}
+
+function orderedConfiguration() {
+  const raw = configuration();
+  raw.tiers.trivial.model = "tiny";
+  raw.tiers.moderate.model = "small";
+  raw.tiers.complex.model = "large";
+  raw.tiers.frontier.model = "huge";
+  return raw;
+}
+
+function route(input: Parameters<typeof resolveRoute>[1], raw: unknown = undefined) {
+  return view(resolveRoute(raw, input, fixture().registry));
+}
+
+describe("portable tiers", () => {
+  test.each<[string, PhysicalPair]>([
+    ["trivial", luna], ["moderate", luna], ["complex", sol], ["frontier", sol],
+  ])("declared %s selects its exact default pair", (tier, pair) => {
+    expect(route({ skillContent: skill(tier), classifiedTier: "frontier" }))
+      .toEqual({ ...pair, tier, source: "tier" });
+  });
+
+  test("trimmed metadata wins over the familiar commit name and classification", () => {
+    expect(route({ skillContent: skill("  CoMpLeX  "), classifiedTier: "trivial" }))
+      .toEqual({ ...sol, tier: "complex", source: "tier" });
+  });
+
+  test.each(["", "unknown", ["trivial"], 4, null, true, { tier: "complex" }]
+    .map((value) => ({ value })))(
+    "invalid scalar metadata $value allows the classified tier", ({ value }) => {
+      expect(route({ skillContent: skill(value), classifiedTier: "moderate" }))
+        .toEqual({ ...luna, tier: "moderate", source: "tier" });
+    },
+  );
+
+  test.each([
+    "No frontmatter", "---\nname: commit\n---\nbody",
+    "---\nmetadata: null\n---", "---\nmetadata: []\n---",
+    "---\nmetadata: 3\n---", "---\n[]\n---",
+    "---\nmetadata: [unterminated\n---",
+    "---\nmetadata: {}\n---\nmodel-tier: frontier",
+  ])("absent or malformed frontmatter is non-fatal: %s", (skillContent) => {
+    expect(route({ skillContent, classifiedTier: "complex" }))
+      .toEqual({ ...sol, tier: "complex", source: "tier" });
+  });
+
+  test("typed input uses its own supplied classifier result", () => {
+    expect(route({ classifiedTier: "moderate", current: sol }))
+      .toEqual({ ...luna, tier: "moderate", source: "tier" });
+  });
+
+  test.each([undefined, "unknown", "complex because", ["complex"], 2, null]
+    .map((classifiedTier) => ({ classifiedTier })))(
+    "unusable supplied classifier result $classifiedTier retains physical evidence", ({ classifiedTier }) => {
+      expect(route({ classifiedTier, current: sol }))
+        .toEqual({ ...sol, tier: undefined, source: "current" });
+    },
+  );
+});
+
+describe("ordered exact availability", () => {
+  test("chooses the nearest smaller tier instead of the available larger tier", () => {
+    const f = fixture();
+    f.catalog.delete("github-copilot/large");
+    const raw = orderedConfiguration();
+    expect(view(resolveRoute(raw, { classifiedTier: "complex" }, f.registry)))
+      .toEqual({ ...luna, model: "small", tier: "moderate", source: "tier" });
+  });
+
+  test("steps past every unavailable smaller tier", () => {
+    const f = fixture();
+    for (const id of ["huge", "large", "small"]) f.catalog.delete(`github-copilot/${id}`);
+    expect(view(resolveRoute(orderedConfiguration(), { classifiedTier: "frontier" }, f.registry)))
+      .toEqual({ ...luna, model: "tiny", tier: "trivial", source: "tier" });
+  });
+
+  test("trivial failure never steps up or invents a pair", () => {
+    const f = fixture();
+    f.catalog.delete("github-copilot/tiny");
+    expect(view(resolveRoute(orderedConfiguration(), { classifiedTier: "trivial", current: sol }, f.registry)))
+      .toEqual({ ...sol, tier: undefined, source: "current" });
+  });
+
+  test("missing auth makes a candidate unavailable without an access probe", () => {
+    const f = fixture();
+    const locked = { ...f.catalog.get("github-copilot/large")!, provider: "locked", id: "large" };
+    f.catalog.set("locked/large", locked);
+    const raw = configuration();
+    raw.tiers.complex = { provider: "locked", model: "large", effort: "xhigh" };
+    expect(view(resolveRoute(raw, { classifiedTier: "complex" }, f.registry)))
+      .toEqual({ ...luna, tier: "moderate", source: "tier" });
+  });
+
+  test("unsupported exact xhigh steps down rather than clamping", () => {
+    const f = fixture();
+    f.catalog.get("github-copilot/gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
+    expect(view(resolveRoute(undefined, { classifiedTier: "complex" }, f.registry)))
+      .toEqual({ ...luna, tier: "moderate", source: "tier" });
+  });
+
+  test("non-reasoning targets do not silently accept high effort", () => {
+    const f = fixture();
+    f.catalog.get("github-copilot/gpt-6-luna")!.reasoning = false;
+    expect(view(resolveRoute(undefined, { classifiedTier: "trivial", current: sol }, f.registry)))
+      .toEqual({ ...sol, tier: undefined, source: "current" });
+  });
+
+  test.each(["off", "minimal", "low", "medium", "high", "xhigh"] as const)(
+    "honors explicitly configured supported %s without adding it as a default", (effort) => {
+      const raw = configuration();
+      raw.tiers.trivial = { ...sol, effort };
+      expect(route({ classifiedTier: "trivial" }, raw))
+        .toEqual({ ...sol, effort, tier: "trivial", source: "tier" });
+    },
+  );
+
+  test("an unavailable classifier is not itself invalid configuration", () => {
+    const raw = configuration();
+    raw.classifier.model = "not-in-catalog";
+    expect(route({ classifiedTier: "trivial" }, raw))
+      .toEqual({ ...luna, tier: "trivial", source: "tier" });
+  });
+});
+
+describe("physical evidence and effort-only", () => {
+  test("current evidence takes precedence over captured evidence", () => {
+    expect(route({ current: luna, captured: sol }))
+      .toEqual({ ...luna, tier: undefined, source: "current" });
+  });
+
+  test.each([
+    undefined, { ...sol, model: "missing" }, { ...sol, model: "auto" },
+    { ...sol, effort: "max" }, { ...sol, provider: "" },
+  ])("invalid current evidence %j falls back to valid captured evidence", (current) => {
+    const f = fixture();
+    f.catalog.set("github-copilot/auto", {
+      ...f.catalog.get("github-copilot/gpt-6-luna")!, id: "auto", api: "pi-virtual",
+    });
+    expect(view(resolveRoute(undefined, {
+      current: current as PhysicalPair | undefined, captured: luna,
+    }, f.registry))).toEqual({ ...luna, tier: undefined, source: "captured" });
+  });
+
+  test("unsupported evidence effort is not silently clamped", () => {
+    const f = fixture();
+    f.catalog.get("github-copilot/gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
+    expect(view(resolveRoute(undefined, { current: sol, captured: luna }, f.registry)))
+      .toEqual({ ...luna, tier: undefined, source: "captured" });
+  });
+
+  test("all-unavailable retention does not introduce speculative auth fallback", () => {
+    const f = fixture();
+    f.authenticated.clear();
+    expect(view(resolveRoute(undefined, { classifiedTier: "frontier", current: sol }, f.registry)))
+      .toEqual({ ...sol, tier: undefined, source: "current" });
+  });
+
+  test.each([{}, { current: { ...sol, model: "missing" } }])(
+    "unknown physical evidence %j requires an actionable selection", (input) => {
+      expect(() => resolveRoute(undefined, input, fixture().registry))
+        .toThrow(/Select an available physical model and effort/);
+    },
+  );
+
+  test("effort-only uses the captured model instead of the mapped model", () => {
+    const raw = configuration();
+    raw.mode = "effort-only";
+    expect(route({ classifiedTier: "moderate", captured: sol }, raw))
+      .toEqual({ ...sol, effort: "high", tier: "moderate", source: "tier" });
+  });
+
+  test("effort-only tests exact effort against the fixed model", () => {
+    const f = fixture();
+    f.catalog.get("github-copilot/gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
+    const raw = configuration();
+    raw.mode = "effort-only";
+    expect(view(resolveRoute(raw, { classifiedTier: "complex", captured: sol }, f.registry)))
+      .toEqual({ ...sol, effort: "high", tier: "moderate", source: "tier" });
+  });
+
+  test("effort-only does not retain another model's current evidence", () => {
+    const raw = configuration();
+    raw.mode = "effort-only";
+    expect(route({ current: luna, captured: sol }, raw))
+      .toEqual({ ...sol, tier: undefined, source: "captured" });
+  });
+
+  test("effort-only requires the captured model even with a mapped candidate", () => {
+    const raw = configuration();
+    raw.mode = "effort-only";
+    expect(() => resolveRoute(raw, { classifiedTier: "trivial", current: sol }, fixture().registry))
+      .toThrow(/physical model.*effort-only/);
+  });
+
+  test("direct summary tier ignores task metadata without changing its input", () => {
+    const input = { direct: true, skillContent: skill("frontier"), classifiedTier: "complex", current: sol, captured: sol };
+    const before = structuredClone(input);
+    expect(route(input)).toEqual({ ...luna, tier: "trivial", source: "tier" });
+    expect(input).toEqual(before);
+  });
+
+  test("a custom summary tier uses the same availability policy", () => {
+    const f = fixture();
+    const raw = orderedConfiguration();
+    raw.summaryTier = "complex";
+    f.catalog.delete("github-copilot/large");
+    expect(view(resolveRoute(raw, { direct: true, current: sol }, f.registry)))
+      .toEqual({ ...luna, model: "small", tier: "moderate", source: "tier" });
+  });
+});
+
+describe("strict version-1 configuration", () => {
+  test("an explicit complete configuration matches the defaults", () => {
+    expect(route({ classifiedTier: "complex" }, configuration()))
+      .toEqual({ ...sol, tier: "complex", source: "tier" });
+  });
+
+  test.each([null, [], 1, "config", {}].map((raw) => ({ raw })))(
+    "invalid root $raw is actionable", ({ raw }) => {
+      expect(() => resolveRoute(raw, { current: sol }, fixture().registry))
+        .toThrow(/Invalid routing configuration at config/);
+    },
+  );
+
+  test.each<[string, unknown]>([
+    ["version", 2], ["version", "1"], ["mode", "automatic"],
+    ["summaryTier", "unknown"], ["summaryTier", "max"],
+    ["tiers", null], ["tiers", []], ["tiers.trivial", null],
+    ["tiers.trivial", { ...luna, extra: true }],
+    ["tiers.trivial.provider", ""], ["tiers.trivial.provider", " github-copilot"],
+    ["tiers.trivial.model", 4], ["tiers.trivial.model", "two words"],
+    ["tiers.trivial.effort", "max"], ["tiers.trivial.effort", "unknown"],
+    ["classifier", null], ["classifier.effort", "max"],
+    ["classifier.provider", false], ["classifier.model", ""],
+    ["classifier.maxInputChars", 0], ["classifier.maxInputChars", 1.5],
+    ["classifier.maxOutputTokens", -1], ["classifier.maxOutputTokens", "64"],
+    ["classifier.timeoutMs", Infinity], ["classifier.timeoutMs", Number.MAX_SAFE_INTEGER + 1],
+  ])("rejects invalid %s = %j", (path, value) => {
+    expect(() => resolveRoute(altered(path, value), { current: sol }, fixture().registry))
+      .toThrow(`Invalid routing configuration at config.${path}`);
+  });
+
+  test.each(["version", "tiers", "classifier", "summaryTier", "mode"])(
+    "rejects missing root field %s", (key) => {
+      const raw: Record<string, unknown> = configuration();
+      delete raw[key];
+      expect(() => resolveRoute(raw, { current: sol }, fixture().registry))
+        .toThrow(`config.${key}`);
+    },
+  );
+
+  test.each(["trivial", "moderate", "complex", "frontier"])(
+    "rejects missing tier %s", (key) => {
+      const raw = configuration();
+      delete (raw.tiers as Record<string, unknown>)[key];
+      expect(() => resolveRoute(raw, { current: sol }, fixture().registry))
+        .toThrow(`config.tiers.${key}`);
+    },
+  );
+
+  test.each(["provider", "model", "effort"])("rejects missing pair field %s", (key) => {
+    const raw = configuration();
+    delete (raw.tiers.trivial as Record<string, unknown>)[key];
+    expect(() => resolveRoute(raw, { current: sol }, fixture().registry))
+      .toThrow(`config.tiers.trivial.${key}`);
+  });
+
+  test.each(["maxInputChars", "maxOutputTokens", "timeoutMs"])(
+    "rejects missing classifier bound %s", (key) => {
+      const raw = configuration();
+      delete (raw.classifier as Record<string, unknown>)[key];
+      expect(() => resolveRoute(raw, { current: sol }, fixture().registry))
+        .toThrow(`config.classifier.${key}`);
+    },
+  );
+
+  test.each<[string, unknown]>([
+    ["skillProfiles", {}], ["tiers.extra", luna], ["classifier.extra", true],
+  ])("rejects conflicting or unknown field %s", (path, value) => {
+    expect(() => resolveRoute(altered(path, value), { current: sol }, fixture().registry))
+      .toThrow(`config.${path}`);
+  });
+
+  test.each(["tiers.frontier", "classifier"])(
+    "rejects a virtual %s target even when the requested tier is trivial", (path) => {
+      const f = fixture();
+      f.catalog.set("github-copilot/virtual-target", {
+        ...f.catalog.get("github-copilot/gpt-6.1-sol")!, id: "virtual-target", api: "pi-virtual",
+      });
+      const raw = altered(`${path}.model`, "virtual-target");
+      expect(() => resolveRoute(raw, { classifiedTier: "trivial" }, f.registry))
+        .toThrow(`Invalid routing configuration at config.${path}: virtual target`);
+    },
+  );
+});
+```
+
+### Task 2 exact green implementation
+
+Replace the stub in `src/policy.ts` with this complete file. The public types
+match the stub exactly. Keep the red tests unchanged.
+
+```typescript
+import {
+  getSupportedThinkingLevels,
+  type Api,
+  type Model,
+  type ModelThinkingLevel,
+} from "@earendil-works/pi-ai";
+import { parseFrontmatter, type ModelRegistry } from "@earendil-works/pi-coding-agent";
+
+export type Tier = "trivial" | "moderate" | "complex" | "frontier";
+export type AutomaticEffort = Exclude<ModelThinkingLevel, "max">;
+export type PhysicalPair = {
+  provider: string;
+  model: string;
+  effort: AutomaticEffort;
+};
+export type RoutingRegistry = Pick<ModelRegistry, "find" | "hasConfiguredAuth">;
+export type RouteInput = {
+  skillContent?: string;
+  classifiedTier?: unknown;
+  current?: PhysicalPair;
+  captured?: PhysicalPair;
+  direct?: boolean;
+};
+export type RouteDecision = {
+  model: Model<Api>;
+  thinkingLevel: AutomaticEffort;
+  tier?: Tier;
+  source: "tier" | "current" | "captured";
+};
+
+type Configuration = {
+  version: 1;
+  mode: "model-and-effort" | "effort-only";
+  summaryTier: Tier;
+  tiers: Record<Tier, PhysicalPair>;
+  classifier: PhysicalPair & {
+    maxInputChars: number;
+    maxOutputTokens: number;
+    timeoutMs: number;
+  };
+};
+
+const tiers: readonly Tier[] = ["trivial", "moderate", "complex", "frontier"];
+const efforts: readonly AutomaticEffort[] = ["off", "minimal", "low", "medium", "high", "xhigh"];
+const defaults: Configuration = {
+  version: 1,
+  mode: "model-and-effort",
+  summaryTier: "trivial",
+  tiers: {
+    trivial: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
+    moderate: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
+    complex: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
+    frontier: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
+  },
+  classifier: {
+    provider: "github-copilot", model: "gpt-6-luna", effort: "high",
+    maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000,
+  },
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function invalid(path: string, detail: string): never {
+  throw new Error(`Invalid routing configuration at ${path}: ${detail}. Correct this setting before using Auto.`);
+}
+
+function object(value: unknown, path: string, keys: readonly string[]) {
+  if (!isRecord(value)) invalid(path, "expected an object");
+  for (const key of Object.keys(value)) {
+    if (!keys.includes(key)) invalid(`${path}.${key}`, "unknown or conflicting field");
+  }
+  for (const key of keys) {
+    if (!Object.hasOwn(value, key)) invalid(`${path}.${key}`, "missing required field");
+  }
+  return value;
+}
+
+function identifier(value: unknown, path: string): string {
+  if (typeof value !== "string" || !value || /\s/.test(value)) {
+    invalid(path, "expected an exact nonempty identifier without whitespace");
+  }
+  return value;
+}
+
+function effort(value: unknown, path: string): AutomaticEffort {
+  if (typeof value !== "string" || !efforts.includes(value as AutomaticEffort)) {
+    invalid(path, "expected an automatic effort other than max");
+  }
+  return value as AutomaticEffort;
+}
+
+function normalizeTier(value: unknown): Tier | undefined {
+  if (typeof value !== "string") return undefined;
+  const normalized = value.trim().toLowerCase();
+  return tiers.includes(normalized as Tier) ? normalized as Tier : undefined;
+}
+
+function pair(value: Record<string, unknown>, path: string, registry: RoutingRegistry): PhysicalPair {
+  const result = {
+    provider: identifier(value.provider, `${path}.provider`),
+    model: identifier(value.model, `${path}.model`),
+    effort: effort(value.effort, `${path}.effort`),
+  };
+  if (registry.find(result.provider, result.model)?.api === "pi-virtual") {
+    invalid(path, `virtual target ${result.provider}/${result.model}; select a physical target`);
+  }
+  return result;
+}
+
+function positiveInteger(value: unknown, path: string): number {
+  if (typeof value !== "number" || !Number.isSafeInteger(value) || value <= 0) {
+    invalid(path, "expected a positive safe integer");
+  }
+  return value;
+}
+
+function configuration(raw: unknown, registry: RoutingRegistry): Configuration {
+  const root = object(raw === undefined ? defaults : raw, "config", [
+    "version", "tiers", "classifier", "summaryTier", "mode",
+  ]);
+  if (root.version !== 1) invalid("config.version", "expected schema version 1");
+  if (root.mode !== "model-and-effort" && root.mode !== "effort-only") {
+    invalid("config.mode", "expected model-and-effort or effort-only");
+  }
+  if (typeof root.summaryTier !== "string" || !tiers.includes(root.summaryTier as Tier)) {
+    invalid("config.summaryTier", "expected an exact tier name");
+  }
+  const rawTiers = object(root.tiers, "config.tiers", tiers);
+  const validatedTiers = {} as Record<Tier, PhysicalPair>;
+  for (const tier of tiers) {
+    const path = `config.tiers.${tier}`;
+    validatedTiers[tier] = pair(object(rawTiers[tier], path, ["provider", "model", "effort"]), path, registry);
+  }
+  const rawClassifier = object(root.classifier, "config.classifier", [
+    "provider", "model", "effort", "maxInputChars", "maxOutputTokens", "timeoutMs",
+  ]);
+  return {
+    version: 1,
+    mode: root.mode,
+    summaryTier: root.summaryTier as Tier,
+    tiers: validatedTiers,
+    classifier: {
+      ...pair(rawClassifier, "config.classifier", registry),
+      maxInputChars: positiveInteger(rawClassifier.maxInputChars, "config.classifier.maxInputChars"),
+      maxOutputTokens: positiveInteger(rawClassifier.maxOutputTokens, "config.classifier.maxOutputTokens"),
+      timeoutMs: positiveInteger(rawClassifier.timeoutMs, "config.classifier.timeoutMs"),
+    },
+  };
+}
+
+function metadataTier(content: string | undefined): Tier | undefined {
+  if (content === undefined) return undefined;
+  try {
+    const parsed: unknown = parseFrontmatter(content).frontmatter;
+    return isRecord(parsed) && isRecord(parsed.metadata)
+      ? normalizeTier(parsed.metadata["model-tier"]) : undefined;
+  } catch {
+    // Malformed frontmatter is absent metadata, not a failed routing request.
+    return undefined;
+  }
+}
+
+function physicalModel(value: PhysicalPair | undefined, registry: RoutingRegistry): Model<Api> | undefined {
+  if (!value || typeof value.provider !== "string" || typeof value.model !== "string") return undefined;
+  const model = registry.find(value.provider, value.model);
+  return model?.api === "pi-virtual" ? undefined : model;
+}
+
+function evidence(value: PhysicalPair | undefined, registry: RoutingRegistry): RouteDecision | undefined {
+  const model = physicalModel(value, registry);
+  if (!model || !value || !efforts.includes(value.effort)) return undefined;
+  if (!getSupportedThinkingLevels(model).includes(value.effort)) return undefined;
+  return { model, thinkingLevel: value.effort, source: "current" };
+}
+
+export function resolveRoute(
+  rawConfiguration: unknown,
+  input: RouteInput,
+  registry: RoutingRegistry,
+): RouteDecision {
+  const config = configuration(rawConfiguration, registry);
+  const fixed = config.mode === "effort-only" ? physicalModel(input.captured, registry) : undefined;
+  if (config.mode === "effort-only" && !fixed) {
+    throw new Error("Select a physical model before enabling effort-only routing; no captured model is known.");
+  }
+  const selectedTier = input.direct ? config.summaryTier
+    : metadataTier(input.skillContent) ?? normalizeTier(input.classifiedTier);
+  if (selectedTier) {
+    for (let index = tiers.indexOf(selectedTier); index >= 0; index--) {
+      const tier = tiers[index]!;
+      const candidate = config.tiers[tier];
+      const model = fixed ?? registry.find(candidate.provider, candidate.model);
+      if (!model || model.api === "pi-virtual" || !registry.hasConfiguredAuth(model)) continue;
+      if (!getSupportedThinkingLevels(model).includes(candidate.effort)) continue;
+      return { model, thinkingLevel: candidate.effort, tier, source: "tier" };
+    }
+  }
+  for (const source of ["current", "captured"] as const) {
+    const retained = evidence(input[source], registry);
+    if (!retained) continue;
+    if (fixed && (retained.model.provider !== fixed.provider || retained.model.id !== fixed.id)) continue;
+    return { ...retained, source };
+  }
+  throw new Error("Select an available physical model and effort before enabling Auto; no usable active or captured physical pair is known.");
+}
+```
+
+### Task 2 verification and approval gate
+
+Run all checks through the unchanged Makefile:
+
+```bash
+make test-unit TEST_FILTER=test/policy.test.ts
+make test
+make typecheck
+make load-check
+```
+
+Expected: all new policy tests plus the existing native Vitest test and Cucumber
+scenario pass; typecheck and module load exit 0. Keep Task 1's native route at
+its committed baseline until Task 4. Before implementation, both stub-plus-tests
+and green-plus-tests passed TypeScript 7.0.2's in-memory preflight; that was not
+behavioral proof.
+
+The approved strict Luna/xhigh worker then added the exact stub and tests,
+proved the required Luna/high versus Sol/xhigh assertion-red, and implemented
+the exact green payload without deviations. The coordinator inspected both
+files, matched them to the compiled snippets and reran all checks:
+
+- Policy unit target: 107 passing tests; original behavioral red preserved.
+- Full `make test`: 108 Vitest tests and one Cucumber scenario pass.
+- `make typecheck` and `make load-check`: exit 0.
+- Protected source/manifest/lockfile/plan/spec hashes: unchanged.
+- Independent downward-selection check: all 64 availability combinations pass.
+
+Logs are indexed in the execution record. Public classifier/native request
+scenarios and slice milestones remain unaccepted. Commit this verified task
+before Task 3.
+
+- [x] Task 2 complete
 
 ### Task 3: Bound and isolate dynamic classification
 
@@ -785,25 +1467,11 @@ A worker may execute only a task with a complete payload and explicit approval.
 Keep the stable IDs, milestone coverage, coordinator verification/commit gate
 and final independent slice review unchanged.
 
-Task 1's first worker stopped at npm dependency resolution with the empty
-extension stub and nine scaffold files retained. The user-approved one-off
-npm 11.21.0 diagnostic resolved the unchanged manifest without weakening peer
-checks. Global npm remains unchanged. See
-[the execution record](./execution.md#task-1-partial-outcome) for evidence.
+Task 1 is verified and committed at `3b68e86`. Task 2's approved policy and
+107-test payload are implemented and independently verified; its commit is
+pending. The extension and existing harness remain unchanged.
 
-Local install, missing-Auto assertion-red and baseline green source are now
-present. The user approved correcting the two tests to await the SDK's
-`Promise<void>` setter and assert selected Auto. The matching snippets above
-are corrected; keep all physical dispatch assertions unchanged.
-
-The approved setter correction is applied and the native unit test passes.
-Cucumber's ESM config has an extra default-profile wrapper, so normal discovery
-imports no step files. An explicit-import diagnostic passes the existing
-scenario unchanged. The user approved flattening `cucumber.mjs`; its matching
-snippet is corrected above. Keep assertions and permanent Make commands
-unchanged.
-
-Task 1 is verified and committed at `3b68e86`; the execution record owns its
-full hash and review index. Compile Task 2's payload against those committed
-interfaces. Task 2 code needs its own edit
-approval. No later task, future slice or global activation is approved.
+Commit verified Task 2, then compile Task 3's bounded classifier payload against
+the actual policy interface. Task 3 code needs its own edit approval. No later
+task implementation, future slice, global activation or live provider probe is
+approved. The execution record owns hashes, check evidence and worker telemetry.
