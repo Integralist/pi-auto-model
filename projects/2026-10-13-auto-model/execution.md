@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task 4 independently verified; commit pending, Slice 1 unaccepted.
+- **Status:** Tasks 1–4 committed and verified; Task 5 pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 4 authorized.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 5 awaiting compilation.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -397,7 +397,7 @@ Task 1's exact source/tests/toolchain and approved compiler corrections are
 verified and committed. Task 2's policy/test implementation is also verified
 and committed. Task 3's classifier adapter and tests are independently verified
 and committed. Task 4's owned native-routing implementation and approved
-summary-observation correction are independently verified, with commit pending.
+summary-observation correction are independently verified and committed.
 No slice milestone is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
@@ -405,7 +405,7 @@ No slice milestone is accepted.
 | `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified and committed: original assertion-red plus normal unit/acceptance/type/load checks |
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified and committed: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope |
-| `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load; commit pending |
+| `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified and committed: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load |
 | `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
 
 No scenario ledger row changes from Unverified until checks actually run.
@@ -420,12 +420,16 @@ No scenario ledger row changes from Unverified until checks actually run.
 | Implementation | `slice-1/task-3` | `4d10a9ea5d48c3e7aaa020beecaa13b283bf7ca1` — feat: classify new tasks without leaking or stalling main routes | Parent `38f5ea3`; assertion-red, 61 unit/seven native/176 total Vitest and Cucumber, type/load, protected scope and 360 input-bound cases verified |
 | Bookkeeping | `slice-1/task-3` | `2f3ef4037103931540bff78258a0e47d1c583b61` — docs: resume routing integration from the verified classifier | Bounded hash/status record; normal checks/docs/protected scope verified; no source change |
 | Bookkeeping | `slice-2/configuration-scope` | `3ec6b35b805161bd6f3cfe9bb715eeb86951cc87` — docs: keep automatic routing open to users' own model providers | Separate approved 184-line addendum; docs/links/keys/protected source verified, implementation pending |
+| Implementation | `slice-1/task-4` | `be2fdf76dc16589d8795d48533a6d2074a90c9d9` — feat: bind automatic model routes to the task that owns them | Parent `3ec6b35` is scope-only; code base `2f3ef40`; assertion-red, 30 routing/17 ownership/223 total Vitest/Cucumber/type/load/protected scope verified |
 
 Task 1's pre-commit compiler corrections are included in its implementation
 commit; there are no later correction commits. Task 2 required no compiler or
 implementation correction. Task 3 also required no compiler or implementation
-correction. This record's Task 3 post-commit hash/status update is bounded
-bookkeeping, indexed by its Git trailers rather than a self-recording hash loop.
+correction. Task 4's separately approved pre-commit summary-test observation
+correction is included in its implementation commit; no production requirement
+changed and no later correction commit exists. This record's Task 4 post-commit
+hash/status update is bounded bookkeeping, indexed by Git trailers rather than
+a self-recording hash loop.
 
 Implementation/correction commit keys will be `slice-1/task-N`. Record real
 hashes and subjects after commit success; preserve correction history and
@@ -850,7 +854,7 @@ pair there. Keep its returned model, unchanged branch/transcript and subsequent
 Sol/xhigh continuation assertions. Matching compiled test text updates only
 after approval and is now refreshed. No routing code or test expectation value
 changes. The approved correction and full coordinator review/normal checks now
-pass; task commit remains pending.
+pass; the verified task is committed as indexed above.
 
 Bounded correction worker
 `b794269d-129e-4719-a55d-5de7cd0698b4` (`task4-summary-fix`) launched with
@@ -920,11 +924,18 @@ rows remain Unverified; Slice 2 still waits for independent Slice 1 acceptance.
 
 ## Next action
 
-Commit verified Task 4 on the authorized branch: seven inspected source/test
-files plus coordinator-owned compiled-payload/execution/README changes. Record
-the approved configuration addendum in a separate documentation commit. Save
-actual hashes using bounded bookkeeping, then compile Task 5's complete Slice 1
-acceptance and independent-review payload. Task 5 edits need separate approval.
+Compile only Task 5's complete Slice 1 acceptance and independent-review
+payload against native routing at `be2fdf76dc16589d8795d48533a6d2074a90c9d9`.
+Tasks 1–4 are committed and verified; preserve them when delayed worker notices
+arrive. Exact feature/step/error-coverage proposals need separate edit approval
+before another worker. After complete checks and independent premium review,
+accept only proven M1.1–M1.4 outcomes and update source milestones under the
+existing gate. No installation, activation or provider account change is implied.
+
+The configuration addendum is separately committed at `3ec6b35`; compile it
+with Slice 2 only after Slice 1 acceptance. This record's bounded Task 4 hash
+update is indexed through plan/task/bookkeeping trailers rather than recording
+its own hash.
 The original behavioral red remains valid. Task 5 and Slice 2 coding are not
 approved; the configuration addendum records future scope only.
 
@@ -933,12 +944,13 @@ arrive. No install, host patch, global activation, paid probe or later task
 implementation is authorized. Milestones and original scenario rows remain
 unaccepted. Do not create a self-recording hash loop.
 
-Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
-Sol/xhigh after explicit opt-in. It does not implement tier classification,
-ordered availability, ownership/lifecycle safety, controls or popups. M1.1–M1.4
-and all original scenarios remain unaccepted until later tasks and independent
-slice review prove them. Public error-branch/full-slice coverage remains in
-Tasks 2–5; this baseline check is not release acceptance.
+Task 4 now connects the native extension to tier/classifier decisions and
+owned physical-pair state. Existing standalone wiring/classifier tests retain
+their explicit extension-origin boundary, while new suites verify eligible
+main tasks and lifecycle safety offline. Controls, configuration UI, popups,
+compatibility and deployment remain future work. M1.1–M1.4 and original scenario
+acceptance stay unaccepted until Task 5's full boundary/error coverage and
+independent review; passing Task 4 does not authorize release activation.
 
 No later task implementation, push, global installation, activation or paid
 model/classifier smoke probe is authorized. Original plan/spec hashes and

@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Tasks 1–3 committed, Task 4 verified, commit pending
+- **Status:** In progress; Tasks 1–4 committed and verified, Task 5 pending
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -2177,8 +2177,8 @@ original main-routing scenario is accepted from this task. Commit before Task 4.
   `test/native-boundary.test.ts`, `features/steps/native-boundary.ts`,
   `test/classifier-boundary.test.ts`; new `test/tier-routing.test.ts` and
   `test/request-ownership.test.ts`
-- **Compiler status:** Approved payload and summary-observation correction
-  implemented and verified; commit pending
+- **Compiler status:** Complete; approved payload and summary-observation
+  correction committed and verified at `be2fdf7`
 
 **Stub / Signature:** Replace Task 1's baseline factory with the composed
 policy. Native router state must be JSON-serializable and contain only the
@@ -3343,18 +3343,15 @@ A worker may execute only a task with a complete payload and explicit approval.
 Keep the stable IDs, milestone coverage, coordinator verification/commit gate
 and final independent slice review unchanged.
 
-Task 1 is verified and committed at `3b68e86`; Task 2's approved policy and
-107-test payload are verified and committed at `50f8af9`. The extension and
-existing harness remain unchanged.
+Tasks 1–4 are verified and committed at `3b68e86`, `50f8af9`, `4d10a9e` and
+`be2fdf7`; the execution record owns full hashes and checks. Task 4 connects the
+native extension and services-first harness to the unchanged policy/classifier.
+Its approved early registration, same-ID deployment constraint and direct-summary
+test observation are recorded above; dependencies and original plan/spec remain
+unchanged.
 
-Task 3's approved classifier addition and two test files are independently
-verified and committed at `4d10a9e`. The harness, dependency pins and native
-extension are unchanged. Task 4's early-registration and same-ID deployment
-constraint decision is approved. Its exact seven-file ownership/native payload
-and its separately approved summary-observation correction are implemented
-and independently verified; the commit is pending. Save verified Task 4 before
-compiling Task 5's acceptance/review payload. That next task needs its own edit
-approval. The configuration addendum is approved future Slice 2 scope only;
+Compile Task 5's complete acceptance/review payload against these committed
+interfaces. That next task needs its own edit approval. The configuration addendum is approved future Slice 2 scope only;
 it does not authorize configuration UI or provider changes now.
 No later task implementation, future slice, global activation or live provider
 probe is approved. The execution record owns hashes, checks and worker telemetry.
