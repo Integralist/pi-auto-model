@@ -21,7 +21,7 @@ When("I explicitly select native Auto and send an offline request", async functi
   await fixture.session.setModel(auto);
   assert.equal(fixture.session.model?.id, "auto");
   fixture.respond();
-  await fixture.session.prompt("offline boundary proof");
+  await fixture.session.prompt("offline boundary proof", { source: "extension" });
 });
 
 Then("selection is Auto and the physical response is Sol at xhigh", function (this: World) {

@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Tasks 1–3 committed and verified; Tasks 4–5 pending, Slice 1 unaccepted.
+- **Status:** Task 4 independently verified; commit pending, Slice 1 unaccepted.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 4 awaiting compilation.
+- **Current slice:** Slice 1; [task document](./tasks-slice-1.md), Task 4 authorized.
 - **Accepted slices:** none.
 
 ## Authorization
@@ -51,6 +51,28 @@
     existing `src/policy.ts` plus new classifier unit/native-boundary tests.
     The strict Luna/xhigh worker may apply only that compiled payload; harness,
     dependencies, extension wiring and paid probes stay outside its authority.
+14. After the verified Task 3 checkpoint, the user said approve. The preceding
+    next step was Task 4 compilation and a later edit proposal, so this approves
+    continuing compilation only. No Task 4 source/test payload was presented;
+    no implementation or registration-contract deviation is inferred.
+15. After a plain-language explanation, the user approved early extension-load
+    registration, lifecycle capture/cleanup and Pi's physical-ID collision guard.
+    The user accepted another `github-copilot/auto` virtual router as an
+    incompatible deployment constraint. This passes the design/compiler gate
+    only; the exact Task 4 implementation still needs a separate edit proposal.
+16. The user subsequently approved Task 4's exact seven-file implementation.
+    Only the compiled extension/harness/four origin edits/two new test suites
+    are authorized. Policy modules, dependencies, host code and globals remain
+    protected; the strict Luna/xhigh worker may not expand that scope.
+17. During Task 4, the user approved recording `/automodel configure` for
+    Slice 2: catalog-backed physical model and supported effort choices for
+    every tier and classifier, persisted in the existing policy file. This
+    authorizes the [configuration addendum](./configuration-addendum.md) and
+    ledger/index updates only. Task 4 source/test scope remains unchanged;
+    no Slice 2 implementation, provider setup or live probe is approved.
+18. The user approved the single direct-summary test-observation correction:
+    record fake-provider model/options.reasoning and assert the same Luna/high
+    pair there. No production routing, other assertions or dependencies change.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -261,12 +283,18 @@ Task mappings and actual outcome evidence are pending compilation.
 | R58 | All | No runtime quota switching, mid-task escalation, new accounts, or automatic skill edits. | spec: Out of Scope |
 | R59 | All | Preserve original requirements/snapshots and audit unsliced documentation/verification. | execute-plan: Whole-plan audit |
 | R60 | All | Coordinator verifies/commits tasks; workers never stage, commit, or mark acceptance. | execute-plan: Task gate |
+| R61 | S2 | Catalog-backed configuration command for all tier and classifier physical pairs. | configuration-addendum: R61 |
+| R62 | S2 | Supported exact automatic efforts and strict validated policy updates. | configuration-addendum: R62 |
+| R63 | S2 | Atomic explicit save, cancel/error preservation and no credentials/provider/preference changes. | configuration-addendum: R63 |
+| R64 | S2 | Complete provider portability without hidden Copilot classifier/summary fallback. | configuration-addendum: R64 |
+| R65 | S2 | Honest availability and safe empty/stale/headless/busy behavior; no paid probe or implicit enabling. | configuration-addendum: R65 |
 
 ## Scenario ledger
 
 These keys enumerate all 44 scenarios in the original spec snapshot, in source
-order. Scenario outlines include every example. No scenario is accepted based
-on this inventory; compiled tasks will name the keys they cover.
+order. AC045–AC052 append the user-approved configuration scope; they do not
+renumber the originals. Scenario outlines include every example. No scenario
+is accepted based on this inventory; compiled tasks name the keys they cover.
 
 | Key | Scope | Original scenario | Evidence |
 | --- | --- | --- | --- |
@@ -314,20 +342,29 @@ on this inventory; compiled tasks will name the keys they cover.
 | AC042 | S2 | Disabled or non-interactive popups are skipped | Unverified |
 | AC043 | S2 | Popup cleanup cannot affect a replacement session | Unverified |
 | AC044 | S2 | Popup failure does not break a model request | Unverified |
+| AC045 | S2/addendum | Search physical catalog entries by provider | Unverified |
+| AC046 | S2/addendum | Choose only supported automatic effort | Unverified |
+| AC047 | S2/addendum | Replace all Copilot defaults and retain mappings after reload | Unverified |
+| AC048 | S2/addendum | Cancel/validation/write/stale selection preserves prior policy | Unverified |
+| AC049 | S2/addendum | Absent provider-model combination is not invented | Unverified |
+| AC050 | S2/addendum | No configured physical models leaves policy unchanged | Unverified |
+| AC051 | S2/addendum | Configuration changes obey safe-boundary active-task rules | Unverified |
+| AC052 | S2/addendum | Headless configuration gives file guidance without a dialog | Unverified |
 
 ## Milestone ledger
 
 Keys and outcomes remain distinct from executable task IDs. All source
-checkboxes remain unchecked; no milestone has verified implementation evidence.
+checkboxes remain unchecked; task evidence contributes to them, but no milestone
+or slice has passed its complete acceptance/review gate.
 
 | Key | Slice | Source outcome | Task/evidence mapping |
 | --- | --- | --- | --- |
 | M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Task 1 baseline verified; Task 5's full tier/classifier boundary evidence pending |
-| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Tasks 2–3 policy/classifier decisions verified; owned main dispatch/full acceptance pending Tasks 4–5 |
-| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Task 3 signal/deadline adapter verified; lifecycle/branch/continuation/native state pending Tasks 4–5 |
-| M1.4 | S1 | Availability/effort/error safety in both modes | Tasks 2–3 exact-effort/fallback/classifier error decisions verified; integrated safety pending Tasks 4–5 |
-| M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled |
-| M2.2 | S2 | Persistence and physical restoration | Not compiled |
+| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Tasks 2–4 policy/classifier/owned main dispatch verified; full executable acceptance/review pending Task 5 |
+| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Tasks 3–4 adapter/lifecycle/branch/continuation/native state verified offline; complete acceptance/review pending Task 5 |
+| M1.4 | S1 | Availability/effort/error safety in both modes | Tasks 2–4 exact-effort/fallback/classifier/integrated safety evidence verified; complete public-error acceptance/review pending Task 5 |
+| M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled; approved R61–R65/AC045–AC052 configuration command addition also required |
+| M2.2 | S2 | Persistence and physical restoration | Not compiled; configuration addendum's atomic policy persistence also required |
 | M2.3 | S2 | State/restoration/lifecycle failures | Not compiled |
 | M2.4 | S2 | Popup lifetime, focus and cleanup | Not compiled |
 | M3.1 | S3 | Standalone physical-model regressions | Not compiled |
@@ -352,20 +389,23 @@ Five stable task scopes and milestone mappings are saved in
 scaffold, stub, red test, baseline green registration, harness and Cucumber
 payloads. Task 2 now includes its exact stub, tests and green policy payload;
 Task 3 now includes its exact asynchronous boundary/types/stub, classifier
-unit/native tests and green payload. Tasks 4–5 remain contracts awaiting
-verbatim payloads.
+unit/native tests and green payload. Task 4 now includes its approved
+registration decision and exact seven-file stub/harness/origin/test/green
+payload; Task 5 remains a contract awaiting compilation.
 The user subsequently authorized Task 1 execution under task-at-a-time gates.
 Task 1's exact source/tests/toolchain and approved compiler corrections are
 verified and committed. Task 2's policy/test implementation is also verified
 and committed. Task 3's classifier adapter and tests are independently verified
-and committed. No slice milestone is accepted.
+and committed. Task 4's owned native-routing implementation and approved
+summary-observation correction are independently verified, with commit pending.
+No slice milestone is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
 | `slice-1/task-1` | M1.1 | Baseline native registration/dispatch; positive control | Verified and committed: original assertion-red plus normal unit/acceptance/type/load checks |
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified and committed: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope |
-| `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Contract only |
+| `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load; commit pending |
 | `slice-1/task-5` | M1.1–M1.4 | All Slice 1 scenarios/examples and public error branches | Contract only |
 
 No scenario ledger row changes from Unverified until checks actually run.
@@ -378,6 +418,8 @@ No scenario ledger row changes from Unverified until checks actually run.
 | Implementation | `slice-1/task-2` | `50f8af9839720910d1267e7cf44ead269064e716` — feat: keep automatic tier choices exact and downward-only | Parent `fdc93b2`; assertion-red, 107 policy tests, 108 full Vitest tests/Cucumber, type/load, protected scope and 64 downward combinations verified |
 | Bookkeeping | `slice-1/task-2` | `38f5ea3c4323289e65d4b3225158be04e1624774` — docs: preserve the verified Task 2 policy checkpoint | Bounded hash/status record; normal checks, docs and protected scope verified; no source change |
 | Implementation | `slice-1/task-3` | `4d10a9ea5d48c3e7aaa020beecaa13b283bf7ca1` — feat: classify new tasks without leaking or stalling main routes | Parent `38f5ea3`; assertion-red, 61 unit/seven native/176 total Vitest and Cucumber, type/load, protected scope and 360 input-bound cases verified |
+| Bookkeeping | `slice-1/task-3` | `2f3ef4037103931540bff78258a0e47d1c583b61` — docs: resume routing integration from the verified classifier | Bounded hash/status record; normal checks/docs/protected scope verified; no source change |
+| Bookkeeping | `slice-2/configuration-scope` | `3ec6b35b805161bd6f3cfe9bb715eeb86951cc87` — docs: keep automatic routing open to users' own model providers | Separate approved 184-line addendum; docs/links/keys/protected source verified, implementation pending |
 
 Task 1's pre-commit compiler corrections are included in its implementation
 commit; there are no later correction commits. Task 2 required no compiler or
@@ -663,18 +705,233 @@ state and durable usage storage. All original scenario acceptance rows and
 slice milestones remain unaccepted; these adapter results do not claim
 installed/global activation, live model behavior or whole-slice acceptance.
 
+## Task 4 compiler checkpoint — registration decision
+
+Inspected clean HEAD `2f3ef4037103931540bff78258a0e47d1c583b61` and the actual
+Pi 1.2.0 input/startup/native-routing call path. No implementation file,
+dependency, worker, paid probe or new commit was created. Coordinator-owned
+task/README/execution notes record one material compiler assumption instead of
+starting a read-only/preflight loop or delegating an unresolved design.
+
+The draft task required registration on `session_start`. Source proves native
+recorded selection happens earlier: services apply factory-queued virtual
+registrations, then `createAgentSession` restores a catalog selection, then
+binding emits `session_start`. Late registration makes restored Auto unavailable
+at the actual selection boundary. Forcing Auto from a later handler is not an
+acceptable workaround because it can override an explicitly chosen physical
+model. The uncompiled late-registration assumption must change or compilation
+cannot promise native resume behavior.
+
+Native `ModelRuntime.registerVirtualModel` rejects physical collisions before
+changing its map, but intentionally replaces existing virtual definitions.
+The public pre-bind extension factory lacks model-registry context for a stronger
+duplicate-virtual ownership check. The original compiled collision wording is
+broader than this native guarantee; the user must accept an incompatible
+same-ID virtual-router deployment constraint or require a host-level boundary.
+Do not silently narrow a test, patch the host or invent another model registry.
+
+Source evidence is indexed in
+[Task 4's decision gate](./tasks-slice-1.md#task-4-registration-boundary-decision):
+loader `403–411`, services `98–110`, SDK `91–113`, AgentSession `2650`, native
+ModelRuntime `693–703`. These are installed package paths, not edit targets.
+Current documentation confirms factory registration and native branch state.
+
+Other verified seams for the eventual payload: input handlers transform in
+order and handled input short-circuits; accepted `before_agent_start` exposes
+expanded prompt but no input token; user entries have stable branch IDs before
+routing; busy/extension work cannot be inferred merely from `reason: user`.
+Resolve commands through actual loaded `sourceInfo.path`, match the exact
+accepted expansion and bind its persisted user entry. This is a proposed
+ownership shape, not tested code. Task 4 still needs exact tests/green code,
+compiler preflight and edit approval after this registration decision.
+
+## Task 4 compiled payload checkpoint
+
+The user approved the registration decision above after the simpler explanation.
+The proposed seven-file payload is compiled against clean implementation HEAD
+`2f3ef4037103931540bff78258a0e47d1c583b61`, with pre-existing coordinator-owned
+Task 4 design notes preserved. No Task 4 source/test file, dependency, worker,
+paid probe or new commit was created. Compiler log/snapshot root:
+`/tmp/pi-auto-model-task4-compile.OV3Le5`.
+
+The compiled extension uses factory registration, actual loaded command paths,
+exact accepted expansion and persisted user-entry IDs. It consumes only owned
+eligible idle input, handles confirmations separately from short new tasks,
+uses previous/failed physical evidence for continuation/retry, and keeps direct
+summaries outside main state/intent. Lifecycle signals/generation/session/branch
+checks guard awaited work. Native JSON state stores physical pairs; classifier
+usage is non-chat custom evidence attributed to the originating user entry.
+Stale session/branch usage is not written into a replacement task. UI cost
+aggregation, controls/popups and installation remain later slices/tasks.
+
+The harness uses actual services-first registration and AgentSessionRuntime
+rebind/replacement with fake providers and in-memory stores. Existing wiring
+and standalone-classifier tests now explicitly propose extension-origin main
+messages, keeping their one-call/selection/transcript assertions unchanged.
+New tests cover metadata/classification, fallback, effort-only, configuration
+errors, tools/retry, queues, handled/transformed input, direct calls, cancellation,
+startup/resume, reload/new/shutdown, tree/fork and late-work guards. The complete
+original Cucumber examples and public-error acceptance remain Task 5.
+
+| Compiler check | Outcome | Evidence |
+| --- | --- | --- |
+| Startup/loaded-command/input/native-state seams | Verified against installed Pi 1.2.0 source | Earlier decision anchors; AgentSession user persistence at message_end before route; before_agent_start discriminates messageType |
+| Stub plus seven-file test/harness/origin proposals | Pass: zero diagnostics | `compiler-type-preflight.log`, TypeScript 7.0.2 in-memory filesystem, actual SDK/compiler options |
+| Green plus same tests/fixture | Pass: zero diagnostics | Same overlay; existing policy/classifier/native tests included |
+| Existing normal Make checks | Pass: 176 Vitest tests, Cucumber scenario/five reported steps, typecheck/module load | `existing-baseline-checks.log`, exit 0 |
+| Existing code/dependency/plan/spec hashes | Pass: unchanged | `protected-source.sha256` |
+| Required trivial-skill assertion-red and Task 4 behavior | Not run | Implementation approval required; no compiled code written to repo |
+| Docs/links/task keys/coverage/whitespace | Checked before approval gate | Only task/README/execution documents modified |
+
+A compiler-only type mismatch in the new user-entry narrowing was corrected in
+the document before delegation; no implementation/test expectation was changed
+or run. No worker/retry/turn-limit record changes. Existing Tasks 1–3 remain
+committed and verified; this preflight is not native ownership acceptance.
+
+## Task 4 launch checkpoint
+
+Authorized branch: `integralist/auto-model`; parent HEAD:
+`2f3ef4037103931540bff78258a0e47d1c583b61`. Index is empty. Only previously
+approved coordinator-owned compiler/README/execution changes pre-exist; no
+Task 4 implementation edit is present. Two new test files are absent. Existing
+176-test/Cucumber/type/load baseline passes. Checkpoint/log root:
+`/tmp/pi-auto-model-task4.2YxMR1`.
+
+`authorized-before.sha256` snapshots the five approved existing edit files;
+`protected-unchanged.sha256` snapshots policy/unit tests/dependencies/spec/plan
+and other source outside Task 4. The worker must preserve those protected files
+and all coordinator docs. Save command outcomes and original assertion-red
+inside the checkpoint, not as repository logs.
+
+Task 4 worker launched:
+`fc58e18e-9e34-4e98-9092-b90a6f9ef8dd` (`task4-routing`), requested strict
+`github-copilot/gpt-6-luna`, `xhigh`, no fallback and 60 turns. Only the seven
+approved files were editable. The worker returned BLOCKED after applying the
+exact payload and proving the required trivial-skill behavioral red. Green
+verification has one failing direct-summary observation; no correction was
+applied. All 12 protected files remain unchanged and the index is empty.
+No budget retry, dependency edit, host patch or task acceptance occurred.
+
+Saved transcript
+`2026-10-13T16-15-46-160Z_01a1360c-6bf0-77f6-8232-f953c307ddc2.jsonl`
+records Copilot Luna/xhigh on 29 assistant turns, ending normally with stop and
+no error outcomes. No substitution or budget exhaustion was observed. This
+verifies recorded settings, not opaque provider gateway internals.
+
+## Task 4 partial outcome — direct-summary observation
+
+The approved seven-file implementation is present. The worker applied no
+behavioral deviation and preserved all tests after the green failure. A
+transcription-only quote was corrected to the exact approved source before
+verification. No task checkbox, milestone, stage or commit changed.
+
+| Check | Outcome | Evidence under Task 4 checkpoint |
+| --- | --- | --- |
+| Stub typecheck | Pass: exit 0 | `worker-typecheck-stub.log` |
+| Required trivial-skill behavioral red | Verified: make exit 2; physical Sol returned where Luna expected | `worker-stub-red.log`, `worker-command-index.log` |
+| Green tier-routing target | Partial: 29/30 pass; one direct-summary response effort field absent | `worker-tier-routing.log`, exit 2 |
+| Request-ownership target | Pass: 17/17 | `worker-request-ownership.log`, exit 0 |
+| Full tests | Partial: 222/223 Vitest pass; same direct-summary assertion; Cucumber not reached | `worker-make-test.log`, exit 2 |
+| Green typecheck/module load | Pass: exit 0 each | `worker-typecheck-green.log`, `worker-load-check.log` |
+| Protected-file hashes/index | Pass: all 12 protected files unchanged, index empty | `worker-protected-hashes.log` |
+| Coordinator direct-request diagnostic | Verified: physical Copilot Luna at high, response thinkingLevel absent, branch/messages unchanged | `coordinator-direct-request-diagnostic.log`, exit 0 |
+
+Root cause is a compiled test-observation error. Pi 1.2.0 native direct
+`ModelRuntime.streamSimple` at `dist/core/model-runtime.js:494–518` passes the
+routed effort as the physical provider request's `options.reasoning`, but it
+does not add that field to the returned standalone AssistantMessage. The
+read-only coordinator diagnostic reproduced both facts without changing code:
+actual Luna/high request and absent response field, with unchanged session
+branch/transcript. This is not evidence of wrong routing effort.
+
+The user approved correcting only the direct-summary test to capture the native fake
+provider's actual model/provider/options.reasoning and assert the same physical
+pair there. Keep its returned model, unchanged branch/transcript and subsequent
+Sol/xhigh continuation assertions. Matching compiled test text updates only
+after approval and is now refreshed. No routing code or test expectation value
+changes. The approved correction and full coordinator review/normal checks now
+pass; task commit remains pending.
+
+Bounded correction worker
+`b794269d-129e-4719-a55d-5de7cd0698b4` (`task4-summary-fix`) launched with
+strict Copilot Luna/xhigh, no fallback and 60 turns. It applied only the
+approved direct-summary observation in `test/tier-routing.test.ts` and returned
+COMPLETE; every assigned check passed. Its transcript records Luna/xhigh on
+13 assistant turns, ending normally with stop and no errors:
+`2026-10-13T16-24-24-510Z_01a13614-54be-77f6-8232-f95408771a29.jsonl`.
+No budget exhaustion, fallback, substitution, additional source change or retry
+was observed. This is recorded model/effort evidence, not opaque provider
+internals. The correction was a user-approved compiler-test fix, not a budget retry.
+
+## Task 4 verified outcome
+
+The coordinator read all seven changed source/test files, confirmed exact
+approved payload/correction and reran each normal target. No routing requirement
+or physical pair expectation changed. The original red assertion still shows
+real native Sol dispatch where the trivial skill required Luna. The only
+compiler correction changes effort observation to the actual provider request.
+
+| Check | Outcome | Evidence under Task 4 checkpoint |
+| --- | --- | --- |
+| Approved correction worker routing/ownership | Pass: 30/30 and 17/17, exit 0 | `worker-summary-routing.log`, `worker-summary-ownership.log` |
+| Correction worker full/type/load checks | Pass: 223 Vitest tests plus existing Cucumber, each target exit 0 | `worker-summary-test.log`, `worker-summary-typecheck.log`, `worker-summary-load-check.log` |
+| Coordinator routing/ownership | Pass: 30/30 and 17/17, exit 0 | `coordinator-final-routing.log`, `coordinator-final-ownership.log` |
+| Coordinator full normal targets | Pass: 223 Vitest tests, Cucumber scenario/five reported steps, typecheck/module load, exit 0 | `coordinator-final-checks.log` |
+| Exact seven-file scope | Pass: approved stub-to-green, services fixture, four source-origin edits and sole observation correction | Coordinator full-source/snippet comparison |
+| Protected files | Pass: all 12 hashes unchanged | `protected-unchanged.sha256`; policy/unit tests/deps/plan/spec remain untouched |
+| Docs/IDs/links/whitespace/secret inspection | Pass before staged commit | Coordinator document and complete source/diff checks |
+
+Auto now uses declared/classified tiers for eligible idle user tasks. Physical
+selection remains opt-in; queued/extension/custom work, confirmations, tool
+continuations and retries keep owned physical evidence. Tests exercise saved
+selection, native state, direct-summary isolation and cancellation/replacement/
+branch guards offline. Classifier usage is attributed through non-chat custom
+entries. Neither worker exhausted its 60-turn cap; no budget retry was required.
+
+Task 4 is verified, not complete Slice 1 acceptance. All original scenario-ledger
+acceptance rows and milestone boxes stay unaccepted until Task 5's complete
+executable scenarios/error coverage and independent review. No global package,
+settings, live provider probe, installation or activation changed.
+
+## Configuration scope addition
+
+The user approved a searchable physical-model picker under `/automodel configure`
+for Slice 2. The canonical behavior, appended R61–R65 and AC045–AC052 are in
+[configuration-addendum.md](./configuration-addendum.md). Original source
+plan/spec snapshots and hashes stay frozen; read the addendum alongside Slice 2
+when compiling its controls/persistence tasks. Requirements and scenarios in
+the original source retain their IDs and acceptance gates.
+
+Users can replace every default tier pair and the classifier; summary dispatch
+uses the configured summary-tier pair. Use Pi's actual configured physical
+catalog and supported exact efforts, not hardcoded provider options. The desired
+Gemini/Bedrock example is unverified as an offering; the picker must not fabricate
+missing combinations or claim account entitlement from catalog presence.
+Atomic policy saving keeps separate preferences/credentials/provider setup
+unchanged and applies updates under the existing safe-idle control contract.
+
+This records future scope, not source/test implementation. Its standalone doc
+is committed at `3ec6b35`; index/evidence links accompany Task 4's coordinator
+bookkeeping, not its source scope. Both Task 4 workers have completed; the
+seven-file approved payload and one approved observation correction are unchanged. New doc/index/evidence changes are
+coordinator-owned; workers do not edit them. No live provider query, account
+change, global install or Slice 2 coding is authorized. All added acceptance
+rows remain Unverified; Slice 2 still waits for independent Slice 1 acceptance.
+
 ## Next action
 
-Compile only Task 4's ownership/native-routing payload against the actual
-policy/classifier interfaces committed at
-`4d10a9ea5d48c3e7aaa020beecaa13b283bf7ca1`. Resolve loaded-resource/input
-identity, lifecycle/generation guards, native route state and usage ownership
-in the coordinator; the exact source/tests/harness changes need their own edit
-approval before a worker. No install, global activation or paid probe is implied.
-Tasks 1–3 must not be repeated or unmarked because delayed worker notices arrive.
-Their verified hashes/checks are indexed above. The bounded Task 3 evidence
-commit is discoverable through plan/task/bookkeeping trailers; do not create
-a self-recording hash loop.
+Commit verified Task 4 on the authorized branch: seven inspected source/test
+files plus coordinator-owned compiled-payload/execution/README changes. Record
+the approved configuration addendum in a separate documentation commit. Save
+actual hashes using bounded bookkeeping, then compile Task 5's complete Slice 1
+acceptance and independent-review payload. Task 5 edits need separate approval.
+The original behavioral red remains valid. Task 5 and Slice 2 coding are not
+approved; the configuration addendum records future scope only.
+
+Tasks 1–3 stay verified; do not repeat them because delayed worker notices
+arrive. No install, host patch, global activation, paid probe or later task
+implementation is authorized. Milestones and original scenario rows remain
+unaccepted. Do not create a self-recording hash loop.
 
 Task 1 is the offline native-wiring scaffold: selected Auto dispatches physical
 Sol/xhigh after explicit opt-in. It does not implement tier classification,

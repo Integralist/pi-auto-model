@@ -22,7 +22,7 @@ test("native physical classification is isolated from selected Auto and session 
     expect(auto).toBeDefined();
     await fixture.session.setModel(auto!);
     fixture.respond("main answer");
-    await fixture.session.prompt("PRIVATE_MAIN_CONVERSATION");
+    await fixture.session.prompt("PRIVATE_MAIN_CONVERSATION", { source: "extension" });
     const before = {
       messages: structuredClone(fixture.session.messages),
       branch: structuredClone(fixture.session.sessionManager.getBranch()),
@@ -60,7 +60,7 @@ test("native physical classification is isolated from selected Auto and session 
       effort: fixture.session.thinkingLevel,
     }).toEqual(before);
     fixture.respond("unchanged main route");
-    await fixture.session.prompt("main follow-up");
+    await fixture.session.prompt("main follow-up", { source: "extension" });
     const main = fixture.session.messages.filter((message) => message.role === "assistant").at(-1);
     expect(main?.model).toBe("gpt-6.1-sol");
     expect(main?.thinkingLevel).toBe("xhigh");

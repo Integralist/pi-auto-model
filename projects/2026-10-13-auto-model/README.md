@@ -36,6 +36,7 @@ support for native virtual models without importing, installing, or requiring
 | [Implementation plan](./plan.md) | Architecture, source ownership, slices, rollout | Planning |
 | [Execution record](./execution.md) | Authorization, requirements, checks, commits | Active |
 | [Slice 1 tasks](./tasks-slice-1.md) | Stable task scope, coverage and implementation payloads | In progress |
+| [Configuration addendum](./configuration-addendum.md) | Slice 2 model picker, portable mappings and acceptance | Scope approved; not implemented |
 | [Native routing decision](../../docs/adr/ADR-0001.md) | Dispatch ownership and alternatives | Proposed |
 
 ## Start a fresh session
@@ -111,8 +112,11 @@ Resume from [the saved Slice 1 task list](./tasks-slice-1.md), not from another
 baseline preflight. The user approved task-at-a-time execution and Task 1's
 scaffold/test payload and Task 2's two-file policy, both now verified and
 committed. Task 3's bounded classifier is also verified and committed.
-Compile Task 4's ownership/native-routing payload next; Tasks 4–5 still need
-compilation and edit approval. The
+Task 4's seven-file native integration and summary-test correction are
+independently verified; record its commit before compiling Task 5's acceptance
+and independent-review payload. Task 5 needs separate edit approval. Before compiling Slice 2, also
+read the approved [configuration addendum](./configuration-addendum.md): users
+must be able to change every tier/classifier physical pair through Pi's catalog. The
 [execution record](./execution.md#next-action) owns current authorization
 and verification/commit gates. Keep the feature opt-in until plugin
 compatibility and rollback are verified.

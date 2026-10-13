@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** In progress; Tasks 1–3 committed and verified, Tasks 4–5 pending
+- **Status:** In progress; Tasks 1–3 committed, Task 4 verified, commit pending
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -59,8 +59,9 @@ one complete task payload, implement it, verify it, and commit it before
 compiling the next task. Task 1's payload and local dependency installation are
 approved and verified. Task 2's complete payload was separately approved and
 its implementation is now verified. Task 3's separately approved payload is
-also implemented and independently verified. Tasks 4–5 remain contracts
-awaiting compilation and approval. Whole-slice acceptance stays separate from these task gates.
+also implemented and independently verified. Task 4's registration decision
+is approved and its exact compiled payload is now separately approved for
+implementation. Task 5 remains a contract awaiting compilation and approval. Whole-slice acceptance stays separate from these task gates.
 
 ## Context for the executor
 
@@ -2172,9 +2173,12 @@ original main-routing scenario is accepted from this task. Commit before Task 4.
 - **Delivers:** Opt-in registered Auto routing with eligible input provenance,
   sticky physical routes and lifecycle-safe pending intent.
 - **Supports:** M1.2–M1.4; R01, R04, R07–R08, R15, R18, R20–R22, R45, R50
-- **Location:** `extensions/auto-model.ts`, `src/policy.ts`,
-  `test/request-ownership.test.ts`, `test/tier-routing.test.ts`,
-  `test/support/session.ts`
+- **Location:** `extensions/auto-model.ts`, `test/support/session.ts`,
+  `test/native-boundary.test.ts`, `features/steps/native-boundary.ts`,
+  `test/classifier-boundary.test.ts`; new `test/tier-routing.test.ts` and
+  `test/request-ownership.test.ts`
+- **Compiler status:** Approved payload and summary-observation correction
+  implemented and verified; commit pending
 
 **Stub / Signature:** Replace Task 1's baseline factory with the composed
 policy. Native router state must be JSON-serializable and contain only the
@@ -2199,12 +2203,14 @@ cover AC001–AC017, AC024–AC028 and AC030 plus these explicit ownership cases
 | Abort before dispatch or during classification | No later request uses canceled intent |
 | Session replacement/reload/shutdown/tree/fork boundary | Old generation cannot mutate new state |
 | Resume a different branch | Active branch evidence; no abandoned-branch route leakage |
-| Auto registration ID already belongs to a catalog model | Actionable collision error; do not replace it |
+| Auto registration ID already belongs to a physical catalog model | Native actionable collision error; do not replace it |
+| Another virtual router uses the same provider/ID | Approved incompatible deployment constraint; Pi permits virtual replacement |
 | Auto loaded but physical model selected | No classification or model-selection mutation |
 
-**Implementation (green):** Register on a context-bearing session lifecycle
-boundary and detect collision before registration. Capture eligible raw user
-input only when idle and unqueued, before expansion. Resolve actual loaded
+**Implementation (green):** Register during extension loading, as approved
+below, and retain Pi's native physical-ID collision guard. Capture/cleanup
+remain context-bearing lifecycle handlers. Capture eligible raw user input only
+when idle and unqueued, before expansion. Resolve actual loaded
 skill commands from public command metadata and raw frontmatter. Bind captured
 intent to the accepted expanded user prompt; never infer eligibility merely
 from native `reason: user`. Check originating session and generation before and
@@ -2229,7 +2235,1058 @@ public source path and transformed-input matching against installed Pi. If a
 public boundary cannot prove identity, return to the coordinator; do not loosen
 ownership or delegate that design decision.
 
-- [ ] Task 4 complete
+### Task 4 registration-boundary decision
+
+Compilation found that Task 4's draft lifecycle-only registration assumption
+cannot preserve native startup/resume selection. The user approved the corrected
+early-registration boundary and incompatible duplicate-virtual deployment
+constraint. Tasks 1–3 remain verified; source requirements/scenarios and
+milestone IDs remain unchanged.
+
+Installed Pi 1.2.0 provides these verified boundaries:
+
+| Boundary | Evidence and consequence |
+| --- | --- |
+| Early extension registrations | `dist/core/extensions/loader.js:403–411` queues the definition while loading and constructs routing context only when the router executes |
+| Startup services | `dist/core/agent-session-services.js:98–110` applies queued virtual registrations before session construction |
+| Recorded selection | `dist/core/sdk.js:91–113` restores the catalog model, or chooses a physical fallback, before `session_start` |
+| Late lifecycle | `dist/core/agent-session.js:2650` emits `session_start`; registration here cannot make Auto available to the preceding restoration step |
+| Native physical collision guard | `dist/core/model-runtime.js:693–703` throws before registration if the ID names a physical model |
+| Competing virtual definitions | The same native method replaces an existing virtual definition; public extension factories have no pre-bind model-registry context for a stronger duplicate-virtual ownership check |
+
+**Approved decision:** Register `github-copilot/auto` during extension loading,
+using Pi's native physical-ID collision rejection. The user accepted another
+router using this exact provider/ID as an incompatible deployment constraint. Keep
+session capture, generation/cancellation and teardown in context-bearing
+lifecycle handlers. Do not select Auto merely because it loads, or force a
+selection during resume to disguise late registration: that could override an
+explicit physical model choice.
+
+This corrects the compiler's `session_start` registration assumption while
+preserving native dispatch and branch state. Pi rejects physical collisions but
+permits virtual replacement. A competing router with exactly this provider/ID
+is an explicitly accepted incompatible deployment, not a guaranteed rejection.
+The tests retain the physical collision guard; no host patch or stronger
+collision claim is authorized.
+
+The compiled payload uses Pi's services-first session constructor in the
+offline harness to exercise real startup/resume/fork behavior. Existing wiring
+and standalone-classifier tests will explicitly submit extension-origin input,
+so their one-call/non-classification assertions keep their original meaning
+after eligible idle input begins routing. These exact code changes are
+compiled below but not implementation-approved; no dependency or host source
+patch is proposed.
+
+**Decision gate passed:** The user approved early registration and the same-ID
+virtual-router deployment constraint. That design decision did not approve implementation. The user subsequently
+approved the exact seven-file payload below as a separate per-edit gate. Requirement,
+scenario and milestone IDs remain intact; original plan/spec files are unchanged.
+
+### Task 4 exact scope and request identity
+
+**Edit scope:** `extensions/auto-model.ts`, `test/support/session.ts`,
+`test/native-boundary.test.ts`, `features/steps/native-boundary.ts`, and
+`test/classifier-boundary.test.ts`; add `test/tier-routing.test.ts` and
+`test/request-ownership.test.ts`. Do not edit `src/policy.ts` or its existing
+unit suites. No dependency, Makefile, global settings or host patch is needed.
+
+The native request reason does not prove fresh intent. Capture only idle,
+unqueued interactive/RPC input while Auto is selected. Resolve an explicit
+`/skill:name` against `pi.getCommands()` and its actual loaded source path.
+Reproduce Pi's verified expansion and require exact equality with accepted
+`before_agent_start` text. Check the skill file again at that boundary so a
+changed resource cannot reuse old metadata. Unknown slash commands are not
+verified skills; ordinary quoted skill examples remain typed task data.
+
+Before dispatch, bind that accepted text to a new persisted user-entry ID on
+the same session branch. Pi persists user messages at `message_end`, before
+calling the native router, not at `message_start`; therefore the route boundary
+performs that binding. Match the projected user text too. A transformed or
+handled input, custom-triggered run, queued input or reused older entry cannot
+consume another task's candidate. Once consumed, the identity cannot classify
+another request. Exact confirmation phrases keep the physical pair; other short
+instructions, including `debug authentication`, remain new tasks.
+
+JSON native state stores only version/current/captured physical pairs. Use
+`previous` for continuations and `failed` for retries before any new tier logic.
+Direct requests select the summary tier without consuming pending intent or
+returning main task state. Restore captured/current evidence from the active
+branch only. Lifecycle invalidation aborts owned work and changes generation;
+check generation/session/request abort again after awaiting classification.
+Late work cannot commit a route to a replacement session or another branch.
+
+Classifier usage is durable non-chat evidence under custom type
+`pi-auto-model.classifier-usage`, with the originating session/user-entry ID and
+physical classifier pair. Record reported usage only while that origin still
+belongs to the active session branch/generation. It does not count as assistant
+messages, change routing state or show a popup. Usage arriving after an ordinary
+abort can still be attributed to its original task; usage from a replaced
+session/abandoned branch is discarded rather than misattributed. Aggregating
+this evidence in a user-facing status/cost UI remains later work.
+
+### Task 4 compiling registration stub
+
+Replace `extensions/auto-model.ts` with this early-registration baseline stub.
+This moves registration to the approved startup boundary, but still deliberately
+ignores tiers. No selection is changed by loading it.
+
+```typescript
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
+export default function autoModel(pi: ExtensionAPI, _configuration?: unknown): void {
+  pi.registerVirtualModel({
+    provider: "github-copilot", id: "auto", name: "Auto",
+    thinkingLevels: ["high", "xhigh"],
+    route(_request, ctx) {
+      const model = ctx.modelRegistry.find("github-copilot", "gpt-6.1-sol");
+      if (!model || model.api === "pi-virtual") throw new Error("Select an available physical model");
+      return { model, thinkingLevel: "xhigh" };
+    },
+  });
+}
+```
+
+### Task 4 exact offline harness
+
+Replace `test/support/session.ts` with this services-first fixture. Defaults
+preserve the existing isolated no-tools Sol/xhigh start. Optional skills,
+handlers, fake response speed/retry and seeded session entries are test-only.
+Lifecycle replacements use Pi's real `AgentSessionRuntime` factory, not an
+extension event mock. Every provider is still native fake, credentials/stores
+are in memory, refresh is no-network, and fixture files stay in its temp tree.
+
+```typescript
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+  createAgentSessionFromServices,
+  createAgentSessionRuntime,
+  createAgentSessionServices,
+  createSyntheticSourceInfo,
+  ModelRuntime,
+  SessionManager,
+  SettingsManager,
+  type ExtensionFactory,
+  type Skill,
+} from "@earendil-works/pi-coding-agent";
+import {
+  fauxAssistantMessage,
+  fauxProvider,
+  InMemoryCredentialStore,
+  InMemoryModelsStore,
+} from "@earendil-works/pi-ai";
+import autoModel from "../../extensions/auto-model.ts";
+
+type Options = {
+  skills?: { name: string; description: string; tier?: unknown; body?: string }[];
+  extensions?: ExtensionFactory[];
+  configuration?: unknown;
+  sessionManager?: SessionManager;
+  restore?: boolean;
+  tools?: string[];
+  retry?: boolean;
+  physicalAuto?: boolean;
+};
+
+export async function createFixture(options: Options = {}) {
+  const dir = mkdtempSync(join(tmpdir(), "pi-auto-model-test-"));
+  const fake = fauxProvider({
+    provider: "github-copilot",
+    models: [
+      { id: "gpt-6.1-sol", reasoning: true },
+      { id: "gpt-6-luna", reasoning: true },
+      ...(options.physicalAuto ? [{ id: "auto", reasoning: true }] : []),
+    ],
+    tokensPerSecond: 1000000,
+  });
+  for (const model of fake.models) model.thinkingLevelMap = { high: "high", xhigh: "xhigh" };
+  const runtime = await ModelRuntime.create({
+    credentials: new InMemoryCredentialStore(),
+    modelsStore: new InMemoryModelsStore(),
+    modelsPath: null, refreshOnCreate: false, allowModelNetwork: false,
+  });
+  runtime.registerNativeProvider(fake.provider);
+  const settings = SettingsManager.inMemory({
+    defaultProvider: "github-copilot", defaultModel: "gpt-6.1-sol", defaultThinkingLevel: "xhigh",
+    compaction: { enabled: false },
+    retry: { enabled: options.retry ?? false, maxRetries: 1, baseDelayMs: 1 },
+    cacheWarming: "off",
+  });
+  const skills: Skill[] = (options.skills ?? []).map((skill) => {
+    const baseDir = join(dir, "skills", skill.name);
+    const filePath = join(baseDir, "SKILL.md");
+    mkdirSync(baseDir, { recursive: true });
+    const metadata = skill.tier === undefined ? "" : `metadata:\n  model-tier: ${JSON.stringify(skill.tier)}\n`;
+    writeFileSync(filePath, `---\nname: ${skill.name}\ndescription: ${JSON.stringify(skill.description)}\n${metadata}---\n${skill.body ?? "OFFLINE_SKILL_BODY"}\n`);
+    return {
+      name: skill.name, description: skill.description, filePath, baseDir,
+      disableModelInvocation: false,
+      sourceInfo: createSyntheticSourceInfo(filePath, { source: "test", scope: "temporary", baseDir }),
+    };
+  });
+  const errors: string[] = [];
+  let first = true;
+  try {
+    const owner = await createAgentSessionRuntime(async ({ sessionManager, sessionStartEvent }) => {
+      const services = await createAgentSessionServices({
+        cwd: dir, agentDir: dir, modelRuntime: runtime, settingsManager: settings,
+        resourceLoaderOptions: {
+          noExtensions: true, noSkills: true, noPromptTemplates: true,
+          noThemes: true, noContextFiles: true,
+          extensionFactories: [(pi) => autoModel(pi, options.configuration), ...(options.extensions ?? [])],
+          skillsOverride: () => ({ skills, diagnostics: [] }),
+        },
+      });
+      errors.push(...services.diagnostics.filter((issue) => issue.type === "error").map((issue) => issue.message));
+      const explicit = first && !options.restore;
+      first = false;
+      const result = await createAgentSessionFromServices({
+        services, sessionManager, sessionStartEvent,
+        model: explicit ? fake.getModel("gpt-6.1-sol")! : undefined,
+        thinkingLevel: explicit ? "xhigh" : undefined,
+        tools: options.tools ?? [],
+      });
+      return { ...result, services, diagnostics: services.diagnostics };
+    }, { cwd: dir, agentDir: dir, sessionManager: options.sessionManager ?? SessionManager.inMemory(dir) });
+    try {
+      const bind = async (session: typeof owner.session) => {
+        await session.bindExtensions({ mode: "print", onError: (error) => errors.push(error.error) });
+        await runtime.refresh({ allowNetwork: false });
+      };
+      owner.setRebindSession(bind);
+      await bind(owner.session);
+      let closed = false;
+      return {
+        get session() { return owner.session; },
+        owner, runtime, faux: fake, errors, dir, skills,
+        respond(text = "offline") { fake.setResponses([fauxAssistantMessage(text)]); },
+        close() {
+          if (closed) return;
+          closed = true;
+          owner.session.dispose();
+          rmSync(dir, { recursive: true, force: true });
+        },
+      };
+    } catch (error) {
+      await owner.dispose();
+      throw error;
+    }
+  } catch (error) {
+    rmSync(dir, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+export type Fixture = Awaited<ReturnType<typeof createFixture>>;
+```
+
+### Task 4 preserve the earlier test boundaries
+
+Apply these exact prompt-origin edits. Keep every existing selection/physical
+model/effort/usage/error assertion unchanged. These tests still prove baseline
+wiring and standalone classification; they are not fresh-user classification
+acceptance tests. Their original fake replies remain main assistant replies.
+
+| File | Existing text | Replacement |
+| --- | --- | --- |
+| `test/native-boundary.test.ts` | `await fixture.session.prompt("offline boundary proof");` | `await fixture.session.prompt("offline boundary proof", { source: "extension" });` |
+| `features/steps/native-boundary.ts` | `await fixture.session.prompt("offline boundary proof");` | `await fixture.session.prompt("offline boundary proof", { source: "extension" });` |
+| `test/classifier-boundary.test.ts` | `await fixture.session.prompt("PRIVATE_MAIN_CONVERSATION");` | `await fixture.session.prompt("PRIVATE_MAIN_CONVERSATION", { source: "extension" });` |
+| `test/classifier-boundary.test.ts` | `await fixture.session.prompt("main follow-up");` | `await fixture.session.prompt("main follow-up", { source: "extension" });` |
+
+### Task 4 exact tier-routing tests
+
+Create `test/tier-routing.test.ts`:
+
+```typescript
+import { ModelRegistry, SessionManager, VIRTUAL_MODEL_STATE_ENTRY } from "@earendil-works/pi-coding-agent";
+import { fauxAssistantMessage, fauxToolCall } from "@earendil-works/pi-ai";
+import { expect, test } from "vitest";
+import { createFixture, type Fixture } from "./support/session.ts";
+
+const sol = { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" };
+const luna = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };
+
+function last(f: Fixture) {
+  return f.session.messages.filter((message) => message.role === "assistant").at(-1)!;
+}
+
+async function select(f: Fixture) {
+  const auto = f.runtime.getModel("github-copilot", "auto");
+  expect(auto?.api).toBe("pi-virtual");
+  await f.session.setModel(auto!);
+}
+
+function config() {
+  return {
+    version: 1, mode: "model-and-effort", summaryTier: "trivial",
+    tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
+    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000 },
+  };
+}
+
+function states(f: Fixture) {
+  return f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom" && entry.customType === VIRTUAL_MODEL_STATE_ENTRY);
+}
+
+test("an explicit loaded trivial skill dispatches Luna/high without classification", async () => {
+  const f = await createFixture({ skills: [{ name: "new-skill", description: "Small work", tier: "trivial" }] });
+  try {
+    expect(f.session.model?.id).toBe("gpt-6.1-sol");
+    await select(f);
+    f.respond("main answer");
+    await f.session.prompt("/skill:new-skill");
+    expect(last(f).model).toBe("gpt-6-luna");
+    expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).stopReason).toBe("stop");
+    expect(f.faux.state.callCount).toBe(1);
+    expect(f.session.model?.id).toBe("auto");
+    expect(f.errors).toEqual([]);
+    expect(states(f)).toHaveLength(1);
+  } finally { f.close(); }
+});
+
+test.each([
+  ["moderate", "gpt-6-luna", "high"], ["  CoMpLeX  ", "gpt-6.1-sol", "xhigh"],
+  ["frontier", "gpt-6.1-sol", "xhigh"],
+])("arbitrary commit skill honors declared %s instead of its name", async (tier, model, effort) => {
+  const f = await createFixture({ skills: [{ name: "commit", description: "Work", tier }] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:commit extra arguments");
+    expect(last(f).model).toBe(model); expect(last(f).thinkingLevel).toBe(effort);
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+
+test.each([undefined, "unknown", ["complex"], 7].map((tier) => ({ tier })))(
+  "invalid/absent declared tier $tier classifies loaded name and description only", async ({ tier }) => {
+    const f = await createFixture({ skills: [{ name: "new-skill", description: "Draft a short PR", tier, body: "POISON_BODY" }] });
+    try {
+      await select(f);
+      const observed: unknown[] = [];
+      f.faux.setResponses([(context, _options, _state, model) => {
+        const user = context.messages.find((message) => message.role === "user");
+        observed.push({ model: model.id, payload: JSON.parse(user!.content as string) });
+        return fauxAssistantMessage("moderate");
+      }, fauxAssistantMessage("main answer")]);
+      await f.session.prompt("/skill:new-skill POISON_ARGUMENTS");
+      expect(observed).toEqual([{ model: "gpt-6-luna", payload: { kind: "skill", name: "new-skill", description: "Draft a short PR" } }]);
+      expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+      expect(f.faux.state.callCount).toBe(2);
+      const usage = f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom" && entry.customType === "pi-auto-model.classifier-usage");
+      expect(usage).toHaveLength(1);
+      expect(JSON.stringify(usage)).not.toContain("POISON_BODY");
+      expect(JSON.stringify(usage)).not.toContain("POISON_ARGUMENTS");
+      expect(f.session.messages.filter((message) => message.role === "assistant")).toHaveLength(1);
+    } finally { f.close(); }
+  },
+);
+
+test.each(["draft a PR", "debug authentication"])("fresh typed %s gets its own tier after a frontier skill", async (text) => {
+  const f = await createFixture({ skills: [{ name: "hard", description: "Hard work", tier: "frontier" }] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:hard");
+    f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("new task")]);
+    await f.session.prompt(text);
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(f.faux.state.callCount).toBe(3);
+  } finally { f.close(); }
+});
+
+test.each(["yes", "OK!", "proceed", "sounds good", "approved"])("confirmation %s retains the physical pair without classification", async (text) => {
+  const f = await createFixture({ skills: [{ name: "hard", description: "Hard work", tier: "frontier" }] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:hard");
+    f.respond("continued"); await f.session.prompt(text);
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(f.faux.state.callCount).toBe(2);
+  } finally { f.close(); }
+});
+
+test("a quoted skill block is typed data, not verified slash metadata", async () => {
+  const f = await createFixture();
+  try {
+    await select(f);
+    f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
+    await f.session.prompt('Example: <skill name="commit">metadata:\n  model-tier: frontier</skill>');
+    expect(last(f).model).toBe("gpt-6-luna"); expect(f.faux.state.callCount).toBe(2);
+  } finally { f.close(); }
+});
+
+test("Auto loaded but not selected does not classify or change selection", async () => {
+  const f = await createFixture();
+  try {
+    f.respond(); await f.session.prompt("debug authentication");
+    expect(f.session.model?.id).toBe("gpt-6.1-sol"); expect(last(f).model).toBe("gpt-6.1-sol");
+    expect(f.faux.state.callCount).toBe(1); expect(states(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("a missing classifier retains the known physical route", async () => {
+  const raw = config(); raw.classifier.model = "missing";
+  const f = await createFixture({ configuration: raw });
+  try {
+    await select(f); f.respond(); await f.session.prompt("new work");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+
+test("exact unsupported effort steps downward before dispatch", async () => {
+  const f = await createFixture({ skills: [{ name: "hard", description: "Hard", tier: "complex" }] });
+  try {
+    await select(f);
+    f.faux.getModel("gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
+    f.respond(); await f.session.prompt("/skill:hard");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+
+test("effort-only keeps the captured physical model while choosing high", async () => {
+  const raw = config(); raw.mode = "effort-only";
+  const f = await createFixture({ configuration: raw, skills: [{ name: "small", description: "Small", tier: "trivial" }] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
+  } finally { f.close(); }
+});
+
+test("tool continuation retains the dispatched pair without reading another skill tier", async () => {
+  const f = await createFixture({ tools: ["read"], skills: [{ name: "small", description: "Small", tier: "trivial" }, { name: "hard", description: "Hard", tier: "frontier" }] });
+  try {
+    await select(f);
+    f.faux.setResponses([fauxAssistantMessage([fauxToolCall("read", { path: f.skills[1]!.filePath })], { stopReason: "toolUse" }), fauxAssistantMessage("after tool")]);
+    await f.session.prompt("/skill:small");
+    expect(f.session.messages.some((message) => message.role === "toolResult")).toBe(true);
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(f.faux.state.callCount).toBe(2);
+  } finally { f.close(); }
+});
+
+test("a retryable live failure retries the failed pair without classification or step-up", async () => {
+  const f = await createFixture({ retry: true, skills: [{ name: "hard", description: "Hard", tier: "complex" }] });
+  try {
+    await select(f);
+    const models: string[] = [];
+    f.faux.setResponses([(_context, _options, _state, model) => {
+      models.push(model.id);
+      return fauxAssistantMessage("failure", { stopReason: "error", errorMessage: "429 rate limit" });
+    }, (_context, _options, _state, model) => {
+      models.push(model.id); return fauxAssistantMessage("recovered");
+    }]);
+    await f.session.prompt("/skill:hard");
+    expect(models).toEqual(["gpt-6.1-sol", "gpt-6.1-sol"]);
+    expect(last(f).thinkingLevel).toBe("xhigh"); expect(last(f).stopReason).toBe("stop");
+  } finally { f.close(); }
+});
+
+test("physical catalog collisions are rejected without replacing the model", async () => {
+  const f = await createFixture({ physicalAuto: true });
+  try {
+    expect(f.runtime.getModel("github-copilot", "auto")?.api).not.toBe("pi-virtual");
+    expect(f.errors.join("\n")).toMatch(/physical model/);
+    expect(f.session.model?.id).toBe("gpt-6.1-sol");
+    expect(f.faux.state.callCount).toBe(0);
+  } finally { f.close(); }
+});
+
+test("invalid automatic max is actionable before any physical dispatch", async () => {
+  const raw = config(); raw.classifier.effort = "max";
+  const f = await createFixture({ configuration: raw });
+  try {
+    await select(f); f.respond(); await f.session.prompt("new work");
+    expect(last(f).stopReason).toBe("error");
+    expect(last(f).errorMessage).toContain("config.classifier.effort");
+    expect(f.faux.state.callCount).toBe(0);
+  } finally { f.close(); }
+});
+
+test("saved Auto selection and native physical state restore before the first resumed request", async () => {
+  const first = await createFixture({ skills: [{ name: "small", description: "Small", tier: "trivial" }] });
+  let restored: Fixture | undefined;
+  try {
+    await select(first); first.respond(); await first.session.prompt("/skill:small");
+    const entries = structuredClone(first.session.sessionManager.getEntries());
+    const manager = SessionManager.inMemory(undefined, undefined, [first.session.sessionManager.getHeader()!, ...entries]);
+    restored = await createFixture({ restore: true, sessionManager: manager });
+    expect(restored.session.model?.id).toBe("auto");
+    restored.respond(); await restored.session.prompt("yes");
+    expect(last(restored).model).toBe("gpt-6-luna"); expect(last(restored).thinkingLevel).toBe("high");
+    expect(restored.faux.state.callCount).toBe(1); expect(restored.errors).toEqual([]);
+  } finally { restored?.close(); first.close(); }
+});
+
+test("all configured tiers unavailable retain a known physical pair without stepping up", async () => {
+  const raw = config();
+  for (const tier of Object.values(raw.tiers)) tier.model = "missing";
+  const f = await createFixture({ configuration: raw, skills: [{ name: "small", description: "Small", tier: "trivial" }] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+
+test("an unusable classified tier with no captured or active pair requires physical selection", async () => {
+  const manager = SessionManager.inMemory();
+  manager.appendModelChange("github-copilot", "auto"); manager.appendThinkingLevelChange("xhigh");
+  manager.appendMessage({ role: "user", content: "seed", timestamp: 0 });
+  const f = await createFixture({ restore: true, sessionManager: manager });
+  try {
+    expect(f.session.model?.id).toBe("auto");
+    f.respond("unknown"); await f.session.prompt("new task");
+    expect(last(f).stopReason).toBe("error");
+    expect(last(f).errorMessage).toMatch(/Select an available physical model and effort/);
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+
+test("a virtual configured physical target is rejected before any provider call", async () => {
+  const raw = config(); raw.tiers.frontier.model = "auto";
+  const f = await createFixture({ configuration: raw });
+  try {
+    await select(f); f.respond(); await f.session.prompt("new task");
+    expect(last(f).stopReason).toBe("error"); expect(last(f).errorMessage).toMatch(/virtual target/);
+    expect(f.faux.state.callCount).toBe(0);
+  } finally { f.close(); }
+});
+
+test("an explicitly saved physical selection is not replaced with Auto on resume", async () => {
+  const first = await createFixture(); let restored: Fixture | undefined;
+  try {
+    await select(first); first.respond(); await first.session.prompt("background", { source: "extension" });
+    await first.session.setModel(first.faux.getModel("gpt-6.1-sol")!);
+    first.respond(); await first.session.prompt("physical work", { source: "extension" });
+    const manager = SessionManager.inMemory(undefined, undefined, [first.session.sessionManager.getHeader()!, ...structuredClone(first.session.sessionManager.getEntries())]);
+    restored = await createFixture({ restore: true, sessionManager: manager });
+    expect(restored.session.model?.id).toBe("gpt-6.1-sol");
+    restored.respond(); await restored.session.prompt("new task");
+    expect(restored.faux.state.callCount).toBe(1); expect(last(restored).model).toBe("gpt-6.1-sol");
+  } finally { restored?.close(); first.close(); }
+});
+
+test("direct summary dispatch does not write main native route state", async () => {
+  const f = await createFixture({ skills: [{ name: "hard", description: "Hard", tier: "complex" }] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:hard");
+    const before = structuredClone(f.session.sessionManager.getBranch());
+    const messages = structuredClone(f.session.messages);
+    const requests: { model: string; effort?: string }[] = [];
+    f.faux.setResponses([(_context, options, _state, model) => {
+      requests.push({ model: model.id, effort: options?.reasoning });
+      return fauxAssistantMessage("summary");
+    }]);
+    const auto = f.runtime.getModel("github-copilot", "auto")!;
+    const summary = await new ModelRegistry(f.runtime).streamSimple(auto, { messages: [{ role: "user", content: "summary", timestamp: Date.now() }] }).result();
+    expect(summary.model).toBe("gpt-6-luna");
+    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "high" }]);
+    expect(f.session.sessionManager.getBranch()).toEqual(before); expect(f.session.messages).toEqual(messages);
+    f.respond(); await f.session.prompt("yes");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+  } finally { f.close(); }
+});
+```
+
+### Task 4 exact request-ownership tests
+
+Create `test/request-ownership.test.ts`:
+
+```typescript
+import { readFileSync, writeFileSync } from "node:fs";
+import { ModelRegistry, type ExtensionFactory } from "@earendil-works/pi-coding-agent";
+import { fauxAssistantMessage } from "@earendil-works/pi-ai";
+import { expect, test } from "vitest";
+import { createFixture, type Fixture } from "./support/session.ts";
+
+async function select(f: Fixture) { await f.session.setModel(f.runtime.getModel("github-copilot", "auto")!); }
+function last(f: Fixture) { return f.session.messages.filter((message) => message.role === "assistant").at(-1)!; }
+function small() { return { name: "small", description: "Small work", tier: "trivial" }; }
+function hard() { return { name: "hard", description: "Hard work", tier: "frontier" }; }
+function gate() {
+  let release!: () => void;
+  const wait = new Promise<void>((resolve) => { release = resolve; });
+  return { wait, release };
+}
+
+function usage(f: Fixture) {
+  return f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom" && entry.customType === "pi-auto-model.classifier-usage");
+}
+
+test.each(["handled", "transform"])("later input handler %s cannot reuse the original skill candidate", async (action) => {
+  const handler: ExtensionFactory = (pi) => {
+    pi.on("input", (event) => {
+      if (event.text !== "/skill:small") return;
+      return action === "handled" ? { action: "handled" } : { action: "transform", text: "different task" };
+    });
+  };
+  const f = await createFixture({ skills: [small()], extensions: [handler] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    if (action === "handled") expect(f.faux.state.callCount).toBe(0);
+    else { expect(last(f).model).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(1); }
+    f.respond(); await f.session.prompt("extension continuation", { source: "extension" });
+    expect(last(f).model).toBe("gpt-6.1-sol");
+    expect(usage(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("a skill changed during input handling cannot route using its old declared tier", async () => {
+  let file = "";
+  const mutate: ExtensionFactory = (pi) => {
+    pi.on("input", () => { writeFileSync(file, readFileSync(file, "utf8").replace("trivial", "frontier")); });
+  };
+  const f = await createFixture({ skills: [small()], extensions: [mutate] });
+  file = f.skills[0]!.filePath;
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(1);
+    expect(usage(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("an unknown slash skill cannot impersonate a loaded resource", async () => {
+  const f = await createFixture({ skills: [small()] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:unknown");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(1);
+    expect(usage(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test.each(["steer", "followUp"] as const)("busy %s delivery keeps the active physical pair", async (streamingBehavior) => {
+  const f = await createFixture({ skills: [hard()] });
+  const started = gate(); const finish = gate();
+  try {
+    await select(f);
+    f.faux.setResponses([async () => { started.release(); await finish.wait; return fauxAssistantMessage("active answer"); }, fauxAssistantMessage("queued answer")]);
+    const running = f.session.prompt("/skill:hard");
+    await started.wait;
+    await f.session.prompt("draft a new PR", { streamingBehavior });
+    finish.release(); await running;
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(f.faux.state.callCount).toBe(2); expect(usage(f)).toEqual([]);
+  } finally { finish.release(); f.close(); }
+});
+
+test("an extension-origin idle message keeps the physical route", async () => {
+  const f = await createFixture({ skills: [small()] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    f.respond(); await f.session.prompt("debug authentication", { source: "extension" });
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(f.faux.state.callCount).toBe(2); expect(usage(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("a custom-triggered run cannot consume a handled input's candidate", async () => {
+  const custom: ExtensionFactory = (pi) => {
+    pi.on("input", (event) => {
+      if (event.text === "/skill:small") {
+        pi.sendMessage({ customType: "offline-event", content: "background update", display: false }, { triggerTurn: true });
+        return { action: "handled" };
+      }
+    });
+  };
+  const f = await createFixture({ skills: [small()], extensions: [custom] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    await f.session.waitForIdle();
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(1);
+    expect(usage(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("a direct call between accepted input and main dispatch does not consume intent", async () => {
+  const calls: string[] = [];
+  const direct: ExtensionFactory = (pi) => {
+    pi.on("before_agent_start", async (_event, ctx) => {
+      const model = ctx.modelRegistry.find("github-copilot", "auto")!;
+      const reply = await ctx.modelRegistry.streamSimple(model, { messages: [{ role: "user", content: "summary", timestamp: Date.now() }] }).result();
+      calls.push(reply.model);
+    });
+  };
+  const f = await createFixture({ skills: [small()], extensions: [direct] });
+  try {
+    await select(f);
+    f.faux.setResponses([fauxAssistantMessage("summary"), fauxAssistantMessage("main")]);
+    await f.session.prompt("/skill:small");
+    expect(calls).toEqual(["gpt-6-luna"]); expect(last(f).model).toBe("gpt-6-luna");
+    expect(f.faux.state.callCount).toBe(2); expect(usage(f)).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("abort while starting cannot leave declared intent for a later extension message", async () => {
+  let first = true;
+  const cancel: ExtensionFactory = (pi) => {
+    pi.on("before_agent_start", (_event, ctx) => { if (first) { first = false; ctx.abort(); } });
+  };
+  const f = await createFixture({ skills: [small()], extensions: [cancel] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    expect(f.faux.state.callCount).toBe(0);
+    f.respond(); await f.session.prompt("later", { source: "extension" });
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(1);
+  } finally { f.close(); }
+});
+
+test("aborted classification cannot route a later task or attribute usage to it", async () => {
+  const f = await createFixture();
+  const started = gate(); const finish = gate();
+  try {
+    await select(f);
+    f.faux.setResponses([async () => { started.release(); await finish.wait; return fauxAssistantMessage("trivial"); }]);
+    const pending = f.session.prompt("new task");
+    await started.wait; await f.session.abort(); await pending;
+    f.respond(); await f.session.prompt("later task", { source: "extension" });
+    const later = structuredClone(f.session.sessionManager.getBranch());
+    finish.release(); await Promise.resolve(); await Promise.resolve();
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    const laterUser = later.findLast((entry) => entry.type === "message" && entry.message.role === "user")!;
+    expect(JSON.stringify(usage(f))).not.toContain(laterUser.id);
+    expect(f.session.messages.filter((message) => message.role === "assistant" && message.stopReason === "stop")).toHaveLength(1);
+  } finally { finish.release(); f.close(); }
+});
+
+test.each(["reload", "new", "shutdown"])("%s invalidates pending intent and restores a clean runtime boundary", async (kind) => {
+  const f = await createFixture({ skills: [small()] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    if (kind === "reload") {
+      await f.session.reload();
+      expect(f.session.model?.id).toBe("auto");
+      f.respond(); await f.session.prompt("yes");
+      expect(last(f).model).toBe("gpt-6-luna");
+    } else if (kind === "new") {
+      await f.owner.newSession();
+      expect(f.session.model?.id).toBe("gpt-6.1-sol");
+      await select(f); f.respond(); await f.session.prompt("background", { source: "extension" });
+      expect(last(f).model).toBe("gpt-6.1-sol"); expect(usage(f)).toEqual([]);
+    } else {
+      await f.owner.dispose();
+      expect(usage(f)).toEqual([]);
+    }
+    expect(f.errors).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("tree navigation and fork retain only the selected branch's physical evidence", async () => {
+  const f = await createFixture({ skills: [small(), hard()] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:small");
+    const smallAnswer = f.session.sessionManager.getBranch().findLast((entry) => entry.type === "message" && entry.message.role === "assistant")!;
+    f.respond(); await f.session.prompt("/skill:hard");
+    expect(last(f).model).toBe("gpt-6.1-sol");
+    await f.session.navigateTree(smallAnswer.id, { summarize: false });
+    f.respond(); await f.session.prompt("yes");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    await f.owner.fork(smallAnswer.id, { position: "at" });
+    expect(f.session.model?.id).toBe("auto");
+    f.respond(); await f.session.prompt("yes");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(f.errors).toEqual([]);
+  } finally { f.close(); }
+});
+
+test("session replacement during classification cannot commit into the new session", async () => {
+  const f = await createFixture(); const started = gate(); const finish = gate();
+  try {
+    await select(f);
+    f.faux.setResponses([async () => { started.release(); await finish.wait; return fauxAssistantMessage("trivial"); }]);
+    const pending = f.session.prompt("new task");
+    await started.wait; await f.owner.newSession(); await pending;
+    expect(f.session.model?.id).toBe("gpt-6.1-sol");
+    await select(f); f.respond(); await f.session.prompt("background", { source: "extension" });
+    const before = structuredClone(f.session.sessionManager.getEntries());
+    finish.release(); await Promise.resolve(); await Promise.resolve();
+    expect(f.session.sessionManager.getEntries()).toEqual(before);
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(usage(f)).toEqual([]);
+  } finally { finish.release(); f.close(); }
+});
+
+test("shutdown during classification discards late route and usage writes", async () => {
+  const f = await createFixture();
+  const started = gate(); const finish = gate();
+  try {
+    await select(f);
+    f.faux.setResponses([async () => { started.release(); await finish.wait; return fauxAssistantMessage("trivial"); }]);
+    const pending = f.session.prompt("new task");
+    await started.wait; await f.owner.dispose(); await pending;
+    const before = structuredClone(f.session.sessionManager.getEntries());
+    finish.release(); await Promise.resolve(); await Promise.resolve();
+    expect(f.session.sessionManager.getEntries()).toEqual(before);
+    expect(f.faux.state.callCount).toBe(1);
+  } finally { finish.release(); f.close(); }
+});
+```
+
+### Task 4 assertion-red and green boundary
+
+With the early-registration stub, updated harness/origin edits and both new
+full test files in place, run:
+
+```bash
+make typecheck
+make test-unit TEST_FILTER=test/tier-routing.test.ts
+```
+
+Required red: `an explicit loaded trivial skill dispatches Luna/high without
+classification` reaches the native provider and returns Sol/xhigh under the
+stub, so the physical-model assertion fails. Do not count missing provider,
+import, session, compiler or fixture errors as red. Keep all new assertions
+unchanged when replacing the stub.
+
+Replace `extensions/auto-model.ts` with this complete green file:
+
+```typescript
+import { readFileSync } from "node:fs";
+import { dirname } from "node:path";
+import { getSupportedThinkingLevels, type Model, type Api, type ModelThinkingLevel } from "@earendil-works/pi-ai";
+import {
+  stripFrontmatter,
+  VIRTUAL_MODEL_STATE_ENTRY,
+  type ExtensionAPI,
+  type ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
+import { resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type TaskInput } from "../src/policy.ts";
+
+type State = { version: 1; current: PhysicalPair; captured?: PhysicalPair };
+type Candidate = {
+  expected: string;
+  task?: TaskInput["task"];
+  path?: string;
+  sessionId: string;
+  lastUserId?: string;
+  generation: number;
+};
+const provider = "github-copilot";
+const modelId = "auto";
+const efforts: readonly AutomaticEffort[] = ["off", "minimal", "low", "medium", "high", "xhigh"];
+
+function text(content: unknown): string {
+  if (typeof content === "string") return content;
+  if (!Array.isArray(content)) return "";
+  return content.map((block) => block?.type === "text" && typeof block.text === "string" ? block.text : "").join("");
+}
+
+function physical(model: Model<Api> | undefined, level: ModelThinkingLevel | undefined): PhysicalPair | undefined {
+  if (!model || model.api === "pi-virtual" || !level || !efforts.includes(level as AutomaticEffort)) return undefined;
+  if (!getSupportedThinkingLevels(model).includes(level)) return undefined;
+  return { provider: model.provider, model: model.id, effort: level as AutomaticEffort };
+}
+
+function pair(value: unknown, ctx: ExtensionContext): PhysicalPair | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const candidate = value as Record<string, unknown>;
+  if (typeof candidate.provider !== "string" || typeof candidate.model !== "string" || typeof candidate.effort !== "string") return undefined;
+  return physical(ctx.modelRegistry.find(candidate.provider, candidate.model), candidate.effort as ModelThinkingLevel);
+}
+
+function state(value: unknown, ctx: ExtensionContext): State | undefined {
+  if (!value || typeof value !== "object" || (value as { version?: unknown }).version !== 1) return undefined;
+  const raw = value as { current?: unknown; captured?: unknown };
+  const current = pair(raw.current, ctx);
+  return current ? { version: 1, current, captured: pair(raw.captured, ctx) } : undefined;
+}
+
+function branchState(ctx: ExtensionContext): State | undefined {
+  for (const entry of ctx.sessionManager.getBranch().toReversed()) {
+    if (entry.type !== "custom" || entry.customType !== VIRTUAL_MODEL_STATE_ENTRY || !entry.data || typeof entry.data !== "object") continue;
+    const raw = entry.data as { provider?: unknown; modelId?: unknown; state?: unknown };
+    if (raw.provider === provider && raw.modelId === modelId) return state(raw.state, ctx);
+  }
+  return undefined;
+}
+
+function lastUser(ctx: ExtensionContext) {
+  return ctx.sessionManager.getBranch().findLast((entry) => entry.type === "message" && entry.message.role === "user");
+}
+
+function selectedPhysical(ctx: ExtensionContext): PhysicalPair | undefined {
+  let model: Model<Api> | undefined;
+  let effort: ModelThinkingLevel | undefined;
+  let captured: PhysicalPair | undefined;
+  for (const entry of ctx.sessionManager.getBranch()) {
+    if (entry.type === "thinking_level_change") effort = entry.thinkingLevel as ModelThinkingLevel;
+    if (entry.type === "model_change") {
+      const next = ctx.modelRegistry.find(entry.provider, entry.modelId);
+      model = next?.api === "pi-virtual" ? undefined : next;
+    }
+    captured = physical(model, effort) ?? captured;
+  }
+  return captured;
+}
+
+function confirmation(value: string) {
+  return /^(yes|y|ok|okay|go|continue|proceed|approve|approved|sounds good)[.!]*$/i.test(value.trim());
+}
+
+export default function autoModel(pi: ExtensionAPI, configuration?: unknown): void {
+  let raw: Candidate | undefined;
+  let accepted: Candidate | undefined;
+  let captured: PhysicalPair | undefined;
+  let generation = 0;
+  let lifecycle = new AbortController();
+  let activeSession = "";
+  const invalidate = () => {
+    lifecycle.abort(); lifecycle = new AbortController(); generation++;
+    raw = undefined; accepted = undefined;
+  };
+  const restore = (ctx: ExtensionContext) => {
+    invalidate(); activeSession = ctx.sessionManager.getSessionId();
+    captured = physical(ctx.model, ctx.thinkingLevel) ?? branchState(ctx)?.captured ?? selectedPhysical(ctx);
+  };
+
+  pi.registerVirtualModel<State>({
+    provider, id: modelId, name: "Auto", thinkingLevels: ["high", "xhigh"],
+    async route(request, ctx) {
+      const saved = state(request.state, ctx) ?? branchState(ctx);
+      const current = physical(request.previous?.model, request.previous?.thinkingLevel) ?? saved?.current;
+      const startup = saved?.captured ?? captured;
+      if (request.reason === "direct") {
+        return resolveRoute(configuration, { direct: true, current, captured: startup }, ctx.modelRegistry);
+      }
+      const failed = request.reason === "retry" ? request.failed : undefined;
+      const sticky = failed ?? (request.reason === "continuation" ? request.previous : undefined);
+      const stickyPair = physical(sticky?.model, sticky?.thinkingLevel);
+      if (sticky && stickyPair) {
+        request.signal?.throwIfAborted();
+        return { model: sticky.model, thinkingLevel: stickyPair.effort, state: request.state };
+      }
+      const candidate = request.reason === "user" ? accepted : undefined;
+      accepted = undefined;
+      const entry = lastUser(ctx);
+      const latest = request.messages.findLast((message) => message.role === "user");
+      const owned = candidate && candidate.generation === generation && candidate.sessionId === activeSession
+        && activeSession === ctx.sessionManager.getSessionId() && entry?.type === "message"
+        && entry.message.role === "user" && entry.id !== candidate.lastUserId
+        && text(entry.message.content) === candidate.expected
+        && text(latest?.content) === candidate.expected;
+      const version = generation;
+      const sessionId = ctx.sessionManager.getSessionId();
+      const userEntryId = owned ? entry.id : undefined;
+      const originSignal = lifecycle.signal;
+      const result = await resolveTaskRoute(configuration, {
+        task: owned ? candidate.task : undefined, current, captured: startup,
+      }, ctx.modelRegistry, {
+        signal: request.signal, lifecycleSignal: originSignal,
+        onClassifierUsage(record) {
+          if (!userEntryId || version !== generation || sessionId !== activeSession || sessionId !== ctx.sessionManager.getSessionId()) return;
+          if (!ctx.sessionManager.getBranch().some((item) => item.id === userEntryId)) return;
+          pi.appendEntry("pi-auto-model.classifier-usage", { sessionId, userEntryId, pair: record.pair, usage: record.usage });
+        },
+      });
+      request.signal?.throwIfAborted();
+      if (originSignal.aborted || version !== generation || sessionId !== activeSession) {
+        throw new Error("Auto task was canceled before dispatch; submit it in the active session.");
+      }
+      const chosen = physical(result.model, result.thinkingLevel)!;
+      return { model: result.model, thinkingLevel: result.thinkingLevel, state: { version: 1, current: chosen, captured: startup } };
+    },
+  });
+
+  pi.on("session_start", (_event, ctx) => restore(ctx));
+  pi.on("session_tree", (_event, ctx) => restore(ctx));
+  pi.on("session_before_tree", () => { invalidate(); });
+  pi.on("session_before_switch", () => { invalidate(); });
+  pi.on("session_before_fork", () => { invalidate(); });
+  pi.on("session_shutdown", () => { invalidate(); activeSession = ""; captured = undefined; });
+  pi.on("agent_end", () => { raw = undefined; accepted = undefined; });
+  pi.on("model_select", (event, ctx) => {
+    invalidate(); activeSession = ctx.sessionManager.getSessionId();
+    captured = physical(event.model, ctx.thinkingLevel) ?? selectedPhysical(ctx)
+      ?? physical(event.previousModel, ctx.thinkingLevel) ?? branchState(ctx)?.captured ?? captured;
+  });
+
+  pi.on("input", (event, ctx) => {
+    raw = undefined;
+    if (ctx.model?.provider !== provider || ctx.model.id !== modelId || ctx.model.api !== "pi-virtual") return;
+    if (event.source === "extension" || event.streamingBehavior || !ctx.isIdle() || ctx.hasPendingMessages()) return;
+    let expected = event.text;
+    let task: TaskInput["task"];
+    let path: string | undefined;
+    if (event.text.startsWith("/skill:")) {
+      const split = event.text.indexOf(" ");
+      const name = split < 0 ? event.text.slice(7) : event.text.slice(7, split);
+      const args = split < 0 ? "" : event.text.slice(split + 1).trim();
+      const command = pi.getCommands().find((item) => item.source === "skill" && item.name === `skill:${name}`);
+      path = command?.sourceInfo?.path;
+      if (!path || !command) return;
+      try {
+        const content = readFileSync(path, "utf8");
+        const block = `<skill name="${name}" location="${path}">\nReferences are relative to ${dirname(path)}.\n\n${stripFrontmatter(content).trim()}\n</skill>`;
+        expected = args ? `${block}\n\n${args}` : block;
+        task = { kind: "skill", name, description: command.description ?? "", content };
+      } catch { return; }
+    } else if (event.text.startsWith("/")) return;
+    else if (!confirmation(event.text) && event.text.trim()) task = { kind: "typed", text: event.text };
+    raw = { expected, task, path, sessionId: ctx.sessionManager.getSessionId(), lastUserId: lastUser(ctx)?.id, generation };
+  });
+
+  pi.on("before_agent_start", (event, ctx) => {
+    accepted = undefined;
+    const candidate = raw; raw = undefined;
+    if (event.messageType !== "user" || !candidate || candidate.expected !== event.prompt) return;
+    if (candidate.generation !== generation || candidate.sessionId !== ctx.sessionManager.getSessionId()) return;
+    if (candidate.path && candidate.task?.kind === "skill") {
+      try { if (readFileSync(candidate.path, "utf8") !== candidate.task.content) return; }
+      catch { return; }
+    }
+    accepted = candidate;
+  });
+}
+```
+
+### Task 4 verification and approval gate
+
+Run through the unchanged Makefile:
+
+```bash
+make test-unit TEST_FILTER=test/tier-routing.test.ts
+make test-unit TEST_FILTER=test/request-ownership.test.ts
+make test
+make typecheck
+make load-check
+```
+
+Expected: new main-routing/ownership tests pass alongside all 176 existing
+Vitest tests and Cucumber. Assert actual assistant physical model/effort, not
+selected/requested labels. Preserve original assertion-red and recorded exits.
+New tests exercise real Pi registration/events/native state/queue/tree/retry and
+fake provider responses; no live model or classifier call is authorized.
+
+The coordinator checked both stub-plus-tests and green-plus-tests in memory
+with TypeScript 7.0.2 against installed Pi 1.2.0: zero diagnostics. All seven
+proposed files plus existing policy/classifier tests and feature steps were
+included. Compiler logs are at `/tmp/pi-auto-model-task4-compile.OV3Le5`;
+that preflight wrote no source and did not count as behavior proof. The initial
+176-test/Cucumber/type/load baseline passed. Implementation checks below now
+supply Task 4 evidence; slice acceptance remains Task 5. If a runtime assumption fails during execution, return it to
+the coordinator; do not patch the host or relax ownership assertions. Some full-slice Cucumber examples/error branches
+remain Task 5's acceptance gate. This task does not accept M1.1–M1.4 by itself.
+The user approved these seven files. One strict Luna/xhigh worker may apply
+only this payload, prove behavioral red, replace the stub and report checks. Coordinator review,
+normal rerun and commit precede Task 5.
+
+**Coordinator verification:** The original native trivial-skill assertion-red
+is preserved. One approved summary-test correction observes the unchanged
+Luna/high pair through actual provider options rather than a standalone response
+field. The coordinator read all seven source/test files, matched them to the
+approved payload and correction, reran the targets and confirmed protected hashes:
+
+- Routing target: 30/30 pass; ownership target: 17/17 pass.
+- Full `make test`: 223 Vitest tests and the existing Cucumber scenario pass.
+- `make typecheck` and `make load-check`: exit 0.
+- Policy/unit suites/dependencies/original plan/spec: unchanged.
+- Registration, saved selection, queues/continuations/retries, lifecycle/branch
+  ownership and classifier usage are verified offline; no live provider calls.
+
+Logs are under `/tmp/pi-auto-model-task4.2YxMR1`. Task 4's implementation is
+verified; commit it before Task 5. Original scenario acceptance, full Cucumber
+coverage, public-error completeness and independent slice review remain Task 5.
+No milestone is accepted here, and no global install/activation occurred.
+
+- [x] Task 4 complete
 
 ### Task 5: Verify the complete slice through executable acceptance
 
@@ -2292,7 +3349,12 @@ existing harness remain unchanged.
 
 Task 3's approved classifier addition and two test files are independently
 verified and committed at `4d10a9e`. The harness, dependency pins and native
-extension are unchanged. Compile Task 4's ownership/native integration payload
-against the committed policy/classifier; its code needs a separate edit approval.
+extension are unchanged. Task 4's early-registration and same-ID deployment
+constraint decision is approved. Its exact seven-file ownership/native payload
+and its separately approved summary-observation correction are implemented
+and independently verified; the commit is pending. Save verified Task 4 before
+compiling Task 5's acceptance/review payload. That next task needs its own edit
+approval. The configuration addendum is approved future Slice 2 scope only;
+it does not authorize configuration UI or provider changes now.
 No later task implementation, future slice, global activation or live provider
 probe is approved. The execution record owns hashes, checks and worker telemetry.

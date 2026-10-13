@@ -11,7 +11,7 @@ test("native Auto is opt-in and dispatches a physical baseline pair", async () =
     await fixture.session.setModel(auto);
     expect(fixture.session.model?.id).toBe("auto");
     fixture.respond();
-    await fixture.session.prompt("offline boundary proof");
+    await fixture.session.prompt("offline boundary proof", { source: "extension" });
     const response = fixture.session.messages
       .filter((message) => message.role === "assistant").at(-1);
     expect(fixture.session.model?.id).toBe("auto");
