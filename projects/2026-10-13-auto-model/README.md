@@ -117,9 +117,13 @@ committed. Task5 acceptance and all approved corrections pass254 tests and
 57 scenarios; completed premium review clears all eight findings. Read
 [the verified correction checkpoint](./execution.md#f2f6-follow-up-verified-outcome)
 before duplicate work. Corrections are committed and all four Slice1 milestone
-checkmarks are approved and marked. Prepare the combined Slice2 proposal next.
-Before compiling Slice2, also read the approved [configuration addendum](./configuration-addendum.md): users
-must be able to change every tier/classifier physical pair through Pi's catalog. The
+checkmarks are approved and marked. Slice2 boundary checks found two required
+implementation adjustments: a credential-independent Auto namespace and scoped
+popup cleanup. Both are explicitly approved and applied in the plan; read
+[the design checkpoint](./execution.md#slice2-compiler--verified-public-boundary-decisions)
+before completing the combined runtime diff. Also read the approved
+[configuration addendum](./configuration-addendum.md): users must be able to
+change every tier/classifier physical pair through Pi's catalog. The
 [execution record](./execution.md#next-action) owns current authorization
 and verification/commit gates. Keep the feature opt-in until plugin
 compatibility and rollback are verified.

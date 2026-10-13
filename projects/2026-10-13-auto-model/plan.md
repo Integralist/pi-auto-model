@@ -28,9 +28,12 @@ plan owns implementation choices, source ownership, milestones, and rollout.
 ## Architectural Decision — Native Routing
 
 Use `pi.registerVirtualModel()` inside `pi-auto-model`; do not build another
-provider, session harness, or routing service. Register `github-copilot/auto`
-with collision detection, while dispatching to the two configured physical
-Copilot models. Confirm the identifier is free in the live catalog first.
+provider, session harness, or routing service. Register `pi-auto-model/auto`
+under an extension-owned virtual-only provider, so Auto itself does not require
+Copilot credentials. Keep collision detection and the default physical Copilot
+mappings; user policy may replace every mapping with configured physical pairs.
+Verify namespace collisions against Pi's local catalog without an entitlement
+probe or credential change.
 
 Pi separates selected virtual settings from physical dispatch, records the
 physical pair on assistant messages, persists routing state per branch, and
@@ -141,7 +144,7 @@ router-specific coupling to save a few lines of independently testable logic.
   loaded skills, with exact physical dispatch and ordered availability fallback.
 - **Consumes:** Pi's `ExtensionAPI`, `ModelRouteRequest`, `ModelRoute`, input
   event, loaded skills, catalog lookup, and physical assistant metadata.
-- **Produces:** `github-copilot/auto`; validated tier/classifier configuration;
+- **Produces:** `pi-auto-model/auto`; validated tier/classifier configuration;
   runnable acceptance for the shared contract and Pi-specific dispatch.
 
 Own these files in the new repository: `package.json`, `Makefile`,
@@ -285,9 +288,11 @@ Own popup behavior inside `pi-auto-model`, not in the status-bar extension.
 Add a policy setting `switchPopup` with `enabled: true` and `durationMs: 10000`
 as defaults; validate a positive, finite duration and allow disabling it.
 
-Use Pi's native terminal overlay API with `overlay: true` and
-`nonCapturing: true`; see [the UI contract][pi-tui] and
-[the passive overlay example][pi-passive-overlay]. Render a small, static,
+Use Pi's public `TUI.showOverlay()` with `nonCapturing: true` and an
+entry-scoped overlay handle. Obtain the injected TUI from a session-owned
+UI factory, not a second renderer or private host field. See
+[the UI contract][pi-tui] and [the passive overlay example][pi-passive-overlay].
+Render a small, static,
 width-safe popup using the active theme, with the previous and new physical
 model/effort pairs. A top-right position is the initial choice; test narrow and
 wide terminal sizes. Do not introduce an OS notification, sound, animation,
@@ -302,9 +307,11 @@ Start the popup without awaiting its ten-second lifetime in routing or command
 handlers. Keep editor focus and ongoing model/tool work intact. A newer change
 replaces the existing popup and resets its timer; generation guards prevent an
 old callback from closing a newer popup or affecting another session. Close
-custom overlays through their completion callback, not their handle's `hide()`.
-Ensure expiration cannot dismiss another active overlay or dialog; test this
-against the installed Pi runtime rather than assuming stack cleanup is safe.
+only the directly owned overlay with its own handle's `hide()`. Do not use
+`ctx.ui.custom()` for this passive popup: Pi 1.2.0's completion callback pops
+the newest overlay, which may belong to another dialog. Custom dialogs elsewhere
+still follow their documented completion-callback contract. Test targeted popup
+expiration against the installed Pi runtime so another overlay remains intact.
 
 Use timers only from session/event operations, never during rendering or factory
 load. Clean up on replacement, reload, and shutdown. Render only in interactive

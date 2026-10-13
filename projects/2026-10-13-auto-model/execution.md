@@ -1,13 +1,13 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Slice1 accepted; controls/configuration proposal compilation next.
+- **Status:** Slice1 accepted; neutral Auto/scoped popup design approved, combined Slice2 code proposal next.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice2 controls/configuration compilation; implementation unapproved.
+- **Current slice:** Slice2 compiler; design choices approved, runtime implementation unapproved.
 - **Accepted slices:** Slice1, with all four M1 milestones explicitly approved and marked.
 
 ## Authorization
@@ -101,6 +101,11 @@
     next step of preparing a combined controls/configuration proposal. Only
     those plan markers change now; no Slice2 code, dependency or live UI smoke
     is implicitly approved.
+26. The user approved the exact57-line plan-only namespace/popup diff and
+    requested a concise remaining-work summary. Apply only its four plan regions,
+    preserve all accepted M1 marks/specification behavior, then finish the
+    combined controls/configuration/popup runtime proposal. This approval does
+    not authorize that later code/test diff, host/global changes or paid probes.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -153,12 +158,13 @@ snapshots for the whole-plan audit.
 
 | Current document | SHA-256 |
 | --- | --- |
-| Plan | `060ad9acbae1cbfb1d5a3a19dad4d132d2ce7e493b24c534a07c0ae2a061e65a` |
+| Plan | `4770f55b73f5ef71dc8fc0e6eb514f6e703e4cded342f038ef9e924aa6ca34b4` |
 | Spec | `4d3dd7999a99e2263eec28638dfc52823d87e39cfd6250e9b8f396feb1ba9112` |
 
 The plan differs from its snapshot only in approved repository-owned handoff
-bookkeeping and the explicitly approved four Slice1 milestone checkmarks.
-The specification is unchanged; no acceptance requirement was changed.
+bookkeeping, four explicitly approved Slice1 checkmarks and approved
+credential-independent Auto/scoped popup implementation choices. Specification
+behavior and accepted milestone wording/state are unchanged.
 
 ## Models and delegation
 
@@ -457,6 +463,7 @@ and completed review. Later rows remain Unverified; no live rollout is implied.
 | Bookkeeping | `slice-1/task-4` | `805883a120576e5d5b79e6decc115b1d9a96b9a5` — docs: resume acceptance work from verified native routing | Actual hash/status checkpoint; normal checks and protected source preserved |
 | Implementation | `slice-1/task-5` | `e3253e2a5145409e260eb7942c142682d3e903de` — test: prove native routing through complete Slice 1 acceptance | Assertion-red,229 Vitest/57 Cucumber/type/load/19 policy checks verified; acceptance implementation only, independent review finds eight open issues |
 | Correction | `slice-1/task-5` | `923b8290f15e1b34340bea7ed47a7f63597c9991` — fix: preserve owned tasks and exact physical routes under native edge cases | Parent1dfe23d; exact approved aggregate +F8 fixture +F2/F6 follow-up;254 Vitest/57 Cucumber/497 steps/type/load/19 policy checks; all eight findings cleared by complete independent review; no source milestone ticks |
+| Bookkeeping | `slice-1/task-5` | `2d1bdf5315a39bde329b404b05faa8acdfb57bad` — docs: accept the verified routing core before building user controls | Parent923b829; exact approved four M1 checkmarks, unchanged spec/plan wording;254 tests/57 scenarios/type/load rerun; docs lint/links/ledger/scope checks pass; no runtime code or later implementation |
 
 Task1's pre-commit compiler corrections are included in its implementation
 commit. Task5's approved aggregate F1–F8 correction is verified and committed
@@ -1237,11 +1244,76 @@ checks are rerun before bookkeeping commit. Slice1 is accepted. Runtime/helper
 state and future Slice2 preferences/model-picker/popup implementation are not
 confused with completed routing outcomes.
 
+## Slice2 compiler — verified public-boundary decisions
+
+Milestone bookkeeping succeeded at actual commit2d1bdf5; runtime source is
+unchanged and the tree/index were clean before this bounded evidence update.
+The combined Slice2 compiler has stopped before a final task/code payload:
+public-boundary checks found two implementation choices that conflict with the
+approved user outcomes. The user has now approved both exact plan adjustments.
+Neither invalidates the reviewed Copilot-default Slice1 core; full credential-independent configuration and popup behavior are Slice2.
+
+1. Auto's current `github-copilot/auto` namespace inherits Copilot credential
+   availability. An offline native SDK diagnostic with an available non-Copilot
+   provider and deliberately unconfigured Copilot confirms Auto is unavailable
+   and `setModel` rejects it. A virtual-only `pi-auto-model/auto` namespace is
+   available/selectable with no Copilot credentials. No physical request occurs.
+   Source: installed virtual-models docs55, virtual-models.js95–120 and
+   model-runtime.js693–712. Propose the extension-owned neutral namespace while
+   retaining physical defaults, exact routing and local collision checks.
+2. Pi1.2.0 `ctx.ui.custom` completion unconditionally invokes `hideOverlay`,
+   which pops the newest stack entry rather than its own. A newer dialog can be
+   removed while the expiring popup remains. `focus` does not reorder the stack;
+   UI-prompt notifications are depth-limited/microtask queued, not a safe close
+   mechanism. Direct public `TUI.showOverlay` handles remove their own entry.
+   Propose a session-injected TUI and directly owned non-capturing popup handle,
+   leaving custom dialogs on their documented completion-callback contract.
+
+Main independently verified the neutral-provider auth/selection case, with zero
+fake stream/network calls and no source/global changes. Read-only worker
+`36067d5e-933d-4198-832c-2d6574115a3b` verified overlay source and real public
+TuiAltScreen/InteractiveMode in-memory cleanup, returning COMPLETE after12
+Luna/xhigh turns at budget35, normal stop/no errors/exhaustion/fallback. Rendering
+was suppressed in the diagnostic; no live terminal focus smoke is claimed.
+Source: interactive-mode.js2334–2353; pi-tui tui.js390–405,430–435,476–491;
+runner.js369–400; public widget/TUI types expose the injected TUI and handles.
+
+Evidence and transcript metadata:
+`/tmp/pi-auto-model-milestone-bookkeeping.rb3DMa`, including
+`provider-portability-diagnostic.log`, `overlay-check-report.txt` and
+`overlay-check-telemetry.json`. These facts need no host patch, new provider
+account or paid probe. Direct-handle source correctness still requires full
+popup rendering/fake-timer/stack/lifecycle tests and separately approved live
+focus smoke before M2.4 acceptance.
+
+Exact plan-only proposal is explicitly approved and applied:
+`/tmp/pi-auto-model-controls-proposal.D8CvLQ/design-proposed.diff` and
+`design-proposal.json`. It changes two implementation choices at four nearby
+regions, preserving specification behavior, all milestone marks and IDs.
+Current plan bytes match proposal.after exactly; the specification hash is
+unchanged. Runtime/tests/host/global configuration are untouched by this edit.
+The neutral identifier requires its later exact source/tests/state binding
+migration, not an alias/router service added without approval. No global user
+installation exists to migrate here; no external sessions are changed now.
+
+Scratch fragments for controls/store/catalog/picker are retained only in
+`partial-code.incomplete.json`; they are not a completed compiled task, approved
+runtime diff, typecheck/red/green proof or delegation authority. They still use
+the old namespace and omit popup/tests; discard or refresh them against approved
+boundaries before producing the single complete Slice2 proposal. No Slice2
+source, fixture, dependency, policy/preferences file or original scenario edits
+have been applied.
+
 ## Next action
 
-Commit the approved milestone/evidence bookkeeping on integralist/auto-model,
-then prepare one combined Slice2 controls/configuration proposal from the
-approved addendum. Present the exact combined diff before implementation.
+Commit the approved design/evidence bookkeeping, then finish one combined
+Slice2 controls/configuration and popup code/test proposal against current
+sources. Preserve physical defaults but move Auto registration/portable state
+tests to the neutral namespace; prove non-Copilot-only selection/classification
+and direct summaries. Include native safe-boundary controls, atomic file failures,
+manual exact restoration and direct-handle lifecycle/focus tests. Present the
+complete diff before applying runtime changes. Per-edit approval remains required;
+design approval is not code approval.
 Three build stages remain: controls/model picker and saved state; independently
 installable plugin compatibility; packaging/documentation and controlled
 installation/rollback checks. Paid probes, live focus smoke, cross-repository
