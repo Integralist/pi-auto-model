@@ -239,14 +239,14 @@ intent, or changing task state. Manual model/effort choices disable automation.
 
 #### Slice 1 Milestones
 
-- [ ] **M1.1:** Boundary acceptance runs via `make test` with fake provider and
+- [x] **M1.1:** Boundary acceptance runs via `make test` with fake provider and
   classifier responses; prove an assertion failure before implementation.
-- [ ] **M1.2:** Metadata-first precedence, scalar normalization, arbitrary skill
+- [x] **M1.2:** Metadata-first precedence, scalar normalization, arbitrary skill
   names, absent-metadata classification, and independent typed tasks satisfy
   the shared contract and dispatch to the configured tier pairs.
-- [ ] **M1.3:** Continuations, retries, confirmations, busy/extension input,
+- [x] **M1.3:** Continuations, retries, confirmations, busy/extension input,
   canceled classification, and direct summaries preserve request ownership.
-- [ ] **M1.4:** Ordered step-down, all-unavailable keep-current, classifier
+- [x] **M1.4:** Ordered step-down, all-unavailable keep-current, classifier
   failure, and exact-effort checks pass in both modes. Cover invalid settings
   and public error branches; automatic requests never use `max`.
 

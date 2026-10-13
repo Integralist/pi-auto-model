@@ -1,6 +1,6 @@
 # Pi Auto Model — Slice 1 Task List
 
-- **Status:** Task5 corrections verified;254 tests/57 scenarios pass, all eight findings cleared
+- **Status:** Complete; Slice1 accepted, all four milestones explicitly approved and marked
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -3336,11 +3336,11 @@ or claim an outline tags a behavior that its steps never exercise.
 | M1.3 | AC012–AC017 plus existing `request-ownership.test.ts` cover active/sticky/direct paths, queues, cancellation, resource identity and branch/session lifetime |
 | M1.4 | AC006, AC010–AC011, AC023–AC028, AC030 and supplemental public errors; existing policy/classifier suites cover every validated field/failure branch |
 
-This table is a verification map, not accepted milestone progress. The source
-plan and spec remain frozen until coordinator-reviewed acceptance warrants the
-four milestone checkbox updates. The original spec scenarios retain their
-ledger IDs; provider/configuration UI and the approved Slice 2 addendum are not
-implemented here.
+This table maps verified outcomes; all four source milestones are now accepted
+and marked under explicit approval after completed independent review. Plan
+wording and the specification remain unchanged. Original scenario ledger IDs
+remain intact; controls/configuration UI and the Slice2 addendum are not
+implemented by this task list.
 
 ### Task 5 exact Makefile edit
 
@@ -4282,8 +4282,9 @@ Coordinator checks pass254 Vitest and57 acceptance scenarios/497 steps.
 Completed full/focused premium review clears all eight findings. Task5's offline
 outcome is verified; see [the checkpoint](./execution.md#f2f6-follow-up-verified-outcome).
 Commit the inspected task-linked correction before any later implementation.
-Source M1.1–M1.4 checkbox edits still need approval; plan/spec remain frozen and
-all later slices/global install/paid probes are outside this correction authority.
+Source M1.1–M1.4 checkmarks are explicitly approved and applied. Plan wording
+and the specification stay frozen; later implementation/global install/paid
+probes remain outside this correction authority.
 The configuration addendum is approved future Slice 2 scope only; it does not
 authorize configuration UI or provider changes now.
 No later task implementation, future slice, global activation or live provider

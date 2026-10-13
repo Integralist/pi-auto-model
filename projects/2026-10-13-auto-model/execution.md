@@ -1,14 +1,14 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Task5 corrections verified; all eight findings cleared, source milestone ticks pending approval.
+- **Status:** Slice1 accepted; controls/configuration proposal compilation next.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice1 Task5 verified; [task document](./tasks-slice-1.md).
-- **Accepted slices:** Source milestones remain unticked pending explicit approval.
+- **Current slice:** Slice2 controls/configuration compilation; implementation unapproved.
+- **Accepted slices:** Slice1, with all four M1 milestones explicitly approved and marked.
 
 ## Authorization
 
@@ -96,6 +96,11 @@
     a concise remaining-work summary. The extension, optional beforeExtensions
     fixture seam and eight tests may change only as proposed. Source milestone
     marks and Slice2 implementation still need their own concrete edit approval.
+25. The user approved the four checkbox-only M1.1–M1.4 changes in
+    `/tmp/pi-auto-model-residual-fixes.lxhB9D/milestone-proposed.diff` and the
+    next step of preparing a combined controls/configuration proposal. Only
+    those plan markers change now; no Slice2 code, dependency or live UI smoke
+    is implicitly approved.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -148,12 +153,12 @@ snapshots for the whole-plan audit.
 
 | Current document | SHA-256 |
 | --- | --- |
-| Plan | `8afe813ffd0f5839993cc1b3ee98bfc2b063742dfab9e6a80a3790ccc97ac31d` |
+| Plan | `060ad9acbae1cbfb1d5a3a19dad4d132d2ce7e493b24c534a07c0ae2a061e65a` |
 | Spec | `4d3dd7999a99e2263eec28638dfc52823d87e39cfd6250e9b8f396feb1ba9112` |
 
 The plan differs from its snapshot only in approved repository-owned handoff
-bookkeeping. The specification is unchanged. No acceptance requirement or
-milestone state was changed by setup.
+bookkeeping and the explicitly approved four Slice1 milestone checkmarks.
+The specification is unchanged; no acceptance requirement was changed.
 
 ## Models and delegation
 
@@ -378,16 +383,16 @@ is accepted based on this inventory; compiled tasks name the keys they cover.
 ## Milestone ledger
 
 Keys and outcomes remain distinct from executable task IDs. Slice1's complete
-offline acceptance/review gate now passes. All source checkboxes remain unticked
-until their explicit edit approval; later outcomes are unverified. The four
-checkbox-only proposal changes no requirement or source milestone wording.
+offline acceptance/review gate passes and its four source checkboxes are marked
+under explicit approval. Later outcomes remain unverified. The checkbox-only
+edit changes no requirement or source milestone wording.
 
 | Key | Slice | Source outcome | Task/evidence mapping |
 | --- | --- | --- | --- |
-| M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Verified:254 Vitest/57 Cucumber/497 steps and original plus correction assertion-red; marker approval pending |
-| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Verified:all Slice1 tagged examples, corrected input/image/steering ownership and completed independent review; marker approval pending |
-| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Verified:native request/lifecycle/branch/direct boundaries, failed evidence/veto/reload regressions and focused review; marker approval pending |
-| M1.4 | S1 | Availability/effort/error safety in both modes | Verified:filtered availability, effective adapter output ceilings, exact pairs and both-mode safety/retention; marker approval pending |
+| M1.1 | S1 | Runnable boundary acceptance and assertion-red proof | Verified:254 Vitest/57 Cucumber/497 steps and original plus correction assertion-red; Accepted under explicit marker approval |
+| M1.2 | S1 | Portable tiers, classification and independent task dispatch | Verified:all Slice1 tagged examples, corrected input/image/steering ownership and completed independent review; Accepted under explicit marker approval |
+| M1.3 | S1 | Sticky routes, ownership/cancellation and direct summaries | Verified:native request/lifecycle/branch/direct boundaries, failed evidence/veto/reload regressions and focused review; Accepted under explicit marker approval |
+| M1.4 | S1 | Availability/effort/error safety in both modes | Verified:filtered availability, effective adapter output ceilings, exact pairs and both-mode safety/retention; Accepted under explicit marker approval |
 | M2.1 | S2 | Controls/manual choice/busy deferral | Not compiled; approved R61–R65/AC045–AC052 configuration command addition also required |
 | M2.2 | S2 | Persistence and physical restoration | Not compiled; configuration addendum's atomic policy persistence also required |
 | M2.3 | S2 | State/restoration/lifecycle failures | Not compiled |
@@ -424,8 +429,8 @@ verified and committed. Task 2's policy/test implementation is also verified
 and committed. Task 3's classifier adapter and tests are independently verified
 and committed. Task 4's owned native-routing implementation and approved
 summary-observation correction are independently verified and committed.
-Task5 and its correction outcome are verified; source milestone checkbox edits
-remain behind the explicit approval gate.
+Task5 and its correction outcome are verified. The four source milestone
+checkboxes were explicitly approved and marked; Slice1 is accepted.
 
 | Task key | Supports | Scenario coverage after integration | Compiler state |
 | --- | --- | --- | --- |
@@ -433,9 +438,9 @@ remain behind the explicit approval gate.
 | `slice-1/task-2` | M1.2, M1.4 | AC001–AC004, AC010–AC011, AC023–AC028; decision-only portions | Verified and committed: assertion-red, 107 policy tests, unchanged native baseline, type/load checks |
 | `slice-1/task-3` | M1.2–M1.4 | AC005–AC009; classifier portions of AC006/AC028; signal-adapter safety | Verified and committed: assertion-red, 61 unit/seven native cases, full tests/type/load and source scope |
 | `slice-1/task-4` | M1.2–M1.4 | AC001–AC017, AC024–AC028, AC030; ownership cases | Verified and committed: native assertion-red, 30 routing/17 ownership/223 total Vitest, Cucumber/type/load |
-| `slice-1/task-5` | M1.1–M1.4 | All24 Slice1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance tests committed; approved correction payload verified at254 tests/57 scenarios; complete full/focused review clears all eight findings; correction commit pending |
+| `slice-1/task-5` | M1.1–M1.4 | All24 Slice1 scenario keys/examples, supplemental errors and existing ownership/cancellation suites | Acceptance tests committed; approved correction payload verified at254 tests/57 scenarios; complete full/focused review clears all eight findings; correction committed at923b829 |
 
-The24 Slice1 scenario rows below are verified offline through current acceptance
+The24 Slice1 scenario rows are verified offline through current acceptance
 and completed review. Later rows remain Unverified; no live rollout is implied.
 
 | Kind | Task key | Actual hash/subject | Verification |
@@ -451,11 +456,13 @@ and completed review. Later rows remain Unverified; no live rollout is implied.
 | Implementation | `slice-1/task-4` | `be2fdf76dc16589d8795d48533a6d2074a90c9d9` — feat: bind automatic model routes to the task that owns them | Parent `3ec6b35` is scope-only; code base `2f3ef40`; assertion-red, 30 routing/17 ownership/223 total Vitest/Cucumber/type/load/protected scope verified |
 | Bookkeeping | `slice-1/task-4` | `805883a120576e5d5b79e6decc115b1d9a96b9a5` — docs: resume acceptance work from verified native routing | Actual hash/status checkpoint; normal checks and protected source preserved |
 | Implementation | `slice-1/task-5` | `e3253e2a5145409e260eb7942c142682d3e903de` — test: prove native routing through complete Slice 1 acceptance | Assertion-red,229 Vitest/57 Cucumber/type/load/19 policy checks verified; acceptance implementation only, independent review finds eight open issues |
+| Correction | `slice-1/task-5` | `923b8290f15e1b34340bea7ed47a7f63597c9991` — fix: preserve owned tasks and exact physical routes under native edge cases | Parent1dfe23d; exact approved aggregate +F8 fixture +F2/F6 follow-up;254 Vitest/57 Cucumber/497 steps/type/load/19 policy checks; all eight findings cleared by complete independent review; no source milestone ticks |
 
 Task1's pre-commit compiler corrections are included in its implementation
-commit. Task5's approved aggregate F1–F8 correction is verified and awaits the
-coordinator commit; its real identity is recorded only after Git succeeds. Task 2 required no compiler or
-implementation correction. Task 3 also required no compiler or implementation
+commit. Task5's approved aggregate F1–F8 correction is verified and committed
+at the real identity above. This post-commit evidence update remains pending
+for the next authorized bookkeeping commit, not a self-recording hash loop.
+Task2 required no compiler or implementation correction. Task 3 also required no compiler or implementation
 correction. Task 4's separately approved pre-commit summary-test observation
 correction is included in its implementation commit; no production requirement
 changed and no later correction commit exists. This record's Task 4 post-commit
@@ -1214,16 +1221,27 @@ route. Later post-route trusted context transformations and live provider
 entitlement/effective effort/cancellation/billing are not newly claimed tested.
 
 F1–F8 are now cleared across completed independent reviews. Task5's offline
-correction outcome is verified; source M1.1–M1.4 markers are not edited yet.
-Original plan/spec bytes remain frozen. Correction commit precedes any later
-implementation worker; no empty commit or self-recording hash loop is needed.
+correction outcome was verified before source milestone edits. At that
+correction checkpoint the plan/spec bytes remained frozen. Correction commit923b829 is verified
+reachable from the authorized branch and has the expected parent/trailers.
+Commit succeeded without extra hook changes; the tree/index were clean before
+this bounded post-commit record. No empty commit or self-recording loop is needed.
+
+## Slice1 milestone acceptance
+
+The user approved all four checkbox-only M1 changes. They match the saved
+proposal byte-for-byte; plan wording is unchanged and the specification hash
+remains frozen. Task5 acceptance and corrections are committed at923b829; all
+eight findings are cleared and the current254 tests/57 scenarios/type/load
+checks are rerun before bookkeeping commit. Slice1 is accepted. Runtime/helper
+state and future Slice2 preferences/model-picker/popup implementation are not
+confused with completed routing outcomes.
 
 ## Next action
 
-Commit the verified task-linked correction and record its actual hash/subject.
-Approve the four checkbox-only M1.1–M1.4 changes proposed in
-`/tmp/pi-auto-model-residual-fixes.lxhB9D/milestone-proposed.diff`, then compile
-one combined Slice2 controls/configuration proposal from the approved addendum.
+Commit the approved milestone/evidence bookkeeping on integralist/auto-model,
+then prepare one combined Slice2 controls/configuration proposal from the
+approved addendum. Present the exact combined diff before implementation.
 Three build stages remain: controls/model picker and saved state; independently
 installable plugin compatibility; packaging/documentation and controlled
 installation/rollback checks. Paid probes, live focus smoke, cross-repository
@@ -1258,13 +1276,13 @@ its own hash.
 The original behavioral red remains valid. Task 5 implementation/read-only
 review, the combined correction diff and one-line F8 fixture fix are approved.
 The F2/F6 follow-up is now approved, applied and independently reviewed.
-Milestone marking and Slice2 implementation are not yet approved. The
-configuration addendum records future scope only.
+Milestone marking is now explicitly approved and applied; Slice2 implementation
+is not approved. The configuration addendum records its scope only.
 
 Tasks 1–4 stay verified; do not repeat them because delayed worker notices
 arrive. No install, host patch, global activation, paid probe or later task
-implementation is authorized. Milestones and original scenario rows remain
-unaccepted. Do not create a self-recording hash loop.
+implementation is authorized. Slice1 milestones and its24 scenario rows are
+accepted offline. Do not create a self-recording hash loop.
 
 Task 4 now connects the native extension to tier/classifier decisions and
 owned physical-pair state. Existing standalone wiring/classifier tests retain

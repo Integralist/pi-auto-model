@@ -116,9 +116,9 @@ Task 4's native integration and summary-test correction are verified and
 committed. Task5 acceptance and all approved corrections pass254 tests and
 57 scenarios; completed premium review clears all eight findings. Read
 [the verified correction checkpoint](./execution.md#f2f6-follow-up-verified-outcome)
-before duplicate work. The correction commit and approval of four source
-milestone ticks precede Slice2 compilation. Before compiling Slice2, also
-read the approved [configuration addendum](./configuration-addendum.md): users
+before duplicate work. Corrections are committed and all four Slice1 milestone
+checkmarks are approved and marked. Prepare the combined Slice2 proposal next.
+Before compiling Slice2, also read the approved [configuration addendum](./configuration-addendum.md): users
 must be able to change every tier/classifier physical pair through Pi's catalog. The
 [execution record](./execution.md#next-action) owns current authorization
 and verification/commit gates. Keep the feature opt-in until plugin
