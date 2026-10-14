@@ -1,7 +1,7 @@
 # Pi Auto Model — Handoff
 
-- **Status:** Items1–4 and isolated package rollback verified; root merge/push
-  and user Git-install check remain.
+- **Status:** Items1–4 verified; `main` is pushed; user Git-install check
+  remains.
 - **Owner:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -147,8 +147,10 @@ clearing all findings and12 combined checks; checklist item4 is complete.
 
 Historical settings changes cannot be reconstructed; current settings match the
 managed file and remain untouched. Package documentation and isolated tarball
-install/removal/rollback are verified. Root commit/merge/push and the user's
-Git-install check remain. No global activation or registry publication occurred.
-See the [verified package outcome](./execution.md#stage-5-package-install-verified-outcome)
-and [execution record](./execution.md#next-action) for current gates. Keep Auto
+install/removal/rollback are verified. Commit `a60aa4b` is on pushed `main`;
+the user's Git-install check remains. No global activation or registry
+publication occurred. See the [verified package outcome][package-outcome] and [execution
+record](./execution.md#next-action) for current gates. Keep Auto
 opt-in; global activation is separate.
+
+[package-outcome]: ./execution.md#stage-5-package-install-verified-outcome

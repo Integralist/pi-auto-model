@@ -1,7 +1,7 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Items1–4 and isolated tarball rollback verified; root merge/push
-  and the user's Git-install check remain.
+- **Status:** Items1–4 verified; commit `a60aa4b` is on pushed `main`;
+  user Git-install check remains.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
@@ -2484,14 +2484,14 @@ review found and the follow-up resolved both low-severity documentation/test gap
 650 steps, typecheck and extension load-check. This evidence is source-checkout
 verification plus the isolated packed-tarball check, not registry publication.
 The documented GitHub install command was not exercised here; the user will test
-it after the repository is pushed. Stage5 remains open for the root merge/push and the user's Git install check.
+it from the pushed `main` branch. Stage5 remains open until that user check.
 
 ## Next action
 
-Commit and merge only this repository. The GitHub remote currently has no branch
-refs, so confirm before creating `main`; then push the agreed branch. The user
-will test the documented Git install after the push. Keep global activation,
-registry publication, provider probes and the four peer repositories separate.
+The user tests `pi install git:github.com/Integralist/pi-auto-model` from
+`main`. Commit `a60aa4b` is the repository's first pushed branch and is on
+`origin/main`. No peer repositories were committed or pushed. Keep global
+activation, registry publication and provider probes as separate gates.
 
 ## Historical stage records
 

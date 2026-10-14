@@ -1,7 +1,7 @@
 # First release — extension-only scope
 
-- **Status:** Items1–4 and isolated package rollback verified; Git install
-  confirmation after push remains.
+- **Status:** Items1–4 verified; `main` is pushed; user Git-install check
+  remains.
 - **Source:** Latest user scope decision supersedes the original restoration
   and saved-enabled requirements.
 - **Host:** Existing Pi1.2.0 public extension APIs; no harness changes, source
@@ -87,7 +87,7 @@ to this document; no scenario is silently counted as passed.
      and rollback; preserve isolated model defaults and portable
      policy/preferences.
    - [x] Review the living spec, package docs and new acceptance coverage.
-   - [ ] Commit and merge this repository to `main`, then push.
+   - [x] Commit `a60aa4b` is on `main` and pushed to `origin/main`.
    - [ ] User confirms Git installation from the pushed repository.
 
 Item1's [verified correction evidence](./execution.md#capture-correction-outcome--verified)
@@ -101,6 +101,5 @@ fix popup timing/render failures. The [test-only follow-up is verified](./execut
 [Live terminal acceptance is verified](./execution.md#stage3-live-terminal-acceptance--verified),
 completing item3. [Plugin compatibility is verified](./execution.md#stage4-follow-up--verified-outcome),
 completing item4. Isolated package installation/removal/rollback is verified;
-item5 remains open for this repository's merge/push and the user's Git-install
-check. No completed item claims registry publication, global activation, or host
-API work.
+item5 remains open until the user confirms the Git installation. No completed
+item claims registry publication, global activation, or host API work.
