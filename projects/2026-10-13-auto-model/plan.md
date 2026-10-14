@@ -1,11 +1,19 @@
 # Pi Auto Model — Implementation Plan
 
-- **Status:** Planning
+- **Status:** In progress
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
-- **Target source:** `/Users/mmcdonnell/code/pi-auto-model` (no code yet)
+- **Target source:** `/Users/mmcdonnell/code/pi-auto-model`
 - **Verified host:** Pi 1.2.0
+
+## Current first-release scope
+
+[The extension-only release scope](./release-scope.md) supersedes earlier
+on/off, automatic restoration, saved-enabled and manual-thinking activation
+clauses. Use Pi's `/model` picker to enter and leave Auto. No Pi host changes
+or host-release dependency are part of this release; other behavior remains
+unchanged.
 
 ## Summary
 
@@ -464,9 +472,9 @@ catalog/pricing changes are needed merely to add a routing entry.
 
 ### Documentation
 
-- [ ] Seed `docs/specs/automatic-routing.md` in the new extension repository
-  when implemented; use `spec-delta` before touching a living-spec path.
-- [ ] Document native virtual-model compatibility in each changed plugin's
+- [x] Seed `docs/specs/automatic-routing.md` from the approved first-release
+  scope; record its added behavior in the project spec's delta.
+- [x] Document native virtual-model compatibility in each changed plugin's
   own README; state supported Pi versions and independent install behavior.
 - [ ] Keep this handoff index, spec links, and source ownership current. Store
   acceptance evidence in execution records, not in milestone descriptions.

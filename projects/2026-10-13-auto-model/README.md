@@ -1,9 +1,16 @@
 # Pi Auto Model — Handoff
 
-- **Status:** Implementation in progress; Slice 1 has not been accepted.
+- **Status:** Items1–4 and isolated package rollback verified; root merge/push
+  and user Git-install check remain.
 - **Owner:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
+
+## Current release checklist
+
+Use [the extension-only scope and remaining-work checklist](./release-scope.md)
+for the current target. Enter and leave Auto through Pi's `/model` picker.
+The earlier host API proposal is retired; it is not a release dependency.
 
 ## Summary
 
@@ -32,11 +39,13 @@ support for native virtual models without importing, installing, or requiring
 
 | Artifact | Purpose | Status |
 | --- | --- | --- |
-| [Specification](./spec.md) | Behavior and acceptance criteria | Draft |
-| [Implementation plan](./plan.md) | Architecture, source ownership, slices, rollout | Planning |
+| [Specification](./spec.md) | Project scope and acceptance history | Draft |
+| [Living routing contract](../../docs/specs/automatic-routing.md) | Current Auto behavior | Draft |
+| [Implementation plan](./plan.md) | Architecture, source ownership, slices, rollout | In progress |
 | [Execution record](./execution.md) | Authorization, requirements, checks, commits | Active |
-| [Slice 1 tasks](./tasks-slice-1.md) | Stable task scope, coverage and implementation payloads | In progress |
-| [Configuration addendum](./configuration-addendum.md) | Slice 2 model picker, portable mappings and acceptance | Scope approved; not implemented |
+| [Slice 1 tasks](./tasks-slice-1.md) | Verified routing-core implementation and acceptance | Complete |
+| [Slice 2 tasks](./tasks-slice-2.md) | Historical controls design and implementation evidence | Superseded by the current release scope |
+| [Configuration addendum](./configuration-addendum.md) | Model picker, portable mappings and acceptance | Mapping UI and safe activation verified; full acceptance pending |
 | [Native routing decision](../../docs/adr/ADR-0001.md) | Dispatch ownership and alternatives | Proposed |
 
 ## Start a fresh session
@@ -106,7 +115,7 @@ checkout before editing; the execution record captures the inspected revision
 and protected files. All unrelated work stays outside staging, resets,
 stashes, and this project's edits.
 
-## Next action
+## Historical implementation handoff
 
 Resume from [the saved Slice 1 task list](./tasks-slice-1.md), not from another
 baseline preflight. The user approved task-at-a-time execution and Task 1's
@@ -121,9 +130,25 @@ checkmarks are approved and marked. Slice2 boundary checks found two required
 implementation adjustments: a credential-independent Auto namespace and scoped
 popup cleanup. Both are explicitly approved and applied in the plan; read
 [the design checkpoint](./execution.md#slice2-compiler--verified-public-boundary-decisions)
-before completing the combined runtime diff. Also read the approved
-[configuration addendum](./configuration-addendum.md): users must be able to
-change every tier/classifier physical pair through Pi's catalog. The
-[execution record](./execution.md#next-action) owns current authorization
-and verification/commit gates. Keep the feature opt-in until plugin
-compatibility and rollback are verified.
+before the approved runtime payload and
+[Task1 review checkpoint](./execution.md#slice2-independent-review--verified-findings).
+The host proposal is retired under the picker-only scope. The
+[capture correction is verified](./execution.md#capture-correction-outcome--verified);
+checklist items1–2 are complete. The configuration/routing batch and follow-ups
+pass372 tests/57 scenarios; [focused review clears their findings](./execution.md#configuration-form-correction-outcome--verified).
+Item3's [popup/acceptance automation is applied and reviewed](./execution.md#stage3-popupacceptance-batch--applied-and-reviewed),
+passing396 tests/77 scenarios with no production findings. Its
+[test-only corrections are verified](./execution.md#stage3-test-only-correction--verified-outcome);
+[live regular/fullscreen acceptance is verified](./execution.md#stage3-live-terminal-acceptance--verified),
+completing checklist item3. [Peer compatibility and follow-up are verified](./execution.md#stage4-follow-up--verified-outcome),
+clearing all findings and12 combined checks; checklist item4 is complete.
+
+## Next action
+
+Historical settings changes cannot be reconstructed; current settings match the
+managed file and remain untouched. Package documentation and isolated tarball
+install/removal/rollback are verified. Root commit/merge/push and the user's
+Git-install check remain. No global activation or registry publication occurred.
+See the [verified package outcome](./execution.md#stage-5-package-install-verified-outcome)
+and [execution record](./execution.md#next-action) for current gates. Keep Auto
+opt-in; global activation is separate.

@@ -15,7 +15,7 @@ function policy(mode = "model-and-effort") {
     classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000 },
   };
 }
-async function select(f: Fixture) { await f.session.setModel(f.runtime.getModel("github-copilot", "auto")!); }
+async function select(f: Fixture) { await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); }
 function last(f: Fixture) { return f.session.messages.filter((message) => message.role === "assistant").at(-1)!; }
 function gate() {
   let release!: () => void;

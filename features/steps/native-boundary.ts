@@ -16,7 +16,7 @@ Given("an isolated Pi session starts on physical Sol at xhigh", async function (
 
 When("I explicitly select native Auto and send an offline request", async function (this: World) {
   const fixture = this.fixture!;
-  const auto = fixture.runtime.getModel("github-copilot", "auto");
+  const auto = fixture.runtime.getModel("pi-auto-model", "auto");
   assert.ok(auto, "registered native Auto");
   await fixture.session.setModel(auto);
   assert.equal(fixture.session.model?.id, "auto");

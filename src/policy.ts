@@ -29,8 +29,9 @@ export type RouteDecision = {
   source: "tier" | "current" | "captured";
 };
 
-type Configuration = {
+export type Configuration = {
   version: 1;
+  switchPopup: { enabled: boolean; durationMs: number };
   mode: "model-and-effort" | "effort-only";
   summaryTier: Tier;
   tiers: Record<Tier, PhysicalPair>;
@@ -45,6 +46,7 @@ const tiers: readonly Tier[] = ["trivial", "moderate", "complex", "frontier"];
 const efforts: readonly AutomaticEffort[] = ["off", "minimal", "low", "medium", "high", "xhigh"];
 const defaults: Configuration = {
   version: 1,
+  switchPopup: { enabled: true, durationMs: 10000 },
   mode: "model-and-effort",
   summaryTier: "trivial",
   tiers: {
@@ -117,10 +119,18 @@ function positiveInteger(value: unknown, path: string): number {
   return value;
 }
 
-function configuration(raw: unknown, registry: RoutingRegistry): Configuration {
-  const root = object(raw === undefined ? defaults : raw, "config", [
+export function validateConfiguration(raw: unknown, registry: RoutingRegistry): Configuration {
+  const source = raw === undefined ? defaults : raw;
+  const root = object(source, "config", [
     "version", "tiers", "classifier", "summaryTier", "mode",
+    ...(isRecord(source) && Object.hasOwn(source, "switchPopup") ? ["switchPopup"] : []),
   ]);
+  const popup = root.switchPopup === undefined ? defaults.switchPopup
+    : object(root.switchPopup, "config.switchPopup", ["enabled", "durationMs"]);
+  if (typeof popup.enabled !== "boolean") invalid("config.switchPopup.enabled", "expected a boolean");
+  if (typeof popup.durationMs !== "number" || !Number.isFinite(popup.durationMs) || popup.durationMs <= 0) {
+    invalid("config.switchPopup.durationMs", "expected a positive finite duration");
+  }
   if (root.version !== 1) invalid("config.version", "expected schema version 1");
   if (root.mode !== "model-and-effort" && root.mode !== "effort-only") {
     invalid("config.mode", "expected model-and-effort or effort-only");
@@ -139,6 +149,7 @@ function configuration(raw: unknown, registry: RoutingRegistry): Configuration {
   ]);
   return {
     version: 1,
+    switchPopup: { enabled: popup.enabled, durationMs: popup.durationMs },
     mode: root.mode,
     summaryTier: root.summaryTier as Tier,
     tiers: validatedTiers,
@@ -192,9 +203,9 @@ export function resolveRoute(
   input: RouteInput,
   registry: RoutingRegistry,
 ): RouteDecision {
-  const config = configuration(rawConfiguration, registry);
-  const fixed = config.mode === "effort-only" ? physicalModel(input.captured, registry) : undefined;
-  if (config.mode === "effort-only" && !fixed) {
+  const config = validateConfiguration(rawConfiguration, registry);
+  const fixed = !input.direct && config.mode === "effort-only" ? physicalModel(input.captured, registry) : undefined;
+  if (!input.direct && config.mode === "effort-only" && !fixed) {
     throw new Error("Select a physical model before enabling effort-only routing; no captured model is known.");
   }
   const selectedTier = input.direct ? config.summaryTier
@@ -374,7 +385,7 @@ export async function resolveTaskRoute(
   registry: ClassifierRegistry,
   options: ClassificationOptions = {},
 ): Promise<TaskResult> {
-  const config = configuration(rawConfiguration, registry);
+  const config = validateConfiguration(rawConfiguration, registry);
   if (config.mode === "effort-only" && !physicalModel(input.captured, registry)) {
     throw new Error("Select a physical model before enabling effort-only routing; no captured model is known.");
   }

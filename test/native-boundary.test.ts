@@ -5,7 +5,7 @@ test("native Auto is opt-in and dispatches a physical baseline pair", async () =
   const fixture = await createFixture();
   try {
     expect(fixture.session.model?.id).toBe("gpt-6.1-sol");
-    const auto = fixture.runtime.getModel("github-copilot", "auto");
+    const auto = fixture.runtime.getModel("pi-auto-model", "auto");
     expect(auto, "registered native Auto").toBeDefined();
     if (!auto) return;
     await fixture.session.setModel(auto);

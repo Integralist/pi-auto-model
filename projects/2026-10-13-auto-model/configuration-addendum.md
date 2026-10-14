@@ -7,6 +7,14 @@
   [original Slice 2 plan](./plan.md#slice-2-quiet-controls-persistence-and-restoration)
 - **Evidence:** [Execution record](./execution.md#configuration-scope-addition)
 
+## Current first-release scope
+
+[The extension-only release scope](./release-scope.md) supersedes earlier
+on/off, automatic restoration, saved-enabled and manual-thinking activation
+clauses. Use Pi's `/model` picker to enter and leave Auto. No Pi host changes
+or host-release dependency are part of this release; other behavior remains
+unchanged.
+
 ## User outcome
 
 Users can use their own providers and models without editing extension code.

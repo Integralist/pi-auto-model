@@ -2,6 +2,7 @@ import { fauxProvider, type Api, type Model } from "@earendil-works/pi-ai";
 import { describe, expect, test } from "vitest";
 import {
   resolveRoute,
+  validateConfiguration,
   type PhysicalPair,
   type RouteDecision,
   type RoutingRegistry,
@@ -86,6 +87,16 @@ function orderedConfiguration() {
 function route(input: Parameters<typeof resolveRoute>[1], raw: unknown = undefined) {
   return view(resolveRoute(raw, input, fixture().registry));
 }
+
+describe("first-release defaults", () => {
+  test("use the trivial summary tier and bounded Luna/high classifier", () => {
+    const config = validateConfiguration(undefined, fixture().registry);
+    expect(config.summaryTier).toBe("trivial");
+    expect(config.classifier).toEqual({
+      ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000,
+    });
+  });
+});
 
 describe("portable tiers", () => {
   test.each<[string, PhysicalPair]>([

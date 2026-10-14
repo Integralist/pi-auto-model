@@ -114,7 +114,7 @@ async function app(world: World): Promise<Fixture> {
   let manager: SessionManager | undefined;
   if (s.noEvidence) {
     manager = SessionManager.inMemory();
-    manager.appendModelChange("github-copilot", "auto");
+    manager.appendModelChange("pi-auto-model", "auto");
     manager.appendThinkingLevelChange("xhigh");
     manager.appendMessage({ role: "user", content: "seed without physical evidence", timestamp: 0 });
   }
@@ -130,7 +130,7 @@ async function app(world: World): Promise<Fixture> {
     tools: ["read"], retry: true, restore: s.noEvidence, sessionManager: manager,
   });
   const f = world.fixture;
-  const auto = f.runtime.getModel("github-copilot", "auto");
+  const auto = f.runtime.getModel("pi-auto-model", "auto");
   assert.equal(auto?.api, "pi-virtual", "real native registration");
   if (!s.noEvidence) assert.equal(f.session.model?.id, "gpt-6.1-sol", "loading is opt-in");
   await f.session.setModel(auto!);
@@ -229,7 +229,7 @@ Given("trivial is absent while every larger tier maps to Luna at high", function
   const s = data(this); s.configuration.tiers.trivial.model = "absent";
   for (const tier of ["moderate", "complex", "frontier"] as const) s.configuration.tiers[tier] = { ...luna };
 });
-Given("a physical tier target is the virtual Auto model", function (this: World) { data(this).configuration.tiers.frontier.model = "auto"; });
+Given("a physical tier target is the virtual Auto model", function (this: World) { data(this).configuration.tiers.frontier = { provider: "pi-auto-model", model: "auto", effort: "xhigh" }; });
 Given("saved Auto has no active or captured physical evidence", function (this: World) { data(this).noEvidence = true; });
 Given("a later input handler {string}", function (this: World, change: string) { data(this).intercept = change; });
 Given("the routing configuration has {string}", function (this: World, problem: string) {
@@ -285,7 +285,7 @@ When("an extension submits {string} work", async function (this: World, delivery
 When("a summary uses native virtual-aware dispatch", async function (this: World) {
   const s = data(this), f = await app(this); s.beforeDirect = snapshot(f);
   f.faux.setResponses([reply(s, "direct")]);
-  s.directReply = await new ModelRegistry(f.runtime).streamSimple(f.runtime.getModel("github-copilot", "auto")!, {
+  s.directReply = await new ModelRegistry(f.runtime).streamSimple(f.runtime.getModel("pi-auto-model", "auto")!, {
     messages: [{ role: "user", content: "summary", timestamp: Date.now() }],
   }).result();
 });

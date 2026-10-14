@@ -18,7 +18,7 @@ test("native physical classification is isolated from selected Auto and session 
   const fixture = await createFixture();
   try {
     const registry = new ModelRegistry(fixture.runtime);
-    const auto = fixture.runtime.getModel("github-copilot", "auto");
+    const auto = fixture.runtime.getModel("pi-auto-model", "auto");
     expect(auto).toBeDefined();
     await fixture.session.setModel(auto!);
     fixture.respond("main answer");

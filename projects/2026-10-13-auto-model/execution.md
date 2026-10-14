@@ -1,14 +1,48 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Slice1 accepted; neutral Auto/scoped popup design approved, combined Slice2 code proposal next.
+- **Status:** Items1–4 and isolated tarball rollback verified; root merge/push
+  and the user's Git-install check remain.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
 - **Coordinator:** selected Copilot GPT-6.1 Sol/xhigh, unchanged.
 - **Delivery branch:** `integralist/auto-model`
 - **Baseline HEAD:** none; the repository had an unborn `main` branch.
-- **Current slice:** Slice2 compiler; design choices approved, runtime implementation unapproved.
+- **Current slice:** Item5 package/docs and isolated installation/removal/rollback proposal; no global activation.
 - **Accepted slices:** Slice1, with all four M1 milestones explicitly approved and marked.
+
+## Current first-release direction
+
+The user has dropped all Pi harness changes and accepted entering/leaving Auto
+through Pi's `/model` picker. [The release scope](./release-scope.md) is the
+current control contract and remaining-work checklist. Earlier host proposals
+and automatic-restoration/saved-enabled tasks below are historical, not current
+authority. No host source is acquired or edited; existing uncommitted work stays
+protected. The user will approve concrete batches as work proceeds.
+
+The13-file picker-only batch and approved two-file capture correction are
+applied exactly. Normal Make verifies338 tests/57 scenarios/type/load; actual
+assertion-red precedes the correction. Independent focused review clears
+PICKER-F01; [the outcome](#capture-correction-outcome--verified) records the
+native evidence. No extension model/effort setter, restore target, shortcut or
+enabled preference remains. Checklist item1 is verified and checked.
+The approved configuration/routing batch and follow-ups are now verified at
+372 tests/57 scenarios. Focused review clears CONFIG-F01 and CONFIG-T01;
+[the outcome](#configuration-form-correction-outcome--verified) records native
+ordering and cancellation evidence. Checklist item2 is checked. Full criterion
+compatibility and package/installation remain open. The stage3 popup/acceptance
+automation and follow-up pass396 tests/77 scenarios. [Focused verification](#stage3-test-only-correction--verified-outcome)
+clears all three test gaps with native controls and rejected inverted contracts.
+[Live regular/fullscreen acceptance](#stage3-live-terminal-acceptance--verified)
+is verified, with no production findings or paid/network calls. Checklist item3
+is checked. Source Task1/M2 aggregate markers and commit remain separately gated;
+external plugin requirements in the original slice still belong to item4.
+The four-peer batch and eight-file follow-up are applied on approved feature
+branches. [Focused review](#stage4-follow-up--verified-outcome) clears all retained
+findings and12 co-loaded cases pass, completing item4. A historical user-settings
+hash differs; the field delta cannot be recovered. Current settings exactly match
+the managed copy and stay read-only. Package/install/rollback and commits remain
+item5 gates; no current result implies a globally activated release.
 
 ## Authorization
 
@@ -106,6 +140,76 @@
     preserve all accepted M1 marks/specification behavior, then finish the
     combined controls/configuration/popup runtime proposal. This approval does
     not authorize that later code/test diff, host/global changes or paid probes.
+27. The user approved the exact21-file controls/configuration/popup runtime
+    diff with60 new cases at `/tmp/pi-auto-model-controls-batch.DYLuDs/proposed.diff`.
+    The frozen payload includes compiling inert stubs and approved namespace/
+    fresh-preference assertions. Strict Luna/xhigh Task1 execution remains
+    bounded to that payload; any material correction needs a new concrete
+    approval. Source M2 marks, new acceptance files, live UI smoke, peer repos,
+    global/provider changes, paid probes and release remain unapproved.
+28. The user approved the exact six-file correction at
+    `/tmp/pi-auto-model-controls-correction.BvM6YI/proposed.diff` and requested
+    a concise remaining-work summary. Apply only that correction, preserve
+    assertions/host/global settings and rerun actual acceptance/review. This
+    does not authorize new review fixes, host API work, source M2 acceptance
+    or any later compatibility/install/live gate.
+29. The user approved preparing a guarded/cancellable Pi model-selection API
+    proposal. This is design/evidence authority only: no upstream acquisition,
+    installed SDK patch, host or extension implementation, dependency change,
+    release/activation or new review correction is implicitly approved.
+30. The user dropped all host changes and accepted /model entry/exit for the
+    first release, then approved concrete batches as work proceeds.
+31. The user approved the13-file picker-only simplification at
+    `/tmp/pi-auto-model-picker-scope.XxlUXO/proposed.diff`; original conflicting
+    selection/restoration requirements yield to release-scope.md.
+32. The user approved the153-line two-file PICKER-F01 correction with19 native
+    regression cases. Apply that exact payload and update the checklist only
+    after normal verification and focused review. Later corrections remain
+    behind their own concrete approval; host/global/activation gates stay closed.
+33. The user approved the six-file556-line item2 diff with27 new regressions at
+    `/tmp/pi-auto-model-config-routing.ZNNpwo/proposed.diff`. Only that exact
+    payload is authorized; fresh review fixes, item3 code or acceptance markers
+    still need their concrete gates. No host, dependency or global edit is included.
+34. The user approved the207-line two-file single-queue/summary-fixture diff at
+    `/tmp/pi-auto-model-config-order.HcPOPS/proposed.diff`. Apply only that exact
+    correction and its five tests/two strengthened cases; new review fixes are
+    not implied. Source M2 acceptance, host/global changes and later stages stay gated.
+35. The user approved the82-line form-continuation diff at
+    `/tmp/pi-auto-model-form-order.KAg57B/proposed.diff`: one production line and
+    two native regressions. Apply exactly, run ordinary red/green and focused
+    verification, then tick item2 only when the retained finding clears. No
+    other implementation, later-stage acceptance or host/global change is included.
+36. The user approved the exact609-line four-file stage3 batch at
+    `/tmp/pi-auto-model-stage3.ju9Y0u/proposed.diff`: monotonic popup time, late
+    render isolation,24 native popup cases and19 configuration scenarios. Apply
+    only that payload and verify normally; new review corrections, live terminal
+    checks, criterion/source M2 markers and later stages retain separate gates.
+37. The user approved the exact87-line two-file test-only follow-up at
+    `/tmp/pi-auto-model-stage3-tests.Kf2tCa/proposed.diff`, addressing S3T01–03.
+    Apply only those acceptance files, run normal checks and focused inverted-
+    contract verification. Production changes, live terminal checks and later
+    stage/aggregate acceptance markers are not authorized by this approval.
+38. The user approved offline live regular/fullscreen terminal acceptance for
+    editor input during work, popup expiry/later-dialog ownership, resize/theme
+    rendering and session cleanup. Use isolated temporary settings/auth/session
+    paths and fake providers only; no paid calls, global installation or Pi edits.
+    The user subsequently closed both instances; do not reopen or close panes
+    merely to collect already-saved results.
+39. The user requested proceeding with checklist item4. This authorizes peer
+    inspection and a concrete compatibility proposal, not source edits to the
+    four repositories, branches, commits, dependency installation, live provider
+    calls or global activation. Obtain explicit approval of the frozen batch
+    and its named feature branches before implementation.
+40. The user approved the frozen5241-line34-file four-peer batch and creating
+    integralist/auto-model-compatibility in each clean peer. Apply exact payloads,
+    verify standalone old/current hosts and isolated combined behavior, then
+    review before marking item4. No fresh review fixes, dependency installation,
+    global configuration, commits, pushes or release activation are authorized.
+41. The user asked what changed in the settings file and said apply fixes. This
+    explicitly approves the frozen998-line eight-file follow-up for C4F01–05
+    and C4T01 on the existing feature branches, with normal checks and focused
+    verification. It does not authorize settings writes/restoration, additional
+    code fixes, commits, package installation or release/global activation.
 
 There is no authorization to push, publish, install/enable this extension
 globally, change other repositories, change explicit worker policy, or run paid
@@ -464,6 +568,7 @@ and completed review. Later rows remain Unverified; no live rollout is implied.
 | Implementation | `slice-1/task-5` | `e3253e2a5145409e260eb7942c142682d3e903de` — test: prove native routing through complete Slice 1 acceptance | Assertion-red,229 Vitest/57 Cucumber/type/load/19 policy checks verified; acceptance implementation only, independent review finds eight open issues |
 | Correction | `slice-1/task-5` | `923b8290f15e1b34340bea7ed47a7f63597c9991` — fix: preserve owned tasks and exact physical routes under native edge cases | Parent1dfe23d; exact approved aggregate +F8 fixture +F2/F6 follow-up;254 Vitest/57 Cucumber/497 steps/type/load/19 policy checks; all eight findings cleared by complete independent review; no source milestone ticks |
 | Bookkeeping | `slice-1/task-5` | `2d1bdf5315a39bde329b404b05faa8acdfb57bad` — docs: accept the verified routing core before building user controls | Parent923b829; exact approved four M1 checkmarks, unchanged spec/plan wording;254 tests/57 scenarios/type/load rerun; docs lint/links/ledger/scope checks pass; no runtime code or later implementation |
+| Bookkeeping | `slice-1/task-5` | `3031a1d6fec44a5e31953d6af323dbb4ee7feb77` — docs: plan credential-independent Auto and safely owned switch popups | Parent2d1bdf5; exact approved four plan regions, prior checkpoint/native boundary facts and unchanged spec/M1 marks;254 tests/57 scenarios/type/load rerun; no runtime/host/global edits |
 
 Task1's pre-commit compiler corrections are included in its implementation
 commit. Task5's approved aggregate F1–F8 correction is verified and committed
@@ -1304,21 +1409,1091 @@ boundaries before producing the single complete Slice2 proposal. No Slice2
 source, fixture, dependency, policy/preferences file or original scenario edits
 have been applied.
 
+## Slice2 implementation proposal — not applied
+
+The approved design/evidence commit succeeded at actual3031a1d on
+integralist/auto-model, parent2d1bdf5. No hook changes or runtime edits occurred.
+A combined Task1 implementation proposal is now frozen in
+`/tmp/pi-auto-model-controls-batch.DYLuDs`. `proposal.json` contains exact final
+source/tests and compiling inert stubs; `proposed.diff` is the user-reviewable
+1482-line diff. `before.json`, source/protected hashes, manifest and approval
+fingerprints anchor it to3031a1d. The user has now approved that exact payload.
+It was unimplemented at approval; no new behavior/red/green is implied by the
+prior compiler proof. Checkpoint: `/tmp/pi-auto-model-controls-implementation.y7f8rh`.
+
+The21 proposed files consist of six runtime source modules, namespace-adjusted
+existing acceptance/ownership tests, offline fixture/UI support, three new suites
+and two package metadata files. New modules are settings, controls, configure
+and popup. Pi-tui is added only as a peer using the already installed1.2.0
+package; installed resolution/dependency graph is unchanged. No install/network
+operation is proposed as part of this code payload.
+
+Task1 supports M2.1–M2.4 and R61–R65: commands/shortcut/deferred controls,
+separate atomic policy/preferences files, JSON-portable per-branch physical
+restore/fixed identities, exact manual restoration, available-model search and
+supported non-max efforts, neutral Auto and scoped passive popups. Policy save
+preserves original policy mode/summary/popup/classifier bounds even when the
+separate mode preference differs. Save/cancel never implicitly selects Auto.
+Native direct summaries and classification are tested with only a non-Copilot
+provider configured, preserving no-hidden-default fallback and no entitlement
+claims.
+
+Sixty new proposed cases:24 settings/catalog/schema/persistence,19 native
+controls/configuration and17 popup/TUI/integration cases. All254 existing
+routing cases remain. Apart from neutral ID/virtual target fixtures, two old
+fresh-session selected-model assertions intentionally change to Auto under the
+new saved-enabled preference contract; their physical startup, sticky retention,
+request counts and late-write guards are not relaxed. This is a feature change,
+not an assertion workaround. Source M2 marks and S2 scenario ledger rows remain
+unverified.
+
+In-memory TypeScript preflight passes both final and inert-stub payloads with
+zero diagnostics (`type-preflight.log`). Compiler name/import/component-signature
+errors were corrected only in scratch before passing; no runtime fixes were
+attempted. Expected post-implementation totals are314 Vitest plus unchanged
+57 Cucumber/497 steps; those are expectations, not executed new results. TDD
+must establish assertion-red through registered native commands/real installed
+TUI and settings effects before replacing inert stubs, preserve every strict
+physical pair/effort/control assertion and clear all stubs from final files.
+
+Task1 is an implementation boundary, not whole Slice2 acceptance. The original
+22 S2/addendum criteria still need complete criterion-by-criterion integration
+acceptance, premium review and the explicitly gated live focus/expiry smoke
+before M2 outcome acceptance. Complete and inspect the Slice2 task document
+with its final boundary verification task before delegating Task1; this code
+proposal does not certify that future acceptance or silently remove tagged
+criteria. Existing native Cucumber examples continue to run unchanged other
+than the virtual identifier/target fixture migration. Later compatibility and
+release tasks are not compiled or authorized by this proposal.
+
+## Slice2 Task1 launch
+
+The coordinator compiled and inspected [the Slice2 task document](./tasks-slice-2.md).
+Task1 contains the exact sixty tests/four compiling stubs and immutable final
+21-file payload. Task2 is coordinator-owned native boundary verification with
+all22 S2/addendum criterion keys and explicit missing-variant/live-smoke gates;
+Task1 approval does not authorize adding those later files or declaring M2 done.
+The compiler did not weaken any requirement to make the existing task pass.
+
+Current branch integralist/auto-model, parent3031a1d, index empty. Only three
+coordinator-owned compilation/evidence documents pre-exist. Baseline254 Vitest/
+57 Cucumber/497 steps/type/load and19 worker-policy checks pass; requested worker
+model catalog preflight is recorded. Frozen proposal/diff fingerprints match,
+all21 source inputs match before.json, and no installed resolution change exists.
+
+Execute Task1 with one strict Copilot Luna/xhigh worker,80turns/no fallback,
+returning before Task2. Retry160 only for budget-limited incomplete work after
+scope/checkpoint verification. Material code/fixture failures return to Sol/xhigh
+for diagnosis and a fresh exact diff approval; no worker invention/staging/commit.
+Logs and source copies: `/tmp/pi-auto-model-controls-implementation.y7f8rh`.
+
+## Slice2 Task1 result — blocked
+
+Worker `e13a5702-b045-4183-8b0b-22428065bc81` applied all21 approved final files
+byte-for-byte and returned BLOCKED. All22 protected launch hashes, branch/HEAD/
+empty index and dependency graph remain intact. It made no material fixes,
+staging, commits or later-task edits. Transcript records strict Luna/xhigh on33
+assistant turns, normal stop with no errors/exhaustion/fallback at budget80;
+no retry is needed for a correctly reported code/fixture blocker.
+
+Stub compilation passes. Original red reports53 failed/7 passed among60 cases;
+settings/catalog/preferences and native command assertions establish valid red,
+but UI theme setup failures do not establish popup/native UI red. Final applied
+code reports282/314 Vitest passing and48/57 Cucumber scenarios passing
+(479/497 steps,9 failed/9 skipped); typecheck/module loading and19 policy checks
+pass. Coordinator full Vitest/type/load/policy reruns reproduce the result.
+Task1, Task2 and every M2 milestone remain open; nothing is committed.
+
+Checkpoint/logs: `/tmp/pi-auto-model-controls-implementation.y7f8rh`, including
+worker report/command index/red/green/full/audit/telemetry and coordinator logs.
+Real current Make checks are not confused with the temporary proposed fixes.
+
+The premium coordinator verified six root causes against installed source and
+native diagnostics before proposing changes:
+
+| Key | Cause | Exact follow-up |
+| --- | --- | --- |
+| S2F1 | session_start preserves a useful invalid-policy error, but manual Auto selection lacks initialized lastPhysical and overwrites that error with an unrelated restore warning. Two maintained unit and nine Cucumber safety cases fail. | Preserve an existing initialization failure before deriving a restore pair in src/controls.ts:238. No dispatch/error assertion changes. |
+| S2T1 | Isolated Theme constructor lacks text/selectedBg/thinkingXhigh fallback sources;28 UI cases throw before feature behavior. | Add required fallback colors to test/support/ui.ts:14; use the same public native Theme/TUI. |
+| S2T2 | The off/high model fixture leaves minimal/low/medium unspecified, which Pi supports by default. | Explicitly mark those efforts null in test/settings.test.ts:12, retaining exact off/high expectations. |
+| S2T3 | The manual-effort test repeats selected virtual xhigh; native setThinkingLevel emits no event for the same level, and model switching uses saved defaults rather than a pre-switch setter. | Set only that in-memory fixture's switch default to high before enabling, so manual xhigh is a real native change. Keep the original Sol/xhigh restore identity and expected Luna/xhigh/count assertions. |
+| S2T4 | Fixture close calls raw session.dispose without session_shutdown; the real owning runtime delivers shutdown first. An overlay remains and captures a stale UI context afterward. | Await f.owner.dispose in the new native/UI test cleanup before raw fixture cleanup; keep overlay absence and focus/count/route assertions. |
+| S2T5 | InMemoryCredentialStore does not exclude ambient provider auth. Bedrock/Vertex physical catalogs remain configured through environment signals, so filtering only fake Copilot does not create an empty catalog. | Isolate built-in provider auth/catalogs inside the native test fixture, then register only its explicit fake. No process environment, account, host or global setting changes. |
+
+SDK evidence: agent-session.js1978–1994,2084–2102; agent-session-runtime.js296–302;
+pi-ai models.js680–689; theme.js44–58 and theme-tokens.js16–53; ModelRegistry
+getAvailable returns the runtime snapshot. The helper/raw-disposal diagnosis is
+not a host lifecycle bug; production receives its documented shutdown event.
+Repeated selection of an unchanged virtual effort is a native no-op, not a
+claim that the extension observed a manual event. This API limit stays explicit.
+
+Exact six-file follow-up is proposed, not applied, at
+`/tmp/pi-auto-model-controls-correction.BvM6YI/proposed.diff` and proposal.json.
+Only one production guard changes; five fixture/cleanup files correct setup.
+All assertions, expected physical models/efforts and request/expiry/focus counts
+remain unchanged. The correction is230 diff lines; no test case is removed.
+The applied21-file batch still matches its immutable finals, so no proposal was
+silently used as editing authority.
+
+Temporary in-memory Vite/module-hook substitutions verify all314 Vitest tests
+and57 Cucumber/497 steps pass against the proposed follow-up, with zero TypeScript
+diagnostics. Logs: in-memory-diagnostic-final.log, in-memory-cucumber-diagnostic-
+async.log and type-preflight.log. These are diagnostic previews, not applied
+Make acceptance or completed review. An initial synchronous Node hook failed in
+harness setup before any scenario; the async hook completed the same cases.
+After correcting fixture inputs in memory, the inert popup stub reaches actual
+native TUI/native-main assertions:12 fail/5 controls pass, including expected
+one-overlay versus zero in both modes. The previous setup exceptions were not
+counted as that proof. After approval, preserve/reproduce this assertion-red
+through the real applied fixture before final popup verification.
+
+No source correction, host patch, global install, paid model request, live
+terminal focus smoke or premium acceptance review was performed. The correction
+preview does not certify missing full Slice2 criteria or provider entitlements.
+
+## Slice2 approved correction verification
+
+The user approved the six-file230-line follow-up. Worker
+`42fd4736-db23-4594-9281-d7fed4f8f720` applied it byte-for-byte and returned
+COMPLETE. All fifteen other Task1 files and37 protected checkpoint hashes
+remain unchanged. Native popup assertion-red uses the now-applied corrected
+fixture and original inert module:12 behavior assertions fail,5 controls pass,
+with no setup/import/theme exceptions. Actual targeted60/60 and full314 Vitest,
+57 Cucumber/497 steps, typecheck, module load and19 worker-policy checks pass.
+Coordinator independent Make reruns confirm all results; no Vite override is
+used for green. Assertions are unchanged and installed resolution metadata is
+unchanged apart from the original approved peer root entry.
+
+Checkpoint: `/tmp/pi-auto-model-controls-fixed.TcFYCi`, including exact approval
+fingerprints/final/before source copies, worker command/red/green/audit output
+and coordinator checks. Worker telemetry records33 Luna/xhigh turns at budget50,
+normal stop/no errors/exhaustion/fallback. One rejected Edit anchor made no change;
+final scope is exact. Worker availability labels are not provider-internal proof.
+Task1 remains unaccepted/uncommitted until independent review findings clear.
+
+## Slice2 independent review — verified findings
+
+All five premium dimensions completed and accounted for all24 changed files.
+Recorded Sol/xhigh turns: behavior19, security14, reliability33, maintainability16,
+adherence26 at budget60. All returned COMPLETE with normal stops, no errors,
+exhaustion/fallback or unfinished work; no retry was needed. Security found no
+additional findings. The immutable source contains43 hash records and the3133-line
+combined diff, including task/coordinator docs and all untracked additions.
+
+Review packet: `/tmp/pi-auto-model-slice2-review.pznc0Y`, with exact diff/context,
+source snapshots/per-file shards, raw JSON, transcripts and model/effort metadata.
+Three independent adversarial verification batches completed: race17, behavior16,
+quality14 recorded Sol/xhigh turns at budget50, all COMPLETE/normal stop/no errors,
+exhaustion/fallback. All twelve raw findings were positively verified; duplicate
+max reports merge into one. Nothing was dropped. The final eleven findings are
+seven Medium/four Low; all existing checks still pass. No new fix is applied.
+
+| ID | Severity | Verified issue | Correction boundary |
+| --- | --- | --- | --- |
+| S2F01 | Medium | Tree can restore enabled=false while native selection stays Auto; mode-only controls then disable the saved preference and on demands a physical model despite a valid restore pair. | Reconcile effective selection/enabled state without implicit re-enabling or recapturing a virtual restore target; test both branch directions. |
+| S2F02 | Medium | Auto offers max in native thinking choices against the plan; unsupported manual max fails restoration and leaves Auto/max selected. No automatic max dispatch was observed. | Remove max from the advertised choice list; verify native offered levels. |
+| S2F03 | Medium | Effort-only preference constrains direct summaries to the captured main model instead of the available configured summary-tier model. | Keep fixed-model retention scoped to main routing, preserve configured physical summary pair and branch isolation in both modes. |
+| S2F04 | Medium | Asynchronous off/effort selection can overwrite a newer manual choice, change a newly active task and mutate the disposed outgoing session; broad internal suppression hides newer choices. | Native commit-point ownership/cancellation is required for a strict guarantee; public extension coordination alone cannot cancel an already issued Pi1.2 setModel. Requires a design decision, not a hidden host patch. |
+| S2F05 | Medium | Atomic file save begun idle can finish during a new classifier and invalidate/cancel that legitimate task. | Separate file persistence from runtime activation; defer activation/invalidation until safe idle. |
+| S2F06 | Medium | A delayed later session_compact handler makes the one-shot drain see busy and abandon its wake-up; queued off can remain pending indefinitely after idle. | Keep an owned bounded drain wake-up until safe or canceled; verify compaction delay and replacement. |
+| S2F07 | Medium | Malformed branch failure remains latched after returning to valid branch controls. | Track/clear branch-specific failure separately while preserving independent policy/preferences initialization failure. |
+| S2F08 | Low | Popup wall-clock lifetime extends after backward clock adjustment. | Use monotonic elapsed time, preserving chunked timers and generation/handle isolation. |
+| S2F09 | Low | Existing tests pass if headless guidance, status and invalid-argument feedback silently vanish. | Capture caller-visible command output and assert guidance/path/syntax alongside existing absence controls. |
+| S2F10 | Low | Existing non-Copilot summary assertions pass with incorrect supported effort. | Assert exact provider/model/reasoning at the physical boundary, with a distinct summary pair and main-state isolation. |
+| S2F11 | Low | Invalid preferences file and invalid branch controls produce indistinguishable errors without path/entry origin. | Attach validation origin at file/entry callers; preserve the schema explanation. |
+
+Verified JSON and all raw-to-stable mappings are in `verified-summary.json`.
+Every retained finding has native SDK/TUI or in-memory mutation evidence and
+positive controls. Verifiers preserve all43 hashes and Git state; main separately
+reran S2F04's native gated-auth diagnostics and both sequential/busy-first controls
+(`coordinator-selection-repro.log`). Model calls are faux only; no provider
+credentials, network, live terminal/global/host source changes occurred.
+
+### Blocking public API constraint
+
+Installed `AgentSession.setModel` awaits checkAuth, then mutates model/transcript
+and effort without checking original session/idle/selection ownership
+(agent-session.js1978–1994). Extension loader assertActive runs only before
+calling it (loader.js350–352); runtime teardown does not settle model selection
+(agent-session-runtime.js102–113). Public ExtensionAPI.setModel has no signal,
+conditional commit or operation identity; model_select is after mutation and
+has no veto. A timeout or post-await guard cannot prevent the already-started
+native commit. The replacement diagnostic mutates the outgoing session, not the
+active replacement session; do not overstate it as new-session corruption.
+
+Admission/teardown waiting and matching-event suppression can reduce extension
+races, but do not provide a bounded strict latest-choice guarantee if auth never
+settles or another public selector wins meanwhile. Eventual reconciliation is a
+weaker contract. No installed host patch, upstream source acquisition, new guard
+API/dependency, weakening of manual/current-task ownership or runtime correction
+is authorized. A minimal guarded/cancellable native selection proposal needs an
+explicit scope decision first. This newly verified constraint supersedes the
+assumption that all safety requirements can use the Pi1.2 public setter unchanged.
+
+### Open behavior questions — not findings
+
+1. When preference persistence fails after a runtime control has applied, should
+   the runtime remain changed with an actionable not-saved notice, or roll back?
+   Current code leaves session/native change applied and prior file intact; the
+   configuration-save rollback requirement does not clearly settle preferences.
+2. When navigating from an explicit off/manual selection to a historically enabled
+   branch, should branch state reselect Auto or preserve the later manual choice?
+   Native navigation keeps current selection; enabled-to-enabled restoration works.
+   S2F01's inconsistent mode persistence is verified independently of this choice.
+
+Task2's22 original criteria/live focus gate and source M2 outcomes remain open.
+No pending runtime source/test is committed; full review success is not claimed.
+The user need not process eleven separate fix gates: prepare a grouped correction
+proposal after settling the blocking native-selection scope. Unknowns remain
+separate; no reviewer permission substitutes for concrete edit approval.
+
+## Guarded host selection contract — proposed only
+
+The approved preparation is complete at
+`/tmp/pi-guarded-selection-proposal.POF5vb/proposal.md`, with source fingerprints,
+read-only native auth evidence, independent critique/disposition and completion
+manifest beside it. No upstream checkout exists; package metadata identifies
+`earendil-works/pi/packages/coding-agent`, but no upstream SHA is verified or
+invented. Installed Pi1.2 sources/maps, canonical global docs and current
+Context7 setModel documentation were read; the proposal is not an existing API.
+
+Recommend one opt-in host/session/extension trySetModel operation with exact
+paired thinking effort, request correlation and read-only ownership revision.
+Host-owned cancellation/final validation rejects a delayed commit after newer
+selection, admitted work or approved teardown. Eligibility remains closed during
+input/queue preparation and teardown, including new calls submitted during those
+intervals. Work consumed by an input handler still conservatively supersedes an
+older switch; ordinary recognized commands that admit no work remain exempt.
+
+Both selected values/revision commit before persistence or observer delivery.
+Guarded notifications are immutable snapshots with matching request IDs; delayed
+self-events must remain recognizable and cannot suppress another manual choice.
+Applied results are commit facts, not leases; post-await/callback bookkeeping
+checks the current revision/session/controller. Existing legacy signatures and
+non-overlapping defaults/clamping remain; guarded admission is conservatively
+busy during an existing legacy selection. No global event/input lock is proposed.
+
+All six soundness questions were independently reviewed by Sol/xhigh worker
+`58e1d7fe-4367-4c79-8281-95380daa5b5a`. COMPLETE after11 turns at budget40,
+normal stop/no errors/exhaustion/fallback. One proposed-contract eligibility
+ambiguity was clarified by the coordinator; delayed events, veto timing, legacy
+in-flight tracking and pre/post-commit result semantics are also explicit.
+The reviewer inspected the first draft; later clarifications were checked by
+main, not falsely claimed as a second native implementation review.
+
+A native diagnostic verifies existing checkAuth cancellation settles while its
+fake provider ignores abort, without a model request or source patch. Late
+rejection handling is verified in source, not separately claimed executed.
+All43 workspace and8 installed host evidence hashes/Git state remained unchanged
+through proposal and review; only the bounded coordinator records below change
+now. API implementation and new-API tests have not run. Installed SDK/global
+settings/dependencies, plan/spec/M2 markers and runtime code remain unchanged.
+
+Pinned upstream source and a concrete committed-state storage-error mechanism
+are mandatory before the implementation diff. Atomic in-process model/effort
+selection is not a new crash-atomic JSONL transaction; post-commit storage failure
+must expose the committed pair/revision, never pretend nothing changed. Supported
+host version/release provenance is unverified. The strict extension feature now
+has a host release or explicitly approved fork/build dependency; no silent unsafe
+Pi1.2 fallback is allowed. Other S2 findings/behavior questions remain separate.
+
+## Historical host proposal disposition
+
+The user subsequently rejected host changes and approved the picker-only first
+release. The host contract/source-checkout proposal above is retired, not a
+current next action or dependency. No source checkout, host edit or package
+upgrade was performed. Native /model selection owns entry/exit; the extension
+selection/restoration machinery that needed the host guarantee is removed.
+
+## Picker-only batch — applied and review-blocked
+
+The user approved the840-line thirteen-file diff at
+`/tmp/pi-auto-model-picker-scope.XxlUXO/proposed.diff`. Worker
+`bba05c7f-bf07-4e16-b102-1b53207a0b88` applied the exact payload, preserving31
+other protected files, Git/index/branch and all installed packages. Stub typecheck
+passes; targeted82-case red reports20 assertion/behavior failures and62 passes.
+Setup fallout is not counted as red. Final82/82 targeted and normal319 Vitest,
+57 Cucumber/497 steps, typecheck, module load,19 worker-policy and six-doc lint
+checks pass. The coordinator independently reran normal Make checks and all
+13 exact-final/31-protected audits. No override is used for actual green.
+Checkpoint: `/tmp/pi-auto-model-picker-apply.Ioi4LL`.
+
+Worker records26 Luna/xhigh turns at budget70, normal stop/no errors, exhaustion
+or fallback. Five incremental premium reviewers each account for all13 files;
+behavior15, security17, reliability15, maintainability11 and adherence11
+Sol/xhigh turns at budget40, all COMPLETE/normal stop/no errors/exhaustion/fallback.
+Security/maintainability/adherence find no introduced issue. Behavior/reliability
+report the same capture-precedence defect; one adversarial verifier returns
+COMPLETE after17 Sol/xhigh turns at budget35 with two positive raw verdicts,
+merged as one Medium PICKER-F01. All44 workspace/source hashes remain fixed
+through reviewers/verifier; no retry is needed. Recorded labels do not establish
+opaque provider-internal behavior.
+
+Review packet: `/tmp/pi-auto-model-picker-review.0k16bE`, including exact13-file
+diff/context, all44 hashes, immutable sources, raw/verified JSON and transcript
+telemetry. PICKER-F01: old valid mode.fixed identity can overwrite newer native
+capture during reload/JSON resume/tree after explicit physical re-selection.
+Both physical-model directions, fresh-task/confirmation paths, no-request gap
+and newer-mode positive controls were independently reproduced using installed
+Pi1.2/faux providers. This is not the removed auto-restoration race or a demand
+for a host API. Settings activation/drain, summary and popup timing stay separately
+open; no reviewer marked them solved or duplicated them as new batch findings.
+
+The approved removed-feature outcomes are checked beneath checklist item1;
+the item itself remains open until the capture correction clears. All M2 source
+milestones, full Task1 acceptance and commit remain open. No host/global/provider
+change, paid probe, live terminal check, release or cross-repo implementation
+was made; existing uncommitted work is preserved.
+
+## Picker capture correction — approved payload
+
+Exact two-file153-line follow-up:
+`/tmp/pi-auto-model-picker-capture.vqNOQ3/proposed.diff` and proposal.json.
+It records the user's explicit physical choice as portable fixed-mode identity
+without ever selecting a model. Reconstruction preserves newer native capture
+and effort over older mode state, while a newer explicit mode entry still wins.
+Inactive/restore/error contexts do not manufacture a fresh fixed identity.
+No enabled flag, restore instruction, setter, shortcut or host capability returns.
+
+Nineteen new caller-facing cases cover both model directions, reload/resume/tree,
+confirmation/fresh work, no intervening response, mode coming from configuration,
+newer-mode positive controls and exact unsupported newer effort without hidden
+step-up. Existing319 cases remain unchanged. Final in-memory substitutions pass
+338 tests; TypeScript preflight has zero diagnostics. New tests against unchanged
+production reach17 expected assertion failures with26 controls passing. Two early
+scratch cases lacked a queued faux response; that setup was corrected before
+freezing the proposal so the final failures assert wrong route/stop behavior,
+not missing fixture responses. These are previews, not actual applied TDD/green.
+After approval, add the tests first and rerun ordinary red before implementation.
+
+At the proposal gate only src/controls.ts and test/controls.test.ts were named;
+no assertion was weakened. Its frozen approval manifest is now verified against
+the exact applied files. All remaining work lives in
+[the release checklist](./release-scope.md).
+
+## Capture correction outcome — verified
+
+The user approved PICKER-F01. Worker59d8d903 applied its exact two files; actual
+red reaches17 failing assertions/26 controls, then all43 controls pass. Full
+normal Make verifies338 Vitest/57 Cucumber/497 steps/type/load;19 worker-policy
+checks and whitespace pass. Coordinator independent reruns confirm these results.
+All42 protected apply hashes remain unchanged. Apply checkpoint/logs:
+`/tmp/pi-auto-model-capture-apply.MezceW`.
+
+Focused reviewerfb5c877b accounts for both files, clears PICKER-F01 with no new
+findings/unknowns, and independently executes35 additional native cases plus
+trace controls. Both model directions, configuration-only mode, reload/JSONL
+resume/tree, newer mode recency, failed/aborted response state, foreign virtual
+identities and unsupported historical effort are verified. All44 review hashes
+and Git state stay fixed. Review sources/JSON/log telemetry:
+`/tmp/pi-auto-model-capture-review.u5XxVd`.
+
+Worker records20 Luna/xhigh turns; reviewer records20 Sol/xhigh turns, both at
+budget40 with normal final stops and no exhaustion/fallback. The review recovered
+from one interrupted provider stream; its complete scoped output and native
+checks were verified. No new implementation retry or host/model calls were
+needed; requested labels do not establish opaque provider-internal effort.
+
+Release checklist item1 is checked. The aggregate controls task/M2 acceptance
+and commit remain open because settings activation/drain, configured summaries,
+popup/acceptance and later release outcomes are still pending. This correction
+adds no selected-model mutation, host/dependency/global edit or activation.
+
+## Item2 applied batch and review outcome
+
+The approved six-file batch is applied byte-for-byte. Actual TDD reports14
+assertion failures/13 positive controls in the27 new cases before source changes;
+all43 existing control cases remain passing. Targeted70/70 and normal365 Vitest,
+57 Cucumber/497 steps/typecheck/module load/19 worker-policy checks pass.
+Coordinator independent Make reruns and six-final/39-protected hash audits pass.
+No preview substitution is used for green. Checkpoint/logs:
+`/tmp/pi-auto-model-config-apply.tr7eQW`.
+
+Workerbe5e60c2 returns COMPLETE after19 recorded Luna/xhigh turns at budget55,
+normal stop/no errors/exhaustion/fallback. An ANSI status-parser audit error
+was corrected only in its scratch audit and rerun; no extra source edits.
+Five incremental Sol/xhigh reviewers complete allsix files at budget40:
+behavior13, security12, reliability13, maintainability9 and adherence14 turns.
+No error/exhaustion/fallback is recorded. Review packet:
+`/tmp/pi-auto-model-config-review.YLiB1Y`, including frozen556-line diff/context,
+source/45 hashes, raw findings and per-pass telemetry. Security and maintainability
+retain no findings. All45 hashes/Git state remain fixed throughout review.
+
+Three raw findings were independently adversarially verified in one COMPLETE
+Sol/xhigh batch after16 turns at budget40 with no error/exhaustion/fallback.
+Both queue schedules reproduce twice with positive controls and physical-request
+assertions; the native-summary coverage gap is proven by a mutation. Nothing was
+dropped; the two queue variants merge as CONFIG-F01 (Medium), and the fixture gap
+is CONFIG-T01 (Low). No new production summary failure was demonstrated.
+Verification details/positive controls are in verification.json and
+verified-summary.json. Requested/transcript labels are not opaque gateway proof.
+
+CONFIG-F01: mixing the serial promise and deferred queue can reverse pending
+commands across idle/busy intervals. It can leave active configuration different
+from the newest saved file or let an older mode overwrite a newer command.
+CONFIG-T01: two supposed capture-free summary sessions had no persisted messages;
+Pi treats that as fresh and appends a physical startup selection. A wrong native
+capture requirement therefore escaped their assertions. Add a persisted user
+entry and assert Auto/no physical startup, retaining strict request-effort/state
+isolation checks. The already-correct production summary behavior is unchanged.
+
+## Item2 ordering correction — approved and applied
+
+One two-file207-line follow-up at
+`/tmp/pi-auto-model-config-order.HcPOPS/proposed.diff` and proposal.json:
+replace separate serial/fromQueue arbitration with one pending queue and one
+owned running-action token. Dequeue only when that action finishes and Pi is
+idle; canceled old completions cannot release a new owner's action. Existing
+save/activate,25ms drain, epoch cancellation and no selected-model setters remain.
+This removes coordination machinery rather than adding a second ordering scheme.
+
+Five additional cases cover two-busy-interval mode/policy saves, mixed-idle and
+all-busy three-command ordering, and canceled old writes beside new-session work.
+Two existing native summary cases are strengthened with actual capture-free
+persisted context and a main-request negative control. No physical model/effort,
+FIFO/error or state-isolation expectation is weakened. The first scratch
+cancellation case blocked while waiting to release its own disk gate; its
+submission/cleanup was corrected before freezing. The final unchanged-source
+preview reaches3 valid ordering assertion failures/29 controls, not timeouts.
+The erroneous capture-requirement mutation fails both strengthened native cases.
+
+The above was the proposal's370-test preview. The user has since approved it;
+only src/controls.ts and test/configuration-boundary.test.ts change. Actual applied
+verification and focused-review results follow. Stage3/4/5 remain separate.
+
+## Single-queue follow-up outcome
+
+The approved two-file payload is applied exactly. Native red reports3 ordering
+assertion failures/29 controls; all32 boundary cases subsequently pass. Actual
+normal Make verifies370 Vitest/57 Cucumber497steps/typecheck/module load and19
+worker-policy checks. Coordinator independent reruns and43 protected-file hashes
+pass. Checkpoint: `/tmp/pi-auto-model-order-apply.VVhbDQ`.
+
+The first apply worker stopped on one unintended extra skills fixture field;
+the coordinator verified the sole discrepancy and a second same-model worker
+restored that line to its exact approved value before green checks. Neither
+changed assertions or added implementation beyond the approved payload.
+Recorded Luna/xhigh turns:16 at budget40 and12 at budget35, both normal stops,
+no errors/exhaustion/fallback. This was mechanical payload restoration, not a
+new code-fix approval or a turn-budget retry.
+
+Focused review accounts for both files/45 fixed source hashes, returning COMPLETE
+at20 Sol/xhigh turns within budget40, normal stop/no errors/exhaustion/fallback.
+It clears CONFIG-T01 and verifies original CONFIG-F01 timing variants plus
+owner cancellation and physical summary controls. Eleven of twelve independent
+native schedules pass; an overlapping configuration-form schedule fails twice.
+Current Make remains370/57 green. The review is complete, not a clean acceptance.
+Evidence: `/tmp/pi-auto-model-order-review.YuDhJi`, raw JSON/telemetry and
+coordinator native reproduction. No host/global/provider changes occur.
+
+CONFIG-F01 remains open on that final schedule: configure A holds its confirmed
+UI answer, younger configure B queues while idle, then a task starts before A's
+form returns. A's save is appended behind B and overwrites the newer settings.
+This is the queue continuation of an existing action, not a new user command;
+it must retain A's earlier slot. The reviewer independently verifies the exact
+one-line front-queue counterfactual. Main repeats the unmodified native failure;
+its first synchronous Node hook positive attempt failed in harness setup, not
+behavior. Final Vitest in-memory tests below verify the correction without that
+hook. No claim of a hidden successful native hook or host patch is made.
+
+## Configuration-form continuation correction — approved payload
+
+Exact two-file82-line diff:
+`/tmp/pi-auto-model-form-order.KAg57B/proposed.diff`. One production line changes
+queue.push to queue.unshift for the approved form's deferred save. It preserves
+the same single pending queue/owned running token, cancellation and idle guards.
+Two new native regressions cover main and classifier work while an older
+confirmed form returns. Assertions require latest file/status and exact physical
+model/effort, active-task isolation, no extra calls and stable session/Auto selection.
+All32 existing boundary cases remain. No feature, host, dependency or global
+setting change is proposed.
+
+At the proposal gate, preview passed372 unit tests/57 scenarios497steps/typecheck.
+Tests against unchanged production failed precisely2 file/pair assertions with32
+controls passing, not setup/timeouts. The user approved this exact payload;
+actual TDD, normal Make and independent verification are recorded below.
+The final-file copies, fingerprints and45 baseline hashes remain frozen in
+`/tmp/pi-auto-model-form-order.KAg57B/approval-manifest.json`.
+
+## Configuration-form correction outcome — verified
+
+The exact approved two files are applied. Actual native TDD reports2 ordering
+assertion failures/32 controls, followed by34/34 boundary cases passing. Normal
+Make verifies372 Vitest/57 Cucumber497steps/typecheck/module load/19 worker-policy
+checks. Coordinator independent reruns confirm all results; both final copies
+match byte-for-byte and all43 protected hashes remain fixed. No selected-model
+setter, host, dependency, global, paid-provider or installation change occurs.
+Apply checkpoint/logs: `/tmp/pi-auto-model-form-apply.ChIn7d`.
+
+Worker e935c018 records19 Luna/xhigh turns at budget30, normal stop/no errors or
+exhaustion/fallback. It completed TDD and all checks but returned BLOCKED because
+its final status comparison included ANSI color escapes. Coordinator resolved
+that audit-only discrepancy with color-free porcelain status and exact hash/Git
+checks, without source changes or another implementation attempt. Requested
+labels/transcripts do not prove opaque provider-internal effort.
+
+Focused reviewer f88647ef returns COMPLETE after10 Sol/xhigh turns at budget35,
+normal stop/no errors/exhaustion/fallback. Both modified files are accounted for;
+no findings, unknowns or unfinished review work remain. The original failing
+native schedule passes twice on actual source; main repeats it independently.
+Both new main/classifier cases pass twice and fail under the exact pre-fix
+in-memory negative control, while all32 older boundary cases remain passing.
+Independent34 boundary/43 controls tests pass. Two additional approved-form
+cancellation cases preserve the new physical selection/session and discard both
+stale form and queued younger work. All45 review hashes and Git state stay fixed.
+Review packet/logs: `/tmp/pi-auto-model-form-review.ddputM`; native diagnostics:
+`/tmp/pi-auto-model-form-verify.aQkzeM`.
+
+CONFIG-F01 is cleared. CONFIG-T01 remains cleared without any summary changes.
+Checklist item2 is verified and checked. Aggregate controls Task1/M2 acceptance
+and the work's commit remain open pending item3's full criterion and popup/live
+checks; compatibility and isolated packaging/install/remove/rollback follow.
+This outcome is not an installation-ready release or activation approval.
+
+## Stage3 popup/acceptance batch — applied and reviewed
+
+The user-approved four files are applied exactly: src/popup.ts, test/popup.test.ts,
+features/controls-acceptance.feature and features/steps/controls-acceptance.ts.
+The single runtime file now uses monotonic performance time for popup expiry
+and contains late theme/render errors. Native tests cover ongoing work, editor
+input/later dialogs, quiet classifier/summary paths, observed effort-only pairs,
+headless/disabled modes, host disposal, stale callbacks and lifecycle changes.
+The19 new executable configuration scenarios cover portable mappings, actual
+catalog/effort menus, file preservation and native mode/selection/busy behavior.
+No prior routing/configuration implementation is changed.
+
+Actual ordinary TDD reports4 popup assertion failures/37 positive controls,
+followed by41/41 passing. Normal Make verifies396 Vitest/76 Cucumber636steps,
+typecheck/module load and19 worker-policy checks. Coordinator independent reruns
+confirm the results; four files match the exact approved payload, all43 protected
+hashes stay fixed, HEAD/branch/index remain unchanged, and only the two approved
+new files are added. Checkpoint: `/tmp/pi-auto-model-stage3-apply.oItysR`.
+
+Worker3124963b returns COMPLETE after31 Luna/xhigh turns at budget45, normal
+stop/no errors/exhaustion/fallback. Five incremental review passes account for
+allfour files and preserve47 source hashes. All return COMPLETE with normal
+stops, no errors/exhaustion/fallback: behavior14, security12, reliability25,
+maintainability11 and adherence17 Sol/xhigh turns at budget40. No production
+finding is retained in the popup changes. The reliability wait exceeded one
+result-poll interval, not a turn limit; its final terminal scope was verified.
+Model labels/transcripts are not opaque gateway-internal effort proof.
+
+Behavior reports three test gaps; adherence duplicates two. Independent premium
+verification completes allfive raw IDs in14 Sol/xhigh turns at budget40, normal
+stop/no errors/exhaustion/fallback. It reproduces allthree narrow mutations
+surviving the full396/76 suite, with actual native caller rejection controls.
+Allfive raw claims are retained as three Low test-only findings; nothing is
+dropped and no production failure or unresolved unknown is demonstrated.
+Packet: `/tmp/pi-auto-model-stage3-review.h9ruRB`, raw pass JSON, telemetry,
+verification.json, verified-summary.json and source snapshots. Independent
+verification logs: `/tmp/pi-auto-model-stage3-verifier.SkNjTL`.
+
+1. S3T01: Catalog queries miss both virtual models, so search alone masks a
+   configure-picker virtual-filter bypass. Existing settings helper tests do
+   reject removing helper filtering; the gap is specifically native picker
+   exclusion, not absence of all virtual-model coverage.
+2. S3T02: Classifier selection chooses its existing Luna/high pair, allowing
+   ignored same-model effort changes to escape. All-five-mapping identity changes
+   remain covered; this is a narrow off→high transition gap.
+3. S3T03: Headless replacement uses a new native session but its no-dialog
+   assertion inspects the disposed recorder. RPC supports an active UI; a dialog
+   inserted before guidance is invisible to that stale observer.
+
+The complete review is not clean acceptance. Stage3 stays open for the concrete
+test-only correction below, final criterion review and separately approved live
+regular/fullscreen terminal focus/expiry/theme/lifecycle smoke. Source M2/Task1
+markers, compatibility, packaging/install/removal/rollback and commits remain
+separate. No paid probe, pane, global activation or host edit was run.
+
+## Stage3 test-only acceptance correction — approved payload
+
+Exact87-line two-file diff:
+`/tmp/pi-auto-model-stage3-tests.Kf2tCa/proposed.diff`. No runtime file changes.
+Add one blank-search scenario requiring the complete physical-only native list
+and unchanged scopes/settings. Start the classifier scenario at off and choose
+high, retaining strict saved pair/bounds and classifier reasoning assertions.
+Bind a fresh RPC recorder to its actual replacement fixture and observe native
+current select/input/confirm calls in all noninteractive modes. Keep print/JSON
+stdout guidance and RPC notification guidance checks; no stale UI assertion is
+used as the only observer. Existing negative/default expectations are retained.
+
+Final preview passes396 unchanged unit tests/77 scenarios644steps and zero
+TypeScript diagnostics. Independent scratch mutants now fail precisely1 virtual
+picker assertion,1 classifier-effort assertion and3 headless-dialog assertions.
+Current valid production remains green; these are test-only corrections, not a
+claim of ordinary behavioral red from current source. The initial scratch run
+included old and new feature paths twice, then a partial custom path list; final
+config names allfour baseline features plus the corrected feature exactly once.
+An absolute Cucumber config-path setup issue and an ExtensionFactory callback
+return type were corrected only in scratch before final freezing. No repository
+source changed during review or preview.
+
+The user has approved this exact correction and it is now applied and verified
+as recorded below. Its frozen final files, fingerprints and47 baseline hashes
+remain in `/tmp/pi-auto-model-stage3-tests.Kf2tCa/approval-manifest.json`.
+No architecture, production change or new feature is added.
+
+## Stage3 test-only correction — verified outcome
+
+Only the two approved acceptance files change, matching their final copies and
+87-line diff exactly. Normal Make passes396 Vitest/77 Cucumber644steps,
+typecheck/module load/19 worker-policy checks and whitespace. Coordinator reruns
+confirm the results; all45 protected hashes and Git status/index remain fixed.
+This is test-only coverage of already-correct behavior, not ordinary production
+assertion-red. Checkpoint: `/tmp/pi-auto-model-stage3-tests-apply.QUN65R`.
+
+Worker611eacc4 returns COMPLETE after16 Luna/xhigh turns at budget30. Focused
+premium reviewer a884d6ca returns COMPLETE after19 Sol/xhigh turns at budget35;
+both end normally with no errors/exhaustion/fallback. Both changed files are
+accounted for; S3T01–03 are resolved with no new findings, unknowns or unfinished
+work. All47 source hashes remain fixed throughout review. The requested and
+recorded model labels do not prove opaque provider-internal effort.
+
+The reviewer uses current applied test files unchanged while mutating only
+runtime source in its owned in-memory loader. Full77-scenario acceptance rejects
+virtual picker bypass with1 assertion failure, ignored same-model classifier
+effort with1, and inserted headless dialog with3. Native probes independently
+observe both registered virtual models in the bad catalog, the off→high save
+and actual classifier reasoning/bounds, and current RPC/print/JSON UI callbacks
+and correct guidance channels. The all-five alternate-identity mapping case
+remains a positive control. Focused20-scenario controls acceptance passes before
+and after all mutations; all setup/teardown succeeds, no production file changes.
+
+Evidence: `/tmp/pi-auto-model-stage3-tests-review.mvjCek/review.json` and
+verified-summary.json; independent diagnostics and preservation logs:
+`/tmp/pi-auto-model-stage3-finalverify.BsQGEJ`. No provider/network request, live
+pane, installation, global configuration or host change is made.
+
+All stage3 automated checks and review findings are clear. Its test-gap subitem
+is checked; the subsequently approved live results below complete checklist
+item3. Aggregate controls/M2 markers remain separate because original external
+plugin outcomes belong to item4. Packaging/docs/isolated installation/removal/
+rollback and commit remain item5 gates.
+
+## Stage3 live terminal acceptance — verified
+
+The approved smoke checks ran actual installed InteractiveMode/ProcessTerminal
+in isolated Ghostty regular and fullscreen windows. The runner used an empty
+HOME/agent directory, temporary auth/settings/session paths, PI_OFFLINE, guarded
+fetch and offline faux responses. No repository, installed SDK, global model or
+credential change was needed. This is automated-driven LIVE TTY evidence, not
+mock UI or a claim of manual user visual signoff.
+
+Both original runs finish COMPLETE across all eight groups: editor input while
+tool follow-up remains streaming; observed physical Luna/high routing; default
+ten-second popup expiry; later native custom dialog receives input before and
+after expiry and retains focus; dark→light theme repaint; actual197→54-column
+window resize with bounded truncation; new-session physical Sol startup and
+fresh noncapturing popup; shutdown removes owned feedback. Regular expiry is
+10000.174417ms, fullscreen10000.385958ms. Each uses four faux calls, zero guarded
+network attempts/errors and empty stderr. ANSI capture confirms physical pair,
+dialog, styles and fullscreen alternate-screen entry. No account access or
+opaque paid-provider effort is asserted.
+
+Evidence directory: `/tmp/pi-auto-model-stage3-live.0eOyBT`; authoritative
+`first-pass/regular` and `first-pass/fullscreen` each contain result.json,
+state.json, events.jsonl and terminal.ansi. The supplemental regular pass also
+observes actual paint of all three admitted popups. Original later popups are
+synchronously opened/hidden before painting; lifecycle assertions and existing
+native TUI tests remain valid. No new requirement to paint all feedback before
+cleanup is inferred.
+
+Failed harness attempts are retained, not counted as acceptance. The first
+regular driver used unsupported Ghostty bounds assignment and never supplied
+editor input; macOS accessibility resize resolved that setup. An optional
+fullscreen retry began already54 columns wide and requested the same54-column
+size, so no resize event occurred; its resize precondition timed out. The
+original successful fullscreen run remains valid. An AppleScript cleanup-count
+syntax failure caused no SDK/global changes. The user then closed the two panes;
+no pane was reopened afterward, and no live runner process remains.
+
+Independent read-only evidence auditor fa27e84c returns COMPLETE/PASS after8
+Sol/xhigh turns at budget20, normal stop/no errors/exhaustion/fallback. It verifies
+both original modes, eight groups, captured bytes/events, known limitations and
+47/47 source plus4/4 explicitly recorded SDK/global baseline hashes. There were
+four protected-global entries, not five. Git HEAD/branch/status/index are fixed.
+Audit results: evidence-audit.json, evidence-telemetry.json and live-results.json
+in the evidence directory. No terminal exit/restoration sequence or aesthetic
+approval is claimed beyond captured evidence. Post-live ordinary Make remains
+396 Vitest/77 Cucumber644steps/typecheck/load/19 worker-policy checks passing.
+
+## Stage3 current criterion disposition
+
+The stage3 contract follows release-scope.md, not retired control features.
+Stable original IDs remain pointers in the historical ledger; removed original
+scenarios are not silently marked passed. Current acceptance evidence is:
+
+| Requirement/criterion group | Verified first-release outcome |
+| --- | --- |
+| R23–27, AC018–022, AC029 | Native physical selection/manual effort and mode-only fresh/resumed ownership; configure/status/mode with safe-boundary persistence. On/off, enabled flags, restoration and shortcuts stay retired. |
+| R28, AC031 | Quiet extension-owned physical status and feedback, no chat messages. External statusbar compatibility remains item4. |
+| R29–33, AC038–044 | Monotonic lifetime, exact observed change, quiet unchanged/classifier/summary paths, real input/work/dialog focus, widths/themes, owned stale-callback and lifecycle cleanup, disabled/headless/error isolation. Automated review plus approved live smoke pass. |
+| R61–62, AC045–046 | Real provider/ID/name catalog search, physical-only blank list with unchanged scopes, exact supported effort menu and same-model classifier off→high save/physical request. S3T01–02 are cleared by mutations and native controls. |
+| R63–64, AC047–048 | All five portable mappings reload and dispatch without Copilot fallback; non-default settings/preferences preserved; cancel/decline/invalid/disappeared/write-failure drafts preserve valid files and the next route. |
+| R65, AC049–052 | Empty/absent catalog guidance, queued changes affect the next task, active print/JSON/RPC no-dialog/file guidance checks. S3T03 clears current-context UI observation. |
+| AC032–037 | Intentionally deferred to item4: external statusbar/child/context plugin behavior. Neither automated nor live popup acceptance claims those outcomes. |
+
+Checklist item3 is verified and checked. The complete slice's Task1/M2 and commit
+markers remain gated for remaining external compatibility/package outcomes;
+this is not an installed or globally activated release.
+
+## Stage4 compatibility — tested proposal only
+
+At the proposal checkpoint allfour peer checkouts were clean on pinned main
+revisions; all five repositories' HEAD/branch/status/index and156 source hashes
+were fixed. That proposal is now approved and applied as recorded below. Root
+normal Make remains396 Vitest/77 Cucumber644steps/typecheck/load. Unchanged
+physical baselines alone were not item4 acceptance.
+
+Audits independently reproduce the native compatibility gaps without Auto:
+statusbar labels virtual selection as effective settings and hides arbitrary
+extension statuses; subagents inherit virtual model/effort and reread settings
+while queued; BTW has unsafe inherited/fallback settings, stale live identity,
+unsupported SDK factory options and noncanonical context seeding; context-shake
+can discard signed thinking and cancel compaction against a virtual placeholder.
+No getVirtualModelState physical-pair context API exists on the verified public
+host. Its internal similarly named helper returns opaque router state. Use
+public successful assistant metadata on the active branch and registry lookups;
+do not add a router-specific state dependency or host patch.
+
+Existing isolated baselines: statusbar141 tests; subagents652; BTW73; shake47
+checks. Subagents' target1.2 typecheck finds4 source and130 caller-fixture
+migration diagnostics; BTW has5 type diagnostics on each tested host. These
+compilation failures are not behavioral TDD red. Current published BTW peer
+ranges also exclude1.2. Source facts, native reproductions and baseline logs:
+`/tmp/pi-auto-model-stage4.cpU6om`, four audit JSON files and snapshots.
+
+Four initial Sol/xhigh audits return normal final stops at35-turn budgets:
+statusbar24, subagents28, BTW25, shake23 turns. Statusbar initially marks its
+report incomplete only for an ignored cache refresh; a bounded read-only
+continuation completes after4 turns at budget70. No audit reaches a turn limit.
+No source/Git/configuration change is made, but the first statusbar Make refreshes
+an existing ignored Vitest result cache. Its old bytes are unknown and are not
+speculatively restored. Later preview tests disable caches or use owned scratch;
+full filesystem preservation is not claimed.
+
+## Stage4 frozen four-peer patch
+
+The scratch-only combined diff is
+`/tmp/pi-auto-model-stage4.cpU6om/proposed.diff`; individual packet roots are
+`proposals/pi-statusbar`, `proposals/pi-subagents`, `proposals/pi-btw` and
+`proposals/pi-context-shake`. Each has proposal.json exact before/final content,
+proposed.diff, runnable preview evidence and hashes. Combined5241 diff lines
+across34 files:10 runtime,14 test,5 documentation,3 verification and2 package
+metadata files. The bulk is native acceptance and prior-host regression coverage.
+The root router has no proposed runtime change.
+
+| Peer | Proposed behavior | Files / diff lines | Target1.2 preview | Older-host preview |
+| --- | --- | --- | --- | --- |
+| pi-statusbar | Distinguish selected/last-observed/pending physical settings; refresh branch state and render generic extension statuses. | 4 /782 | 170 tests | 161 tests on0.84.2;9 native cases explicitly skipped |
+| pi-subagents | Capture physical settings before queue/resume; preserve explicit/strict fallback; use public chosen-provider transport in the real default factory; repair target type fixtures and public load verification. | 20 /2765 | 708 tests | 691 tests on0.84.2;17 native-only cases explicitly skipped |
+| pi-btw | Resolve physical defaults/fallbacks; keep an existing side session's pair and identity pinned; seed canonical history; use public physical provider/auth runtime for side and summary sessions. | 7 /1248 | 88 tests | 78 tests on0.85.1;10 native cases explicitly skipped |
+| pi-context-shake | Preserve signed/redacted thinking for unknown/virtual targets; defer uncertain virtual compaction; use canonical context projection on the current host. | 3 /446 | 179 checks | 132 checks on0.85.1 |
+
+All eight host/peer typechecks pass. Public loading and applicable lint checks
+pass; coordinator independently repeats all four host matrices in scratch.
+Preview behavioral red is preserved against unchanged sources: statusbar25 native
+assertions; BTW14 of15 native caller tests; shake16 old/36 current checks. Initial
+subagent resolver/fallback tests and transport-only mutations establish separate
+caller regressions; dropping only the default physical-runtime handoff fails2
+old-host and3 current-host assertions, not compilation/setup. Public default
+runner coverage includes6 old and9 current cases without createSession injection;
+14 earlier injected-native cases remain distinct, not falsely used as default
+transport proof. No Auto registration or private state is copied to a subagent.
+
+BTW package metadata adds only exact tested1.2.0 support to the existing peer
+range (`>=0.85.1 <1 || 1.2.0`), adds its compatibility test command and synchronizes
+three root lock peer fields. No development pin, dependency package entry,
+installation or shared compatibility package changes. Other peers need no
+package/lock update. Public physical transport reuse does not copy credentials
+into another harness or add a provider grant; faux tests establish request/auth
+plumbing, not live OAuth refresh, provider entitlement or future SDK support.
+
+## Stage4 proposal completion and limitations
+
+Statusbar proposal completes at57 Sol/xhigh turns after its55-turn wrap-up
+warning; all artifact/output checks are independently verified. Subagent's
+initial55-turn proposal also reaches wrap-up and is corrected to INCOMPLETE:
+its injected factory proved pair handling but not production-default transport.
+A same-model110-turn continuation completes in52 turns with real default-factory
+cases and the minimal public runtime handoff, preserving all652 original tests.
+Both initial limit warnings must be disclosed with the proposal summary; no
+provider/model fallback or hidden premium implementation is used. These are
+unapplied engineering proposals, not authorized source implementation workers.
+
+Shake's proposal completes in37 turns at55; BTW's in49 at55 but initially reports
+INCOMPLETE for two generated npm debug logs outside owned scratch. A read-only
+continuation completes in13 at110 after verifying artifacts/checks and recording
+that boundary incident. No turn limit was reached for those passes. The logs'
+original contents and why they later disappeared are not established; no manual
+cleanup/restoration is attempted. The tool may also spool large read-only output
+in its own temp directory. These generated-artifact limitations remain recorded;
+source/Git/configuration preservation is verified, not every filesystem byte.
+Requested and transcript model labels do not prove opaque internal effort/cost.
+
+At the proposal gate the final source drafts were COMPLETE and preview checks
+passed, but application/branches and later gates were not yet authorized. The
+user subsequently approved the exact patches and named feature branches. No
+dependency download, live provider probe, terminal pane, installation or global
+activation is included. There is no stacked delivery
+scope in this plan. Fresh installation, live credentials and untested host
+versions remain unverified; the original intercom exception stays non-blocking
+and unchanged. No extra architecture or new user-facing control is proposed.
+
+## Stage4 applied batch and independent review
+
+All34 approved files are applied byte-for-byte in four peer repositories. The
+approved branch integralist/auto-model-compatibility exists in each, at its
+unchanged pinned HEAD, with empty indexes. The root's47 source files remain
+unchanged during implementation; no peer commit, push, dependency download or
+installation is performed. Checkpoint: `/tmp/pi-auto-model-stage4-apply.1Dh9zw`.
+
+Actual applied results: subagents708 tests on1.2.0,691/17 skips on0.84.2; BTW88
+on1.2.0,78/10 skips on0.85.1; shake179 current/132 old checks. Type/lint/public
+load checks pass as assigned. Statusbar current169 pass/1 fail and old160
+pass/9 skips/1 fail: unchanged tests/git.test.ts:16 expects literal main after
+approved feature-branch creation. All33 statusbar behavior and11 current native
+cases pass, but its full suite is not green. The pre-existing assumption remains
+a separately gated Low correction, not a hidden skip or a production failure.
+
+Actual caller red: statusbar15 assertion failures/18 controls; subagents35
+failures/656 passes/17 skips; shake16 old/36 current checks fail before source
+correction. BTW retains the separately labelled frozen14-failure/1-control
+preview adapter evidence; the incompatible old factory is not dispatched using
+ambient credentials merely to manufacture an ordinary red phase.
+
+Four Luna/xhigh apply workers at65-turn budgets record statusbar40, subagents66,
+BTW51 and shake33 turns, normal final stops/no provider errors or model fallback.
+Subagents hits its65-turn wrap-up limit with18 exact final files and two still
+at before state. Coordinator verifies that partial checkpoint; a same-model
+130-turn continuation finishes only runner/spawn in15 turns, audits all20 files
+and50 protected hashes, and passes both host matrices. Report the initial limit
+warning even though the continuation completes. Statusbar's initial report is
+INCOMPLETE for the known branch-test failure, not exhaustion; a read-only same-
+model130-turn continuation diagnoses it in10 turns without source/test changes.
+The continuation's malformed prose hash is not used: actual src/git.ts hash is
+03b430c131b7369a90be6c40ec2cb1084989bbabf2d27a5e207d482861893ce4;
+its test hash is1f73dcca98e21e916a02c4b45bb490f9ca9ef080f56e3069a83f26ba67b77592.
+
+Combined integration uses the real public1.2.0 SDK, allfive actual applied
+plugins, faux providers and isolated UI/session/settings paths. Its initial
+55-turn pass stops normally in20 turns while awaiting source hashes. A bounded
+110-turn continuation completes in39 turns:12/12 cases pass,11 fake requests
+(main5, BTW3, subagent2, summary1), zero network attempts/errors. Evidence covers
+unknown/explicit physical inheritance, pinned BTW/summary, canonical signed
+history shaking, native footer/status/passive popup, model-issued subagent action
+and session cleanup. Owned diagnostic setup failures are excluded from product
+findings: tool allowlists, overwritten virtual-provider registration and scope
+classification were corrected from verified public source. The apparent extra
+.claude/settings.local.json was September-dated and globally ignored; isolated
+HOME/XDG changed discovery, not source. Git ignore context is preserved and that
+existing file is untouched. Artifacts: combined/result.json, completion.json,
+provider-inputs.json and before/after integrity in the apply checkpoint.
+
+Five premium incremental review passes complete all34 files: behavior25,
+security31, reliability30, maintainability26 and adherence32 Sol/xhigh turns at
+budget50. All end normally with no errors/exhaustion/fallback and preserve163
+source hashes/Git state. Seven raw findings are adversarially verified in14
+Sol/xhigh turns at55, normal stop/no errors/exhaustion/fallback, with all required
+native positive controls. Merge duplicate auth and physical-ID reports into
+five Medium findings; none is dropped. Maintainer review retains no additional
+finding. Review packet: `/tmp/pi-auto-model-stage4-review.NzRj7s`, per-pass JSON,
+telemetry, raw-findings.json, verification.json and verified-summary.json.
+
+1. C4F01: Provider-only authentication drops model-specific Authorization/tenant
+   headers in both default runtime bridges. Parent model-aware requests succeed;
+   subagent/BTW requests lose those headers and fail. No cross-tenant disclosure
+   or external exploit is demonstrated. Summary uses the same BTW bridge.
+2. C4F02: Text-only injection of saved BTW exchanges unnecessarily creates a
+   child, failing when the virtual parent's physical settings are unknown.
+3. C4F03: An exact qualified virtual BTW query can fuzzy-match a physical prefix
+   and dispatch the substitute instead of refusing.
+4. C4F04: A virtual bare ID from another provider can veto the unique scoped
+   physical subagent candidate before normal physical resolution.
+5. C4F05: Truthy invalid persisted BTW effort is accepted and clamped to off,
+   inventing settings instead of treating inheritance as unknown.
+
+C4T01 is the separate pre-existing statusbar main-only assertion. Stage4 remains
+open for these corrections and focused review despite passing combined cases.
+Review completion is not clean acceptance or installed-package readiness.
+
+## Stage4 eight-file follow-up — approved payload
+
+Exact998-line combined diff at
+`/tmp/pi-auto-model-stage4-followup.3enwlI/proposed.diff`: one statusbar test,
+four subagent files and three BTW files. Three runtime files change, with five
+test files; no docs, package/lock, host, dependency or global setting changes.
+Use the public chosen-model authentication result at request time, preserving
+headers/base URL/environment and explicit failure behavior without copying
+credentials. Keep exact virtual refusals and scoped physical precedence. Read
+existing saved handoff text without creating a child; validate persisted effort
+vocabulary before inheritance. Replace the main-only Git assertion with an
+independent real branch query. The owned single queue and pinned settings remain.
+
+Scratch previews pass statusbar170 current/161 old with9 skips; subagents720
+current/699 old with21 skips; BTW110 current/85 old with25 skips. Both tested
+hosts' types/public loads pass for corrected runtime peers; subagent lint passes.
+Root stays396/77; shake stays179/132 with no new patch. Subagent adds12 cases;
+BTW adds22, retaining all88 prior names/passes. Early faux transport/setup errors
+are excluded; final red reaches7 current subagent assertions/61 controls and6
+old/41 controls/21 skips; BTW13 assertions/97 controls with zero type/load errors.
+Parent transport/header positive controls and fresh request-time auth verify
+actual default factories, not injected transport seams. The user subsequently
+approved and applied this exact payload; actual outcome follows below. Optional0.84.2 BTW checks
+are extra evidence, not a widened peer declaration or future SDK promise.
+
+Proposal authors finish normally, no errors/exhaustion/fallback: BTW47 and
+subagents46 Sol/xhigh turns at55. Coordinator independently repeats both host
+matrices and full statusbar suites in scratch/in-memory overlays. Native opt-in
+was initially absent for the statusbar preview, yielding11 skipped cases; the
+final explicitly selected1.2.0 run executes all170. These preview passes do not
+establish applied follow-up acceptance. All163 current source hashes/Git states
+remain fixed; no follow-up code has been applied. Its before/final copies and
+fingerprints are frozen in the follow-up approval manifest.
+
+## Unattributed user-settings hash change
+
+A final integrity read finds /Users/mmcdonnell/.pi/agent/settings.json differs
+from the earlier live-check baseline. Its modification time is2026-10-14T14:52:31Z.
+Baseline SHA c9adc2cd6ec2c9f83033c989d9d34cb8a25ba669b4af4e272c05e85a83611f6f;
+observed SHA1c35f6577312a1cf47af64b6212bbdb4687bb4d055f6c4190f4d1292d3fcd126.
+No old-content snapshot exists here, so the changed fields and actor are not
+established. Current provider/model/effort remain Copilot/Sol/xhigh. Three recorded
+SDK package/source hashes match. No restore, overwrite or deletion is attempted;
+do not claim blanket global-configuration preservation. The user says they may
+have updated settings but cannot identify the change, and authorizes applying
+source fixes. The read-only investigation below resolves the operational gate
+without fabricating the historical delta or repeatedly asking for recollection.
+Root/peer source and Git preservation remain independently verified.
+
+## Current settings investigation — no field delta recovered
+
+The old settings bytes were not recorded. Read-only searches of available local
+settings copies, this session's prior outputs and31 managed-file Git revisions
+recover no content matching the old hash; no exact field change can be claimed.
+The current file is byte-identical to
+/Users/mmcdonnell/code/agent-skills/.pi/agent/settings.json: Copilot/Sol/xhigh,
+nord-contrast and the configured model/package lists. A managed-file resync is
+possible, not established. No credential content is read or copied.
+
+The user-settings file is copied into the owned apply checkpoint solely to
+capture the current read-only baseline. Its guard hash remains
+1c35f6577312a1cf47af64b6212bbdb4687bb4d055f6c4190f4d1292d3fcd126 before and after
+implementation, all test runs and review. No global settings restoration or
+modification occurs. Do not block further approved source work on an unrecoverable
+historical field delta. Details: settings-diff-investigation.json and
+settings.guard.json in `/tmp/pi-auto-model-stage4-fix-apply.qgegZ3`.
+
+## Stage4 follow-up — verified outcome
+
+The exact eight files are applied. Test-first proof: statusbar's old branch
+assertion fails1 case/5 controls; subagents old6 assertion failures/693 passes/
+21 skips and current7 failures/713 passes, with typecheck already passing; BTW
+current13 assertion failures/97 passes, zero types/load errors. Post-fix ordinary
+checks pass on actual source, with only SDK dependency-version aliases:
+
+| Peer | Current1.2.0 | Tested older host | Other checks |
+| --- | --- | --- | --- |
+| pi-statusbar | 170 tests | 161 passes/9 native skips on0.84.2 | Old/current types and lint pass |
+| pi-subagents | 720 tests | 699 passes/21 native skips on0.84.2 | Types,38-file lint and six-tool public loading pass |
+| pi-btw | 110 tests | 85 passes/25 native skips on0.85.1 | Types and public loading pass |
+| pi-context-shake | 179 checks, unchanged since initial apply | 132 checks on0.85.1 | Earlier applied checks retained; no follow-up code change |
+| Router | 396 unit tests/77 scenarios644steps | Not an older-host router claim | Type/load and19 worker-policy checks pass |
+
+Coordinator repeats all corrected peer host checks. Its first subagent current
+attempt uses an unconsumed environment variable and runs the older host; the
+final run uses PI_SDK_ROOT and confirms1.2.0/720 tests. Statusbar's first old run
+skips two additional opt-in cases; the final SDK-root opt-in executes161/9.
+Those intermediate runs are not counted as current-host or complete-old evidence.
+No dependency/package/lock/docs or parent-model behavior changes beyond the
+approved payload occur.
+
+Worker passes end normally with no errors/model fallback or turn-limit warning:
+statusbar27, initial subagents30 and BTW26 Luna/xhigh turns at60. The initial
+subagent apply stops BLOCKED on two unintentionally outdented fixture blocks.
+Coordinator confirms whitespace-only drift and a same-model120-turn continuation
+completes in49 turns, restoring the approved text then applying only runner/index.
+No assertions or design change is made; this is exact-payload recovery, not a
+budget-exhaustion retry. All final files match approved hashes. Apply/log root:
+`/tmp/pi-auto-model-stage4-fix-apply.qgegZ3`.
+
+The twelve co-loaded actual SDK cases pass again with11 faux calls (main5,
+BTW3, subagents2, summary1), zero network attempts/errors/setup failures. The
+fresh diagnostic reads current applied code and verifies all163 source hashes
+and Git states before/after; no earlier final-source override is used. Evidence:
+combined/result.json, coordinator-run.log and run-before.json/run-after.json.
+No terminal panes are opened.
+
+Focused premium reviewer57831df1 accounts for all eight files and clears
+C4F01–05 plus C4T01 with no findings, unknowns or unfinished work. It completes
+in16 Sol/xhigh turns at55, normal stop/no errors/exhaustion/fallback. Independent
+native default factories/registered command paths verify model-aware headers,
+base URL/environment, fresh auth and fail-closed dispatch; text-only injection,
+virtual/query precedence and valid/invalid historical effort have positive and
+negative controls. All six counterfactuals fail their relevant assertions.
+No actual live credential/OAuth/provider-entitlement claim is made.
+
+The review independently executes12 current default-factory cases,4 applicable
+cases on each older SDK and12 caller replays with factory seams separately
+identified. Six type configurations are clean; source163 hashes/allfive Git
+states and the current settings guard remain fixed. Full review JSON, telemetry
+and verified-summary.json: `/tmp/pi-auto-model-stage4-fix-review.P2Uz6O`;
+diagnostic logs: `/var/folders/1k/74569v455xlc52dxnwj02cym0000gn/T/pi-c4-final-focused.u0l0atub`.
+Recorded model labels are not proof of opaque provider-internal effort/cost.
+
+Item4 is verified and checked: standalone synthetic-virtual peers remain
+independent of Auto, explicit physical/effort choices stay authoritative, child
+settings/auth are pinned without virtual recursion, and context guards remain
+conservative. All four peer feature branches retain their pinned HEADs and empty
+indexes; no work is pushed, installed or globally activated. Full
+compiled/source milestone markers still need their separate acceptance/commit
+review rather than being inferred from this checklist. Item5 remains open.
+
+## Stage 5: Package install verified outcome
+
+The package manifest now allowlists `extensions/`, `src/` and the root
+`README.md`; the user README documents the Pi 1.2.0 host boundary, Node range,
+`/model` controls and retained policy/preferences. `private: true` remains in
+place; npm publication was not part of this stage.
+
+`npm pack --offline --ignore-scripts` produced `pi-auto-model-0.1.0.tgz` with
+exactly eight files (58,836 unpacked bytes): the manifest, README, extension
+entry point and five runtime source modules. The tarball SHA-256 was
+`f5b3b39ebfc1d3d52396ccd670d76a3c16b313630c40d31cf3dfdc5f4fa870f6`.
+No tests, project history, lockfile or development dependencies were included.
+
+Installed the local tarball with npm offline, then registered its extracted
+package directory through Pi 1.2.0 using temporary `HOME`, agent, session,
+npm-config and cache directories. The SDK's default resource loader loaded the
+packed extension with no errors; `/automodel` and `pi-auto-model/auto` were
+registered. No session, classifier or provider request was started. `pi remove`
+removed the package declaration and `pi list` reported no packages. Rollback
+checks confirmed the temporary provider/model/thinking defaults (synthetic
+placeholders) and both Auto policy and preference files were unchanged. No
+physical provider session ran. The temporary install/home/session tree was
+deleted. No registry downloads, credentials, provider requests, live settings or
+peer-plugin files were used.
+
+The living contract records the default Luna/high classifier pair, classifier
+bounds, trivial summary tier and virtual-thinking behavior. A new unit assertion
+pins the classifier defaults; a native acceptance scenario checks that a
+virtual thinking choice does not replace tier dispatch. A focused independent
+review found and the follow-up resolved both low-severity documentation/test gaps.
+
+`make test typecheck load-check` passes: 397 unit tests, 78 Cucumber scenarios,
+650 steps, typecheck and extension load-check. This evidence is source-checkout
+verification plus the isolated packed-tarball check, not registry publication.
+The documented GitHub install command was not exercised here; the user will test
+it after the repository is pushed. Stage5 remains open for the root merge/push and the user's Git install check.
+
 ## Next action
 
-Commit the approved design/evidence bookkeeping, then finish one combined
-Slice2 controls/configuration and popup code/test proposal against current
-sources. Preserve physical defaults but move Auto registration/portable state
-tests to the neutral namespace; prove non-Copilot-only selection/classification
-and direct summaries. Include native safe-boundary controls, atomic file failures,
-manual exact restoration and direct-handle lifecycle/focus tests. Present the
-complete diff before applying runtime changes. Per-edit approval remains required;
-design approval is not code approval.
-Three build stages remain: controls/model picker and saved state; independently
-installable plugin compatibility; packaging/documentation and controlled
-installation/rollback checks. Paid probes, live focus smoke, cross-repository
-edits and global activation need their explicit gates. No later implementation
-or release is implied by this passing routing-core checkpoint.
+Commit and merge only this repository. The GitHub remote currently has no branch
+refs, so confirm before creating `main`; then push the agreed branch. The user
+will test the documented Git install after the push. Keep global activation,
+registry publication, provider probes and the four peer repositories separate.
+
+## Historical stage records
 
 Historical launch: Execute approved [Task 5](./tasks-slice-1.md#task-5-verify-the-complete-slice-through-executable-acceptance)
 with one strict Luna/xhigh worker, 60 turns and no fallback: only the six
@@ -1348,8 +2523,9 @@ its own hash.
 The original behavioral red remains valid. Task 5 implementation/read-only
 review, the combined correction diff and one-line F8 fixture fix are approved.
 The F2/F6 follow-up is now approved, applied and independently reviewed.
-Milestone marking is now explicitly approved and applied; Slice2 implementation
-is not approved. The configuration addendum records its scope only.
+Milestone marking is explicitly approved and applied. Slice2 Task1's exact
+runtime payload is now approved; later acceptance/live UI/compatibility/release
+work remains separately gated.
 
 Tasks 1–4 stay verified; do not repeat them because delayed worker notices
 arrive. No install, host patch, global activation, paid probe or later task

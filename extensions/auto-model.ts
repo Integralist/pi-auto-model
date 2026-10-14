@@ -1,5 +1,7 @@
 import { readFileSync } from "node:fs";
 import { dirname } from "node:path";
+import { registerControls } from "../src/controls.ts";
+import { registerPopups } from "../src/popup.ts";
 import { getSupportedThinkingLevels, type Model, type Api, type ModelThinkingLevel } from "@earendil-works/pi-ai";
 import {
   stripFrontmatter,
@@ -20,7 +22,7 @@ type Candidate = {
   imageMimes?: string[];
   startingMessage?: { text: string; timestamp: number };
 };
-const provider = "github-copilot";
+const provider = "pi-auto-model";
 const modelId = "auto";
 const efforts: readonly AutomaticEffort[] = ["off", "minimal", "low", "medium", "high", "xhigh"];
 
@@ -129,7 +131,7 @@ function confirmation(value: string) {
   return /^(yes|y|ok|okay|go|continue|proceed|approve|approved|sounds good)[.!]*$/i.test(value.trim());
 }
 
-export default function autoModel(pi: ExtensionAPI, configuration?: unknown): void {
+export default function autoModel(pi: ExtensionAPI, configuration?: unknown, options: { directory?: string } = {}): void {
   let raw: Candidate | undefined;
   let accepted: Candidate | undefined;
   let captured: PhysicalPair | undefined;
@@ -146,13 +148,13 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
   };
 
   pi.registerVirtualModel<State>({
-    provider, id: modelId, name: "Auto", thinkingLevels: ["high", "xhigh"],
+    provider, id: modelId, name: "Auto", thinkingLevels: ["off", "minimal", "low", "medium", "high", "xhigh"],
     async route(request, ctx) {
       const saved = state(request.state, ctx) ?? branchState(ctx);
       const current = branchCurrent(ctx) ?? physical(request.previous?.model, request.previous?.thinkingLevel) ?? pair(saved?.current, ctx);
-      const startup = saved?.captured ?? captured;
+      const startup = captured ?? saved?.captured;
       if (request.reason === "direct") {
-        return resolveRoute(configuration, { direct: true, current, captured: startup }, ctx.modelRegistry);
+        return resolveRoute(controls.policy(ctx), { direct: true, current, captured: startup }, ctx.modelRegistry);
       }
       const failed = request.reason === "retry" ? request.failed : undefined;
       const stickyPair = failed ? physical(failed.model, failed.thinkingLevel)
@@ -184,7 +186,7 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
       const sessionId = ctx.sessionManager.getSessionId();
       const userEntryId = owned ? entry.id : undefined;
       const originSignal = lifecycle.signal;
-      const result = await resolveTaskRoute(configuration, {
+      const result = await resolveTaskRoute(controls.policy(ctx), {
         task: owned ? candidate.task : undefined, current, captured: startup,
       }, ctx.modelRegistry, {
         signal: request.signal, lifecycleSignal: originSignal,
@@ -260,4 +262,16 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown): vo
     candidate.imageMimes = event.images?.map((image) => image.mimeType.split(";")[0]!.trim().toLowerCase());
     accepted = candidate;
   });
+
+  const current = (ctx: ExtensionContext) => physical(ctx.model, ctx.thinkingLevel) ?? branchCurrent(ctx) ?? pair(captured, ctx);
+  const controls = registerControls(pi, {
+    directory: options.directory,
+    readPolicy: () => configuration,
+    setPolicy: (raw) => { configuration = raw; },
+    current,
+    capture: (value) => { captured = value; },
+    invalidate,
+    clearPopup: () => popups.clear(),
+  });
+  const popups = registerPopups(pi, { policy: controls.policy, current });
 }

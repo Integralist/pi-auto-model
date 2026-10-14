@@ -4,7 +4,7 @@ import { fauxAssistantMessage } from "@earendil-works/pi-ai";
 import { expect, test } from "vitest";
 import { createFixture, type Fixture } from "./support/session.ts";
 
-async function select(f: Fixture) { await f.session.setModel(f.runtime.getModel("github-copilot", "auto")!); }
+async function select(f: Fixture) { await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); }
 function last(f: Fixture) { return f.session.messages.filter((message) => message.role === "assistant").at(-1)!; }
 function small() { return { name: "small", description: "Small work", tier: "trivial" }; }
 function hard() { return { name: "hard", description: "Hard work", tier: "frontier" }; }
@@ -106,7 +106,7 @@ test("a direct call between accepted input and main dispatch does not consume in
   const calls: string[] = [];
   const direct: ExtensionFactory = (pi) => {
     pi.on("before_agent_start", async (_event, ctx) => {
-      const model = ctx.modelRegistry.find("github-copilot", "auto")!;
+      const model = ctx.modelRegistry.find("pi-auto-model", "auto")!;
       const reply = await ctx.modelRegistry.streamSimple(model, { messages: [{ role: "user", content: "summary", timestamp: Date.now() }] }).result();
       calls.push(reply.model);
     });
@@ -164,6 +164,7 @@ test.each(["reload", "new", "shutdown"])("%s invalidates pending intent and rest
       expect(last(f).model).toBe("gpt-6-luna");
     } else if (kind === "new") {
       await f.owner.newSession();
+      expect(f.session.model?.provider).toBe("github-copilot");
       expect(f.session.model?.id).toBe("gpt-6.1-sol");
       await select(f); f.respond(); await f.session.prompt("background", { source: "extension" });
       expect(last(f).model).toBe("gpt-6.1-sol"); expect(usage(f)).toEqual([]);
@@ -199,6 +200,7 @@ test("session replacement during classification cannot commit into the new sessi
     f.faux.setResponses([async () => { started.release(); await finish.wait; return fauxAssistantMessage("trivial"); }]);
     const pending = f.session.prompt("new task");
     await started.wait; await f.owner.newSession(); await pending;
+    expect(f.session.model?.provider).toBe("github-copilot");
     expect(f.session.model?.id).toBe("gpt-6.1-sol");
     await select(f); f.respond(); await f.session.prompt("background", { source: "extension" });
     const before = structuredClone(f.session.sessionManager.getEntries());

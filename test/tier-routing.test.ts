@@ -11,7 +11,7 @@ function last(f: Fixture) {
 }
 
 async function select(f: Fixture) {
-  const auto = f.runtime.getModel("github-copilot", "auto");
+  const auto = f.runtime.getModel("pi-auto-model", "auto");
   expect(auto?.api).toBe("pi-virtual");
   await f.session.setModel(auto!);
 }
@@ -183,7 +183,7 @@ test("a retryable live failure retries the failed pair without classification or
 test("physical catalog collisions are rejected without replacing the model", async () => {
   const f = await createFixture({ physicalAuto: true });
   try {
-    expect(f.runtime.getModel("github-copilot", "auto")?.api).not.toBe("pi-virtual");
+    expect(f.runtime.getModel("pi-auto-model", "auto")?.api).not.toBe("pi-virtual");
     expect(f.errors.join("\n")).toMatch(/physical model/);
     expect(f.session.model?.id).toBe("gpt-6.1-sol");
     expect(f.faux.state.callCount).toBe(0);
@@ -229,7 +229,7 @@ test("all configured tiers unavailable retain a known physical pair without step
 
 test("an unusable classified tier with no captured or active pair requires physical selection", async () => {
   const manager = SessionManager.inMemory();
-  manager.appendModelChange("github-copilot", "auto"); manager.appendThinkingLevelChange("xhigh");
+  manager.appendModelChange("pi-auto-model", "auto"); manager.appendThinkingLevelChange("xhigh");
   manager.appendMessage({ role: "user", content: "seed", timestamp: 0 });
   const f = await createFixture({ restore: true, sessionManager: manager });
   try {
@@ -242,7 +242,7 @@ test("an unusable classified tier with no captured or active pair requires physi
 });
 
 test("a virtual configured physical target is rejected before any provider call", async () => {
-  const raw = config(); raw.tiers.frontier.model = "auto";
+  const raw = config(); raw.tiers.frontier = { provider: "pi-auto-model", model: "auto", effort: "xhigh" };
   const f = await createFixture({ configuration: raw });
   try {
     await select(f); f.respond(); await f.session.prompt("new task");
@@ -276,7 +276,7 @@ test("direct summary dispatch does not write main native route state", async () 
       requests.push({ model: model.id, effort: options?.reasoning });
       return fauxAssistantMessage("summary");
     }]);
-    const auto = f.runtime.getModel("github-copilot", "auto")!;
+    const auto = f.runtime.getModel("pi-auto-model", "auto")!;
     const summary = await new ModelRegistry(f.runtime).streamSimple(auto, { messages: [{ role: "user", content: "summary", timestamp: Date.now() }] }).result();
     expect(summary.model).toBe("gpt-6-luna");
     expect(requests).toEqual([{ model: "gpt-6-luna", effort: "high" }]);

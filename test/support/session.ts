@@ -30,16 +30,21 @@ type Options = {
   tools?: string[];
   retry?: boolean;
   physicalAuto?: boolean;
+  physicalProvider?: string;
+  setup?: (directory: string) => void;
+  mode?: "tui" | "print" | "rpc" | "json";
+  ui?: import("@earendil-works/pi-coding-agent").ExtensionUIContext;
 };
 
 export async function createFixture(options: Options = {}) {
   const dir = mkdtempSync(join(tmpdir(), "pi-auto-model-test-"));
+  options.setup?.(dir);
+  const physicalProvider = options.physicalProvider ?? "github-copilot";
   const fake = fauxProvider({
-    provider: "github-copilot",
+    provider: physicalProvider,
     models: [
       { id: "gpt-6.1-sol", reasoning: true },
       { id: "gpt-6-luna", reasoning: true },
-      ...(options.physicalAuto ? [{ id: "auto", reasoning: true }] : []),
     ],
     tokensPerSecond: 1000000,
   });
@@ -49,9 +54,20 @@ export async function createFixture(options: Options = {}) {
     modelsStore: new InMemoryModelsStore(),
     modelsPath: null, refreshOnCreate: false, allowModelNetwork: false,
   });
+  // Built-in providers can be configured from the test runner's environment.
+  // Keep this offline fixture's catalog limited to its explicitly supplied fake.
+  for (const provider of runtime.getProviders()) {
+    runtime.registerNativeProvider({
+      ...provider, auth: { apiKey: { name: "Offline fixture only", resolve: async () => undefined } },
+      filterModels: () => [],
+    });
+  }
   runtime.registerNativeProvider(fake.provider);
+  if (options.physicalAuto) {
+    runtime.registerNativeProvider(fauxProvider({ provider: "pi-auto-model", models: [{ id: "auto", reasoning: true }] }).provider);
+  }
   const settings = SettingsManager.inMemory({
-    defaultProvider: "github-copilot", defaultModel: "gpt-6.1-sol", defaultThinkingLevel: "xhigh",
+    defaultProvider: physicalProvider, defaultModel: "gpt-6.1-sol", defaultThinkingLevel: "xhigh",
     compaction: { enabled: false },
     retry: { enabled: options.retry ?? false, maxRetries: 1, baseDelayMs: 1 },
     cacheWarming: "off",
@@ -77,7 +93,7 @@ export async function createFixture(options: Options = {}) {
         resourceLoaderOptions: {
           noExtensions: true, noSkills: true, noPromptTemplates: true,
           noThemes: true, noContextFiles: true,
-          extensionFactories: [...(options.beforeExtensions ?? []), (pi) => autoModel(pi, options.configuration), ...(options.extensions ?? [])],
+          extensionFactories: [...(options.beforeExtensions ?? []), (pi) => autoModel(pi, options.configuration, { directory: dir }), ...(options.extensions ?? [])],
           skillsOverride: () => ({ skills, diagnostics: [] }),
         },
       });
@@ -94,7 +110,7 @@ export async function createFixture(options: Options = {}) {
     }, { cwd: dir, agentDir: dir, sessionManager: options.sessionManager ?? SessionManager.inMemory(dir) });
     try {
       const bind = async (session: typeof owner.session) => {
-        await session.bindExtensions({ mode: "print", onError: (error) => errors.push(error.error) });
+        await session.bindExtensions({ mode: options.mode ?? "print", uiContext: options.ui, onError: (error) => errors.push(error.error) });
         await runtime.refresh({ allowNetwork: false });
       };
       owner.setRebindSession(bind);
