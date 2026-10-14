@@ -1,7 +1,7 @@
 # Pi Auto Model — Handoff
 
-- **Status:** Items1–4 verified; `main` is pushed; user Git-install check
-  remains.
+- **Status:** Complete — extension-only first release verified; personal/global
+  activation is separate.
 - **Owner:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -39,14 +39,14 @@ support for native virtual models without importing, installing, or requiring
 
 | Artifact | Purpose | Status |
 | --- | --- | --- |
-| [Specification](./spec.md) | Project scope and acceptance history | Draft |
-| [Living routing contract](../../docs/specs/automatic-routing.md) | Current Auto behavior | Draft |
-| [Implementation plan](./plan.md) | Architecture, source ownership, slices, rollout | In progress |
-| [Execution record](./execution.md) | Authorization, requirements, checks, commits | Active |
+| [Specification](./spec.md) | Project scope and acceptance history | Complete |
+| [Living routing contract](../../../docs/specs/automatic-routing.md) | Current Auto behavior | Current |
+| [Implementation plan](./plan.md) | Architecture, source ownership, slices, rollout | Complete |
+| [Execution record](./execution.md) | Authorization, requirements, checks, commits | Complete |
 | [Slice 1 tasks](./tasks-slice-1.md) | Verified routing-core implementation and acceptance | Complete |
 | [Slice 2 tasks](./tasks-slice-2.md) | Historical controls design and implementation evidence | Superseded by the current release scope |
-| [Configuration addendum](./configuration-addendum.md) | Model picker, portable mappings and acceptance | Mapping UI and safe activation verified; full acceptance pending |
-| [Native routing decision](../../docs/adr/ADR-0001.md) | Dispatch ownership and alternatives | Proposed |
+| [Configuration addendum](./configuration-addendum.md) | Mapping UI design and original acceptance history | Historical; current scope is in the living spec |
+| [Native routing decision](../../../docs/adr/ADR-0001.md) | Dispatch ownership and alternatives | Accepted |
 
 ## Start a fresh session
 
@@ -61,7 +61,7 @@ pi --provider github-copilot --model gpt-6.1-sol --thinking xhigh
 Give that session this instruction:
 
 ```txt
-Read projects/2026-10-13-auto-model/README.md, spec.md, and plan.md completely.
+Read projects/completed/2026-10-13-auto-model/README.md, spec.md, and plan.md completely.
 Verify the source checkouts and current Pi APIs before proposing edits.
 Compile tasks for Slice 1 only using /skill:to-tasks, resolving source
 paths against the repository roots in the plan. Keep compilation on
@@ -145,12 +145,7 @@ clearing all findings and12 combined checks; checklist item4 is complete.
 
 ## Next action
 
-Historical settings changes cannot be reconstructed; current settings match the
-managed file and remain untouched. Package documentation and isolated tarball
-install/removal/rollback are verified. Commit `a60aa4b` is on pushed `main`;
-the user's Git-install check remains. No global activation or registry
-publication occurred. See the [verified package outcome][package-outcome] and [execution
-record](./execution.md#next-action) for current gates. Keep Auto
-opt-in; global activation is separate.
-
-[package-outcome]: ./execution.md#stage-5-package-install-verified-outcome
+No action remains for the extension-only release. The user confirmed installation
+from pushed `main`; the router and four peer changes are on their separate main
+branches. Personal/global activation, live provider entitlement, and any future
+`/automodel on` command are separate, approval-gated work. Auto remains opt-in.

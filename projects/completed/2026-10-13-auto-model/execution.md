@@ -1,7 +1,6 @@
 # Pi Auto Model — Execution Record
 
-- **Status:** Items1–4 verified; commit `a60aa4b` is on pushed `main`;
-  user Git-install check remains.
+- **Status:** Complete for the extension-only release; global activation is separate.
 - **Plan:** [Implementation plan](./plan.md)
 - **Specification:** [Behavior contract](./spec.md)
 - **Started:** 2026-10-13
@@ -2483,15 +2482,15 @@ review found and the follow-up resolved both low-severity documentation/test gap
 `make test typecheck load-check` passes: 397 unit tests, 78 Cucumber scenarios,
 650 steps, typecheck and extension load-check. This evidence is source-checkout
 verification plus the isolated packed-tarball check, not registry publication.
-The documented GitHub install command was not exercised here; the user will test
-it from the pushed `main` branch. Stage5 remains open until that user check.
+The user confirmed that `pi install git:github.com/Integralist/pi-auto-model`
+succeeds from the pushed `main` branch. This is a user-reported installation
+smoke; no live provider request or Auto activation is claimed.
 
 ## Next action
 
-The user tests `pi install git:github.com/Integralist/pi-auto-model` from
-`main`. Commit `a60aa4b` is the repository's first pushed branch and is on
-`origin/main`. No peer repositories were committed or pushed. Keep global
-activation, registry publication and provider probes as separate gates.
+No work remains for the extension-only first release. Personal/global
+activation, live provider entitlement checks, and any future `on` command are
+separate, approval-gated work.
 
 ## Historical stage records
 

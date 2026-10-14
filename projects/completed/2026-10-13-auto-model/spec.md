@@ -1,6 +1,6 @@
 # Pi Auto Model — Specification
 
-- **Status:** Draft
+- **Status:** Complete
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -718,7 +718,7 @@ Feature: Native Auto routing
 
 ## Living Specifications
 
-[`docs/specs/automatic-routing.md`](../../docs/specs/automatic-routing.md)
+[`docs/specs/automatic-routing.md`](../../../docs/specs/automatic-routing.md)
 owns the current Auto selection, task-tier dispatch, controls, and mode-only
 preference contract. Companion-plugin compatibility remains documented in each
 plugin's own repository.

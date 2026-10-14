@@ -1,6 +1,6 @@
 # Automatic Model Routing
 
-- **Status:** Draft
+- **Status:** Current
 - **Author:** Integralist
 - **Created:** 2026-10-14
 

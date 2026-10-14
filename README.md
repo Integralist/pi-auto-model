@@ -20,16 +20,39 @@ pushed before Pi can install it.
 
 ## Use Auto
 
-1. Select `pi-auto-model/auto` from Pi's `/model` picker to enter Auto.
-2. Select a physical model in `/model` to leave Auto. Change its effort with
-   Pi's normal thinking control.
-3. Use `/automodel status` to inspect the current mode, mappings and guidance.
-   Use `/automodel configure` to edit the tier and classifier mappings, or
-   `/automodel mode model-and-effort|effort-only` to choose the routing mode.
+Enter and leave Auto through Pi's model picker:
 
-Auto does not provide an on/off command, shortcut, or automatic restoration.
-Changing thinking while Auto is selected does not switch to a physical model.
-A fresh session does not activate Auto just because preferences exist.
+1. Run `/model` and select `pi-auto-model/auto` to enter Auto. If Auto is
+   missing from `Scoped`, press Tab to switch to `All`, search `auto`, and select
+   `auto [pi-auto-model]`.
+2. To add Auto to `Scoped`, run `/scoped-models` and search for
+   `pi-auto-model/auto`. If its row is not checked, press Enter to enable it;
+   press Ctrl+S to save the scope. This adds Auto to the model cycle; it does
+   not select Auto or set it as the startup default. In `/model`, Ctrl+S sets
+   the selected model as the default for new sessions.
+3. Run `/model` and select a physical model to leave Auto. Then use Pi's normal
+   thinking control to set its effort.
+
+`/automodel mode` chooses how Auto routes requests. It saves a preference; it
+does **not** select Auto or turn routing on.
+
+- `model-and-effort` (default) uses each task tier's configured physical model
+  and effort.
+- `effort-only` keeps the known physical model and uses the configured effort
+  for each task tier. If no physical model is known, select one with `/model`.
+
+The other `/automodel` options are:
+
+- `status` shows the selected model, mode, mappings, and availability guidance.
+- `configure` lets you edit the four tier mappings and classifier pair.
+
+If Auto is already selected with `model-and-effort`, repeating that mode command
+can look like a no-op: it saves the current mode but does not change selection.
+Run `/automodel status` to check the result. A fresh session does not select Auto
+just because a mode preference exists.
+
+There is no `/automodel on` or `/automodel off` option. Select Auto or a physical
+model with Pi's `/model` picker.
 
 ## Configuration and removal
 

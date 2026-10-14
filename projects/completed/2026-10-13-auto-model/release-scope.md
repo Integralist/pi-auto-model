@@ -1,7 +1,6 @@
 # First release — extension-only scope
 
-- **Status:** Items1–4 verified; `main` is pushed; user Git-install check
-  remains.
+- **Status:** Items1–5 verified; personal/global activation remains separate.
 - **Source:** Latest user scope decision supersedes the original restoration
   and saved-enabled requirements.
 - **Host:** Existing Pi1.2.0 public extension APIs; no harness changes, source
@@ -80,7 +79,7 @@ to this document; no scenario is silently counted as passed.
    - [x] Apply approved34-file peer batch on feature branches;12 isolated combined checks pass.
    - [x] Clear five verified review findings and the statusbar branch-test assumption; all host checks pass.
    - [x] Preserve the current settings baseline, document the unknown historical delta, and clear focused review/combined checks.
-5. [ ] Finish package/docs release and verify the documented Git install.
+5. [x] Finish package/docs release and verify the documented Git install.
    Global activation is separate.
    - [x] Add a package allowlist and Git-install README; keep npm publication disabled.
    - [x] Verify the packed tarball with offline isolated install, load, removal
@@ -88,7 +87,7 @@ to this document; no scenario is silently counted as passed.
      policy/preferences.
    - [x] Review the living spec, package docs and new acceptance coverage.
    - [x] Commit `a60aa4b` is on `main` and pushed to `origin/main`.
-   - [ ] User confirms Git installation from the pushed repository.
+   - [x] User confirms Git installation from the pushed repository.
 
 Item1's [verified correction evidence](./execution.md#capture-correction-outcome--verified)
 records assertion-red, normal checks and independent native review. It is not
@@ -100,6 +99,6 @@ Item3's [applied automation and review](./execution.md#stage3-popupacceptance-ba
 fix popup timing/render failures. The [test-only follow-up is verified](./execution.md#stage3-test-only-correction--verified-outcome);
 [Live terminal acceptance is verified](./execution.md#stage3-live-terminal-acceptance--verified),
 completing item3. [Plugin compatibility is verified](./execution.md#stage4-follow-up--verified-outcome),
-completing item4. Isolated package installation/removal/rollback is verified;
-item5 remains open until the user confirms the Git installation. No completed
-item claims registry publication, global activation, or host API work.
+completing item4. Package install, removal, rollback, and the user's Git
+installation check are complete. Personal/global activation remains separate;
+no registry publication or host API work is claimed.

@@ -1,6 +1,6 @@
 # Pi Auto Model — Implementation Plan
 
-- **Status:** In progress
+- **Status:** Complete
 - **Author:** Integralist
 - **Created:** 2026-10-13
 - **Language:** TypeScript
@@ -14,6 +14,11 @@ on/off, automatic restoration, saved-enabled and manual-thinking activation
 clauses. Use Pi's `/model` picker to enter and leave Auto. No Pi host changes
 or host-release dependency are part of this release; other behavior remains
 unchanged.
+
+The approved extension-only release is complete. The original Slice 2–4
+milestones below are reconciled against `release-scope.md`: retired controls are
+superseded, peer compatibility is delivered independently, and personal/global
+activation is deferred outside this project.
 
 ## Summary
 
@@ -67,8 +72,8 @@ The shared-contract approval did not change the Claude mod or skills. The
 [execution record](./execution.md) owns subsequent execution authorization.
 
 This choice is recorded in
-[the proposed native-routing ADR](../../docs/adr/ADR-0001.md).
-Its [repository-wide index](../../docs/adr/README.md) is the decision registry.
+[the accepted native-routing ADR](../../../docs/adr/ADR-0001.md).
+Its [repository-wide index](../../../docs/adr/README.md) is the decision registry.
 A PRD is unnecessary for this personal tooling project.
 
 ## Prerequisites & Dependencies
@@ -328,17 +333,18 @@ UI errors must not abort the request; the status bar remains the fallback.
 Use fake timers for lifetime/replacement/cleanup tests and a live focus/overlay
 smoke check after approval. This replaces the previous status-only requirement.
 
-#### Slice 2 Milestones
+#### Slice 2 milestone disposition
 
-- [ ] **M2.1:** Controls, manual choices, and busy-control deferral satisfy their
-  acceptance scenarios without recursive switching or blocked commands.
-- [ ] **M2.2:** New sessions, resume, compaction, reload, and tree navigation
-  preserve valid state and restore both original physical settings on off.
-- [ ] **M2.3:** Missing/corrupt state, failed restoration, shutdown, and canceled
-  pending work have behavior-level tests and actionable failures.
-- [ ] **M2.4:** Model-only and effort-only changes show one ten-second popup;
-  focus, ongoing work, other dialogs, replacement timers, non-interactive
-  operation, and lifecycle cleanup satisfy the popup acceptance scenarios.
+- [x] **M2.1:** Picker-only controls, explicit physical choices, and safe busy
+  configuration satisfy the current acceptance scenarios.
+- **Superseded — M2.2:** Automatic restoration and saved-enabled fresh-session
+  behavior were retired. Native conversation resume and mode-only preferences
+  are covered by the first-release scope.
+- [x] **M2.3 (retained behavior):** Invalid policy/preferences, branch errors,
+  shutdown, and cancellation have actionable boundary tests. Restoration errors
+  are retired with automatic restoration.
+- [x] **M2.4:** Popup timing, non-interruption, replacement, cleanup, and live
+  focus behavior are verified.
 
 ### Slice 3: Independently installable plugin compatibility
 
@@ -402,17 +408,20 @@ accepts the limitation; it is neither a milestone nor a release gate.
 
 #### Slice 3 Milestones
 
-- [ ] **M3.1:** Every changed plugin passes its established physical-model
-  behavior tests with no router package or handler present.
-- [ ] **M3.2:** Synthetic native routers pass the plugin's virtual-selection,
-  physical metadata, inheritance, summary, or context-safety scenarios.
-- [ ] **M3.3:** Explicit child overrides, strict fallback, prior host support,
-  and selected-vs-effective status are verified and documented honestly.
-- [ ] **M3.4:** Unchanged user-owned plugins pass their applicable regression/
-  load checks, and the third-party intercom limitation is documented without
-  any intercom edit or upstream-update requirement.
+- [x] **M3.1:** Changed plugins pass physical-model behavior tests without the
+  router package or handler.
+- [x] **M3.2:** Synthetic native virtual models pass selection, inheritance,
+  summary, and context-safety scenarios.
+- [x] **M3.3:** Explicit child overrides, strict fallback, tested host support,
+  and selected-versus-effective status are verified and documented.
+- [x] **M3.4:** Unchanged plugins pass regression/load checks; the accepted
+  intercom limitation is documented without an intercom change.
 
-### Slice 4: Personal configuration and controlled rollout
+### Slice 4: Personal configuration and controlled rollout (deferred)
+
+> [!IMPORTANT]
+> This slice is not part of the completed extension-only release. Do not apply
+> its personal-settings changes without a separate approved rollout.
 
 - **Blocked by:** Slices 1–3 for the router and user-owned plugins only.
 - **Delivers:** A reproducible personal install, clear model roles, and a
@@ -456,19 +465,12 @@ Keep Claude Code and OpenCode defaults, catalogs, favorites, and credentials
 unchanged. Do not copy credentials or add new provider accounts. No physical
 catalog/pricing changes are needed merely to add a routing entry.
 
-#### Slice 4 Milestones
+#### Slice 4 disposition
 
-- [ ] **M4.1:** Repo-owned policy/install changes are approved, verified, and
-  preserve unrelated working-copy changes and explicit worker settings.
-- [ ] **M4.2:** A fresh opt-in session dispatches metadata-free classification
-  and trivial/moderate versus complex/frontier work to the observed expected
-  pairs; tier fallback and off restoration satisfy their acceptance scenarios.
-- [ ] **M4.3:** User-owned plugin-only installations and the owned plugin suite
-  pass smoke checks, including child sessions, context shaking, and popup focus/
-  lifetime. Accepted third-party intercom handover behavior does not block
-  rollout.
-- [ ] **M4.4:** Rollback restores the physical session/default behavior without
-  reverting standalone plugin compatibility improvements.
+M4.1–M4.4 describe personal settings edits, global activation, live-session
+routing, and rollback of the user's environment. These are separate operational
+work, not requirements for the completed extension-only release. No installed
+settings or personal policy was changed.
 
 ### Documentation
 
@@ -476,22 +478,21 @@ catalog/pricing changes are needed merely to add a routing entry.
   scope; record its added behavior in the project spec's delta.
 - [x] Document native virtual-model compatibility in each changed plugin's
   own README; state supported Pi versions and independent install behavior.
-- [ ] Keep this handoff index, spec links, and source ownership current. Store
+- [x] Keep the handoff index, spec links, and source ownership current. Store
   acceptance evidence in execution records, not in milestone descriptions.
 
 ### Verification
 
-- [ ] Use the owning repository's Makefile targets where available. For the
-  new extension, provide `make test`, `make typecheck`, and `make load-check`.
-- [ ] Existing available targets include `make -C <pi-subagents> verify` and
-  `make -C <pi-statusbar> test lint`; recheck targets before execution.
-  Repositories without a Makefile use their existing test scripts.
-- [ ] Run `make -C /Users/mmcdonnell/code/agent-skills check-execute-plan` to
-  ensure the unchanged explicit worker policy still matches its contracts.
-- [ ] Assert every specified feature through registered public boundaries and
-  provider/child-session observations; cover every public error branch.
-- [ ] Obtain approval before paid live probes; report requested, dispatched,
-  and provider-observed model/effort separately and disclose missing evidence.
+- [x] Root `make test typecheck load-check` passes: 397 unit tests, 78 Cucumber
+  scenarios, 650 steps, typecheck, and extension load-check.
+- [x] Peer physical/native compatibility, host, type, lint, and public-load
+  checks pass in their owning repositories; evidence is in the execution record.
+- [x] `make -C /Users/mmcdonnell/code/agent-skills check-execute-plan` passes
+  all 19 worker-policy checks.
+- [x] First-release behavior and public configuration errors are covered by
+  native-boundary and offline fake-provider tests and reviews.
+- [x] No live provider probe was run or claimed. Any future paid probe needs
+  separate approval and must report requested, dispatched, and observed pairs.
 
 ## File Changes and Delivery
 
@@ -501,7 +502,7 @@ compiled just-in-time after source/API inspection, not invented upfront.
 
 Use separate reviewable changes in each owning repository. Plugin compatibility
 changes depend only on Pi's native contracts and can merge independently of
-the router. Personal activation waits for all required compatibility changes.
+the router. Personal/global activation is outside this release and needs separate approval.
 Do not turn this multi-repository delivery into a cross-repository PR stack.
 Confirm branch/PR choices with the user before performing Git operations.
 
