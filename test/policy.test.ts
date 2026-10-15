@@ -25,7 +25,7 @@ function configuration() {
       complex: { ...sol }, frontier: { ...sol },
     },
     classifier: {
-      ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000,
+      ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000,
     },
   };
 }
@@ -93,7 +93,7 @@ describe("first-release defaults", () => {
     const config = validateConfiguration(undefined, fixture().registry);
     expect(config.summaryTier).toBe("trivial");
     expect(config.classifier).toEqual({
-      ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000,
+      ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000,
     });
   });
 });

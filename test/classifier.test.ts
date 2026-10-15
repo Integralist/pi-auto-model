@@ -31,7 +31,7 @@ function configuration(classifier: Record<string, unknown> = {}) {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
     tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
-    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000, ...classifier },
+    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000, ...classifier },
   };
 }
 
@@ -169,7 +169,7 @@ describe("classification and payload isolation", () => {
     expect(model.api).not.toBe("pi-virtual");
     expect(context.tools ?? []).toEqual([]);
     expect(context.messages).toHaveLength(1);
-    expect(options).toMatchObject({ reasoning: "high", maxTokens: 64, maxRetries: 0, toolChoice: "none", cacheRetention: "none" });
+    expect(options).toMatchObject({ reasoning: "high", maxTokens: 256, maxRetries: 0, toolChoice: "none", cacheRetention: "none" });
     expect(options?.sessionId).toBeUndefined();
     expect(options?.signal).toBeInstanceOf(AbortSignal);
   });
@@ -244,7 +244,7 @@ describe("unusable responses and unavailable access", () => {
   );
 
   test("over-budget output is not accepted even if a provider ignores its cap", async () => {
-    const f = fixture({ ...response("complex"), usage: { ...usage, output: 65 } });
+    const f = fixture({ ...response("complex"), usage: { ...usage, output: 257 } });
     expect((await resolveTaskRoute(undefined, task(), f.registry)).source).toBe("current");
   });
 

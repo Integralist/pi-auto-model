@@ -20,7 +20,7 @@ function config() {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
     tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
-    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000 },
+    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
   };
 }
 

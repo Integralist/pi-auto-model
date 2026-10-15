@@ -12,7 +12,7 @@ function policy(mode = "model-and-effort") {
   return {
     version: 1, mode, summaryTier: "trivial",
     tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
-    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 64, timeoutMs: 10000 },
+    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
   };
 }
 async function select(f: Fixture) { await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); }

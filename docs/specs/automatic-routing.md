@@ -27,7 +27,7 @@ The four tiers are ordered from smallest to hardest:
 
 Users can configure all four tier mappings and the classifier pair. The default
 classifier uses `github-copilot/gpt-6-luna` at `high`, with a 12,000-character
-input bound, a 64-token output bound, and a 10,000 ms deadline. The policy also
+input bound, a 256-token output bound, and a 10,000 ms deadline. The policy also
 names a summary tier, which selects one of the tier mappings; the default is
 `trivial`. Configured physical pairs must name a physical model and an exact
 supported effort. Automatic routing does not use `max`.
