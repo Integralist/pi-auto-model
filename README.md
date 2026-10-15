@@ -43,8 +43,11 @@ does **not** select Auto or turn routing on.
 
 The other `/automodel` options are:
 
-- `status` shows the selected model, mode, mappings, and availability guidance.
-- `configure` lets you edit the four tier mappings and classifier pair.
+- `status` shows the selected model, mode, effective mappings, active temporary
+  preset, and availability guidance.
+- `configure` edits and saves the global four tier mappings and classifier pair.
+- `temp bedrock` uses the Bedrock preset only in the current session.
+- `temp clear` removes that override and returns to the saved/default mappings.
 
 If Auto is already selected with `model-and-effort`, repeating that mode command
 can look like a no-op: it saves the current mode but does not change selection.
@@ -54,10 +57,46 @@ just because a mode preference exists.
 There is no `/automodel on` or `/automodel off` option. Select Auto or a physical
 model with Pi's `/model` picker.
 
+## Session-only presets
+
+Use different Auto mappings in two repos without changing their shared settings:
+
+```txt
+/automodel temp bedrock
+```
+
+The `bedrock` preset uses provider `amazon-bedrock` with these exact pairs:
+
+| Use        | Model                        | Effort   |
+| ---------- | ---------------------------- | -------- |
+| Trivial    | `anthropic.claude-haiku-5-5` | `medium` |
+| Moderate   | `anthropic.claude-haiku-5-5` | `high`   |
+| Complex    | `anthropic.claude-opus-5-5`  | `high`   |
+| Frontier   | `anthropic.claude-opus-5-5`  | `xhigh`  |
+| Classifier | `anthropic.claude-haiku-5-5` | `low`    |
+
+All five pairs must be available in Pi's configured catalog before activation.
+This checks configured availability, not live entitlement, and sends no model
+request. The preset does not select Auto or change your routing mode. In
+`effort-only` mode, the main conversation keeps its known physical model and
+uses the preset's tier efforts.
+
+The override survives `/reload` and resuming the same session. It follows the
+active session branch; a genuinely new session has no override. It is stored in
+session history, not the global settings files. Other sessions are unaffected.
+With `--no-session`, it cannot survive closing Pi.
+
+Use `/automodel temp clear` to return to the global mappings and
+`/automodel status` to check which mappings are effective. Busy-session changes
+wait for a safe idle point. `/automodel configure` still edits the global
+mappings; saving them does not remove an active temporary preset.
+
 ## Configuration and removal
 
 The routing policy is stored in `pi-auto-model.json`; mode preferences are
 stored separately in `pi-auto-model-state.json` in Pi's agent directory.
+Without a policy file, Auto uses its built-in defaults without creating a file.
+Saving through `/automodel configure` creates or replaces the global policy.
 Removing the package does not delete either file. To remove the Git
 installation, select a physical model, then run:
 

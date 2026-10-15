@@ -31,6 +31,7 @@ type Options = {
   retry?: boolean;
   physicalAuto?: boolean;
   physicalProvider?: string;
+  policyDirectory?: string;
   setup?: (directory: string) => void;
   mode?: "tui" | "print" | "rpc" | "json";
   ui?: import("@earendil-works/pi-coding-agent").ExtensionUIContext;
@@ -93,7 +94,7 @@ export async function createFixture(options: Options = {}) {
         resourceLoaderOptions: {
           noExtensions: true, noSkills: true, noPromptTemplates: true,
           noThemes: true, noContextFiles: true,
-          extensionFactories: [...(options.beforeExtensions ?? []), (pi) => autoModel(pi, options.configuration, { directory: dir }), ...(options.extensions ?? [])],
+          extensionFactories: [...(options.beforeExtensions ?? []), (pi) => autoModel(pi, options.configuration, { directory: options.policyDirectory ?? dir }), ...(options.extensions ?? [])],
           skillsOverride: () => ({ skills, diagnostics: [] }),
         },
       });

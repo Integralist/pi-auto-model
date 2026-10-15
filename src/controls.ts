@@ -7,7 +7,8 @@ import { formatPair, readSettings, validateMappings, validatePreferences, writeS
 
 type ControlState = Preferences & { fixed?: PhysicalPair };
 type Action = { kind: "configure" } | { kind: "mode"; mode: Preferences["mode"] } | { kind: "save"; policy: Configuration }
-  | { kind: "activate-policy"; policy: Configuration } | { kind: "activate-mode"; preferences: Preferences };
+  | { kind: "activate-policy"; policy: Configuration } | { kind: "activate-mode"; preferences: Preferences }
+  | { kind: "temp"; group: "bedrock" | undefined };
 type Hooks = {
   directory?: string;
   readPolicy(): unknown;
@@ -19,6 +20,23 @@ type Hooks = {
 };
 
 const entryType = "pi-auto-model.controls";
+const temporaryEntryType = "pi-auto-model.temp";
+const bedrock = {
+  tiers: {
+    trivial: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "medium" },
+    moderate: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "high" },
+    complex: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "high" },
+    frontier: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "xhigh" },
+  },
+  classifier: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "low" },
+} satisfies { tiers: Configuration["tiers"]; classifier: PhysicalPair };
+
+function temporaryPolicy(config: Configuration, group: "bedrock" | undefined): Configuration {
+  if (!group) return config;
+  const mappings = structuredClone(bedrock);
+  return { ...config, tiers: mappings.tiers, classifier: { ...config.classifier, ...mappings.classifier } };
+}
+
 const isAuto = (model: Model<Api> | undefined) => model?.provider === "pi-auto-model" && model.id === "auto" && model.api === "pi-virtual";
 
 function branchState(ctx: ExtensionContext): ControlState | undefined {
@@ -51,6 +69,7 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   let preferences: Preferences = { version: 2, mode: "model-and-effort" };
   let control: ControlState = { ...preferences }, initialized = false;
   let configurationFailure: string | undefined, branchFailure: string | undefined;
+  let temporaryGroup: "bedrock" | undefined, temporaryFailure: string | undefined;
   let sessionId: string | undefined, epoch = 0;
   let queue: Action[] = [], timer: ReturnType<typeof setTimeout> | undefined;
   let active: object | undefined;
@@ -63,7 +82,8 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   function status(ctx: ExtensionContext) {
     const current = hooks.current(ctx);
     ctx.ui.setStatus("pi-auto-model", isAuto(ctx.model)
-      ? "Auto · " + control.mode + (current ? " → " + formatPair(current) : " · no physical dispatch yet") : undefined);
+      ? "Auto · " + control.mode + (temporaryGroup ? " · temp " + temporaryGroup : "")
+        + (current ? " → " + formatPair(current) : " · no physical dispatch yet") : undefined);
   }
   function cancel() {
     epoch++; queue = []; active = undefined; if (timer) clearTimeout(timer); timer = undefined;
@@ -85,12 +105,31 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
       branchFailure = error instanceof Error ? error.message : String(error);
       report(ctx, branchFailure, "error");
     }
+    temporaryGroup = undefined; temporaryFailure = undefined;
+    const entry = ctx.sessionManager.getBranch().findLast((entry) => entry.type === "custom" && entry.customType === temporaryEntryType);
+    if (entry?.type === "custom") {
+      const raw = entry.data as { version?: unknown; group?: unknown } | null;
+      if (!raw || typeof raw !== "object" || Array.isArray(raw) || raw.version !== 1
+        || Object.keys(raw).sort().join(",") !== "group,version" || (raw.group !== "bedrock" && raw.group !== null)) {
+        temporaryFailure = "Invalid temporary Auto preset at branch entry " + entry.id + ": expected version 1 and group bedrock or null. Use /automodel temp clear.";
+        report(ctx, temporaryFailure, "error");
+      } else temporaryGroup = raw.group ?? undefined;
+    }
     status(ctx);
   }
   async function apply(action: Action, ctx: ExtensionContext, owner: number) {
     if (!valid(ctx, owner)) return;
     if (!ctx.isIdle() || ctx.hasPendingMessages()) { queue.unshift(action); flush(ctx); return; }
     if (configurationFailure) throw new Error(configurationFailure);
+    if (action.kind === "temp") {
+      if (action.group) validateMappings(temporaryPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), action.group), ctx.modelRegistry);
+      pi.appendEntry(temporaryEntryType, { version: 1, group: action.group ?? null });
+      temporaryGroup = action.group; temporaryFailure = undefined;
+      hooks.clearPopup(); status(ctx);
+      report(ctx, (temporaryGroup ? "Temporary preset " + temporaryGroup + " is active for this session; /automodel temp clear restores saved mappings."
+        : "Temporary preset cleared; using saved/default mappings.") + " Model selection and mode preference are unchanged.");
+      return;
+    }
     if (action.kind === "configure") {
       if (ctx.mode !== "tui") { report(ctx, "Edit " + policyPath + " and /reload; interactive model picking requires terminal mode."); return; }
       const draft = await configureMappings(ctx, validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), () => valid(ctx, owner));
@@ -108,7 +147,8 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
     }
     if (action.kind === "activate-policy") {
       hooks.setPolicy(action.policy); hooks.clearPopup();
-      status(ctx); report(ctx, "Saved model mappings. Model selection and mode preference are unchanged.");
+      status(ctx); report(ctx, "Saved model mappings. Model selection and mode preference are unchanged."
+        + (temporaryGroup ? " Temporary preset " + temporaryGroup + " remains active; use /automodel temp clear to use the saved mappings." : ""));
       return;
     }
     if (action.kind === "mode") {
@@ -159,13 +199,13 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
     timer.unref();
   }
   function policy(ctx: ExtensionContext): Configuration {
-    if (configurationFailure || branchFailure) throw new Error(configurationFailure ?? branchFailure);
-    return { ...validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), mode: control.mode };
+    if (configurationFailure || branchFailure || temporaryFailure) throw new Error(configurationFailure ?? branchFailure ?? temporaryFailure);
+    return { ...temporaryPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), temporaryGroup), mode: control.mode };
   }
 
   pi.registerCommand("automodel", {
-    description: "Auto status/mode/configure — select Auto or a physical model through /model",
-    getArgumentCompletions: (prefix) => ["status", "configure", "mode model-and-effort", "mode effort-only"]
+    description: "Auto status/mode/configure/temp — select Auto or a physical model through /model",
+    getArgumentCompletions: (prefix) => ["status", "configure", "mode model-and-effort", "mode effort-only", "temp bedrock", "temp clear"]
       .filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
     handler: async (args, ctx) => {
       const words = args.trim().split(/\s+/), verb = words[0] || "status";
@@ -175,7 +215,8 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
           const label = (pair: PhysicalPair) => formatPair(pair) + (available.some((model) => model.api !== "pi-virtual"
             && model.provider === pair.provider && model.id === pair.model && getSupportedThinkingLevels(model).includes(pair.effort)) ? "" : " [unavailable]");
           report(ctx, "Selection: " + (isAuto(ctx.model) ? "Auto" : ctx.model?.provider + "/" + ctx.model?.id)
-            + "; mode: " + control.mode + "; pending: " + queue.length + "; policy: " + policyPath + "\n"
+            + "; mode: " + control.mode + "; pending: " + queue.length + "; policy: " + policyPath
+            + "; mappings: " + (temporaryGroup ? "session preset " + temporaryGroup : "saved/default") + "\n"
             + Object.entries(config.tiers).map(([tier, pair]) => tier + ": " + label(pair)).join("\n")
             + "\nclassifier: " + label(config.classifier) + "; configured availability is not live entitlement."
             + "\nUse /model to select Auto or leave it for a physical model.");
@@ -186,7 +227,10 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
       if (verb === "mode" && words.length === 2 && ["model-and-effort", "effort-only"].includes(words[1]!)) {
         await defer({ kind: "mode", mode: words[1] as Preferences["mode"] }, ctx); return;
       }
-      report(ctx, "Use /model to enter or leave Auto. Use /automodel status|configure or /automodel mode model-and-effort|effort-only.", "error");
+      if (verb === "temp" && words.length === 2 && ["bedrock", "clear"].includes(words[1]!)) {
+        await defer({ kind: "temp", group: words[1] === "bedrock" ? "bedrock" : undefined }, ctx); return;
+      }
+      report(ctx, "Use /model to enter or leave Auto. Use /automodel status|configure or /automodel mode model-and-effort|effort-only or /automodel temp bedrock|clear.", "error");
     },
   });
   pi.on("session_start", async (_event, ctx) => {
