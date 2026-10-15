@@ -51,7 +51,7 @@ const defaults: Configuration = {
   summaryTier: "trivial",
   tiers: {
     trivial: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
-    moderate: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
+    moderate: { provider: "github-copilot", model: "gpt-6-luna", effort: "xhigh" },
     complex: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
     frontier: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
   },

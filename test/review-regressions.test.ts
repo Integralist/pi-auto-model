@@ -11,7 +11,7 @@ const sol = { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" 
 function policy(mode = "model-and-effort") {
   return {
     version: 1, mode, summaryTier: "trivial",
-    tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
+    tiers: { trivial: { ...luna }, moderate: { ...luna, effort: "xhigh" }, complex: { ...sol }, frontier: { ...sol } },
     classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
   };
 }
@@ -41,7 +41,7 @@ test("credential-filtered tier candidates step down without dispatching excluded
     }]);
     await f.session.prompt("/skill:hard");
     expect(dispatched).toEqual(["gpt-6-luna"]);
-    expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.errors).toEqual([]);
   } finally { f.close(); }
 });
@@ -77,7 +77,7 @@ test.each(["skill", "typed"])("host image omission preserves the accepted %s tas
       : [fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
     await f.session.prompt(kind === "skill" ? "/skill:small" : "draft a short PR", { images });
     expect(last(f).model).toBe("gpt-6-luna");
-    expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).thinkingLevel).toBe(kind === "skill" ? "high" : "xhigh");
     expect(f.faux.state.callCount).toBe(kind === "skill" ? 1 : 2);
     const user = f.session.messages.findLast((message) => message.role === "user");
     expect(JSON.stringify(user)).toMatch(/image|Image/);
@@ -175,7 +175,7 @@ test.each(["new", "fork"])("a later veto of %s preserves the running task and se
     expect(f.session).toBe(session); expect(f.session.sessionManager.getSessionId()).toBe(id);
     finish.release(); await pending;
     expect(last(f).stopReason).toBe("stop");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.faux.state.callCount).toBe(2);
   } finally { finish.release(); f.close(); }
 });

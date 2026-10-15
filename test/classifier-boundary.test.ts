@@ -40,7 +40,7 @@ test("native physical classification is isolated from selected Auto and session 
       current: sol, captured: sol,
     }, registry, { onClassifierUsage: (record) => usageRecords.push(record) });
     expect(result.model.id).toBe("gpt-6-luna");
-    expect(result.thinkingLevel).toBe("high");
+    expect(result.thinkingLevel).toBe("xhigh");
     expect(observed).toHaveLength(1);
     expect(observed[0]!.model).toBe("gpt-6-luna");
     expect(observed[0]!.api).not.toBe("pi-virtual");
@@ -74,7 +74,7 @@ test.each([
   ["plan a new feature", "complex", "gpt-6.1-sol", "xhigh"],
   ["implement the approved task list", "complex", "gpt-6.1-sol", "xhigh"],
   ["debug authentication", "complex", "gpt-6.1-sol", "xhigh"],
-  ["draft a short PR description", "moderate", "gpt-6-luna", "high"],
+  ["draft a short PR description", "moderate", "gpt-6-luna", "xhigh"],
   ["summarize the completed work", "trivial", "gpt-6-luna", "high"],
 ])("native classifier observes only the typed task: %s", async (text, tier, model, effort) => {
   const fixture = await createFixture();

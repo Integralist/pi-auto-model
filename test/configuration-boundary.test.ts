@@ -248,7 +248,7 @@ test.each(["model-and-effort", "effort-only"] as const)("%s direct summaries nee
       messages: [{ role: "user", content: "direct summary", timestamp: 0 }],
     }).result();
     expect(summary.stopReason).toBe("stop"); expect(summary.model).toBe("gpt-6-luna");
-    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "high" }]);
+    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "xhigh" }]);
     expect(f.faux.state.callCount).toBe(1); expect(manager.getBranch()).toEqual(branch);
     if (mode === "effort-only") {
       await f.session.prompt("Main request still needs its own captured physical identity");

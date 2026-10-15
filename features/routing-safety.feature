@@ -21,7 +21,7 @@ Feature: Exact and safe automatic routing
     Given a loaded skill declares model-tier "complex"
     And the configured complex pair is absent
     When I invoke that skill as an idle slash command
-    Then the main request uses "gpt-6-luna" at "high"
+    Then the main request uses "gpt-6-luna" at "xhigh"
     And 0 classifier requests are made
 
   @AC025

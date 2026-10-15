@@ -21,7 +21,7 @@ The four tiers are ordered from smallest to hardest:
 | Task tier  | Default physical model       | Default effort |
 | ---------- | ---------------------------- | -------------- |
 | `trivial`  | `github-copilot/gpt-6-luna`  | `high`         |
-| `moderate` | `github-copilot/gpt-6-luna`  | `high`         |
+| `moderate` | `github-copilot/gpt-6-luna`  | `xhigh`        |
 | `complex`  | `github-copilot/gpt-6.1-sol` | `xhigh`        |
 | `frontier` | `github-copilot/gpt-6.1-sol` | `xhigh`        |
 
@@ -122,7 +122,8 @@ Feature: Native Auto routing
     And the earlier physical pair is not restored
 
   Scenario: Virtual thinking does not change the next tier dispatch
-    When I enter Auto, choose medium virtual thinking, and submit a trivial skill
+    When I enter Auto, choose medium virtual thinking, and submit a trivial
+    skill
     Then Auto remains selected and the request uses Luna at high
 
   Scenario Outline: A declared tier selects its configured pair

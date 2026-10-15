@@ -79,7 +79,7 @@ Given("two physical providers and another virtual model are registered", async f
 Given("a physical catalog model supports only off and high", async function (this: World) {
   const s = state(this), model = s.f.faux.getModel("gpt-6-luna")!;
   model.thinkingLevelMap = { minimal: null, low: null, medium: null, high: "high", xhigh: null, max: null };
-  const raw = JSON.parse(s.originalPolicy); raw.classifier.effort = "off";
+  const raw = JSON.parse(s.originalPolicy); raw.tiers.moderate.effort = "high"; raw.classifier.effort = "off";
   s.originalPolicy = JSON.stringify(raw, null, 2) + "\n"; writeFileSync(policyPath(s), s.originalPolicy);
   await s.f.session.reload();
   assert.equal(JSON.parse(readFileSync(policyPath(s), "utf8")).classifier.effort, "off");

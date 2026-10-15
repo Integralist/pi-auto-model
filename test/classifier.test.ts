@@ -30,7 +30,7 @@ const usage = {
 function configuration(classifier: Record<string, unknown> = {}) {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
-    tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
+    tiers: { trivial: { ...luna }, moderate: { ...luna, effort: "xhigh" }, complex: { ...sol }, frontier: { ...sol } },
     classifier: { ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000, ...classifier },
   };
 }
@@ -98,12 +98,12 @@ describe("classification and payload isolation", () => {
   test("a fresh typed task uses the physical classifier tier", async () => {
     const f = fixture();
     const result = await resolveTaskRoute(undefined, task(), f.registry);
-    expect(view(result)).toEqual({ ...luna, tier: "moderate", source: "tier" });
+    expect(view(result)).toEqual({ ...luna, effort: "xhigh", tier: "moderate", source: "tier" });
     expect(result.classification).toEqual({ pair: { ...luna, effort: "low" }, outcome: "tier", tier: "moderate", usage });
   });
 
   test.each([
-    ["trivial", "gpt-6-luna", "high"], ["moderate", "gpt-6-luna", "high"],
+    ["trivial", "gpt-6-luna", "high"], ["moderate", "gpt-6-luna", "xhigh"],
     ["complex", "gpt-6.1-sol", "xhigh"], ["frontier", "gpt-6.1-sol", "xhigh"],
   ])("valid metadata %s avoids classifier work", async (tier, model, effort) => {
     const f = fixture(response("trivial"));

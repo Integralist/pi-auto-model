@@ -13,7 +13,7 @@ Feature: Portable skill tiers
     Examples:
       | tier     | model       | effort |
       | trivial  | gpt-6-luna  | high   |
-      | moderate | gpt-6-luna  | high   |
+      | moderate | gpt-6-luna  | xhigh  |
       | complex  | gpt-6.1-sol | xhigh  |
       | frontier | gpt-6.1-sol | xhigh  |
 
@@ -87,6 +87,6 @@ Feature: Portable skill tiers
     Given a completed declared frontier task used Sol at xhigh
     And the offline classifier returns "moderate"
     When I submit "draft a short PR description" while idle
-    Then the main request uses "gpt-6-luna" at "high"
+    Then the main request uses "gpt-6-luna" at "xhigh"
     And 1 classifier requests are made
     And classification receives only that typed task

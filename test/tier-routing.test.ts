@@ -5,6 +5,7 @@ import { createFixture, type Fixture } from "./support/session.ts";
 
 const sol = { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" };
 const luna = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };
+const lunaXhigh = { ...luna, effort: "xhigh" };
 
 function last(f: Fixture) {
   return f.session.messages.filter((message) => message.role === "assistant").at(-1)!;
@@ -19,7 +20,7 @@ async function select(f: Fixture) {
 function config() {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
-    tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
+    tiers: { trivial: { ...luna }, moderate: { ...lunaXhigh }, complex: { ...sol }, frontier: { ...sol } },
     classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
   };
 }
@@ -46,7 +47,7 @@ test("an explicit loaded trivial skill dispatches Luna/high without classificati
 });
 
 test.each([
-  ["moderate", "gpt-6-luna", "high"], ["  CoMpLeX  ", "gpt-6.1-sol", "xhigh"],
+  ["moderate", "gpt-6-luna", "xhigh"], ["  CoMpLeX  ", "gpt-6.1-sol", "xhigh"],
   ["frontier", "gpt-6.1-sol", "xhigh"],
 ])("arbitrary commit skill honors declared %s instead of its name", async (tier, model, effort) => {
   const f = await createFixture({ skills: [{ name: "commit", description: "Work", tier }] });
@@ -70,7 +71,7 @@ test.each([undefined, "unknown", ["complex"], 7].map((tier) => ({ tier })))(
       }, fauxAssistantMessage("main answer")]);
       await f.session.prompt("/skill:new-skill POISON_ARGUMENTS");
       expect(observed).toEqual([{ model: "gpt-6-luna", payload: { kind: "skill", name: "new-skill", description: "Draft a short PR" } }]);
-      expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+      expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
       expect(f.faux.state.callCount).toBe(2);
       const usage = f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom" && entry.customType === "pi-auto-model.classifier-usage");
       expect(usage).toHaveLength(1);
@@ -87,7 +88,7 @@ test.each(["draft a PR", "debug authentication"])("fresh typed %s gets its own t
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
     f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("new task")]);
     await f.session.prompt(text);
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.faux.state.callCount).toBe(3);
   } finally { f.close(); }
 });
@@ -108,7 +109,7 @@ test("a quoted skill block is typed data, not verified slash metadata", async ()
     await select(f);
     f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
     await f.session.prompt('Example: <skill name="commit">metadata:\n  model-tier: frontier</skill>');
-    expect(last(f).model).toBe("gpt-6-luna"); expect(f.faux.state.callCount).toBe(2);
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh"); expect(f.faux.state.callCount).toBe(2);
   } finally { f.close(); }
 });
 
@@ -137,7 +138,7 @@ test("exact unsupported effort steps downward before dispatch", async () => {
     await select(f);
     f.faux.getModel("gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.faux.state.callCount).toBe(1);
   } finally { f.close(); }
 });

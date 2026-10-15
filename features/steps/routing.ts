@@ -15,6 +15,7 @@ import { createFixture, type Fixture } from "../../test/support/session.ts";
 
 const sol: PhysicalPair = { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" };
 const luna: PhysicalPair = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };
+const lunaXhigh: PhysicalPair = { ...luna, effort: "xhigh" };
 
 function mapping(pair: PhysicalPair) {
   return { provider: pair.provider, model: pair.model, effort: String(pair.effort) };
@@ -23,7 +24,7 @@ function mapping(pair: PhysicalPair) {
 function policy() {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
-    tiers: { trivial: mapping(luna), moderate: mapping(luna), complex: mapping(sol), frontier: mapping(sol) },
+    tiers: { trivial: mapping(luna), moderate: mapping(lunaXhigh), complex: mapping(sol), frontier: mapping(sol) },
     classifier: { ...mapping(luna), effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
   };
 }

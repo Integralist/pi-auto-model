@@ -16,7 +16,7 @@ Feature: Main-conversation routing
       | plan a new feature               | complex  | gpt-6.1-sol | xhigh  |
       | implement the approved task list | complex  | gpt-6.1-sol | xhigh  |
       | debug authentication             | complex  | gpt-6.1-sol | xhigh  |
-      | draft a short PR description     | moderate | gpt-6-luna  | high   |
+      | draft a short PR description     | moderate | gpt-6-luna  | xhigh  |
       | summarize the completed work    | trivial  | gpt-6-luna  | high   |
 
   @AC010
@@ -24,7 +24,7 @@ Feature: Main-conversation routing
     Given offline Auto is enabled in "effort-only" mode
     And the offline classifier returns "moderate"
     When I submit "draft a short PR description" while idle
-    Then the main request uses "gpt-6.1-sol" at "high"
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
     And 1 classifier requests are made
 
   @AC011
@@ -61,7 +61,7 @@ Feature: Main-conversation routing
     Given a completed declared complex task used Sol at xhigh
     And the offline classifier returns "moderate"
     When I submit "debug authentication" while idle
-    Then the main request uses "gpt-6-luna" at "high"
+    Then the main request uses "gpt-6-luna" at "xhigh"
     And 1 classifier requests are made
     And classification receives only that typed task
 
