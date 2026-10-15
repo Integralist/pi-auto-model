@@ -34,6 +34,7 @@ test("successful native state is portable JSON containing physical current and c
       version: 1,
       current: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
       captured: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
+      tier: "trivial",
     });
     expect(f.session.messages.some((message) => message.role === "custom")).toBe(false);
   } finally { f.close(); }

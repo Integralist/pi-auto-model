@@ -9,9 +9,9 @@ import {
   type ExtensionAPI,
   type ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
-import { resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type TaskInput } from "../src/policy.ts";
+import { resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type TaskInput, type Tier } from "../src/policy.ts";
 
-type State = { version: 1; current: PhysicalPair; captured?: PhysicalPair };
+type State = { version: 1; current: PhysicalPair; captured?: PhysicalPair; tier?: Tier };
 type Candidate = {
   expected: string;
   task?: TaskInput["task"];
@@ -25,6 +25,7 @@ type Candidate = {
 const provider = "pi-auto-model";
 const modelId = "auto";
 const efforts: readonly AutomaticEffort[] = ["off", "minimal", "low", "medium", "high", "xhigh"];
+const tiers: readonly Tier[] = ["trivial", "moderate", "complex", "frontier"];
 
 function text(content: unknown): string {
   if (typeof content === "string") return content;
@@ -52,10 +53,11 @@ function pair(value: unknown, ctx: ExtensionContext, requireSupportedEffort = tr
 
 function state(value: unknown, ctx: ExtensionContext): State | undefined {
   if (!value || typeof value !== "object" || (value as { version?: unknown }).version !== 1) return undefined;
-  const raw = value as { current?: unknown; captured?: unknown };
+  const raw = value as { current?: unknown; captured?: unknown; tier?: unknown };
   // Saved pairs establish identity; actual route evidence is validated separately.
   const current = pair(raw.current, ctx, false);
-  return current ? { version: 1, current, captured: pair(raw.captured, ctx, false) } : undefined;
+  const tier = typeof raw.tier === "string" && tiers.includes(raw.tier as Tier) ? raw.tier as Tier : undefined;
+  return current ? { version: 1, current, captured: pair(raw.captured, ctx, false), ...(tier ? { tier } : {}) } : undefined;
 }
 
 function branchState(ctx: ExtensionContext): State | undefined {
@@ -204,7 +206,8 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
         throw new Error("Auto task was canceled before dispatch; submit it in the active session.");
       }
       const chosen = physical(result.model, result.thinkingLevel)!;
-      return { model: result.model, thinkingLevel: result.thinkingLevel, state: { version: 1, current: chosen, captured: startup } };
+      const tier = result.tier ?? saved?.tier;
+      return { model: result.model, thinkingLevel: result.thinkingLevel, state: { version: 1, current: chosen, captured: startup, ...(tier ? { tier } : {}) } };
     },
   });
 
