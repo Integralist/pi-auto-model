@@ -46,8 +46,8 @@ The other `/automodel` options are:
 - `status` shows the selected model, mode, effective mappings, active temporary
   preset, and availability guidance.
 - `configure` edits and saves the global four tier mappings and classifier pair.
-- `temp bedrock` uses the Bedrock preset only in the current session.
-- `temp clear` removes that override and returns to the saved/default mappings.
+- `temp bedrock` or `temp gemini` uses that preset only in the current session.
+- `temp clear` removes the active preset and returns to saved/default mappings.
 
 If Auto is already selected with `model-and-effort`, repeating that mode command
 can look like a no-op: it saves the current mode but does not change selection.
@@ -63,6 +63,7 @@ Use different Auto mappings in two repos without changing their shared settings:
 
 ```txt
 /automodel temp bedrock
+/automodel temp gemini
 ```
 
 The `bedrock` preset uses provider `amazon-bedrock` with these exact pairs:
@@ -85,6 +86,20 @@ The override survives `/reload` and resuming the same session. It follows the
 active session branch; a genuinely new session has no override. It is stored in
 session history, not the global settings files. Other sessions are unaffected.
 With `--no-session`, it cannot survive closing Pi.
+
+The `gemini` preset uses provider `google-vertex` with these exact pairs:
+
+| Use        | Model              | Effort   |
+| ---------- | ------------------ | -------- |
+| Trivial    | `gemini-3.8-flash` | `medium` |
+| Moderate   | `gemini-3.8-flash` | `high`   |
+| Complex    | `gemini-4-argon`   | `off`    |
+| Frontier   | `gemini-4-argon`   | `off`    |
+| Classifier | `gemini-3.8-flash` | `medium` |
+
+The exact models and efforts must be available in Pi's configured catalog
+before activation. This checks configured availability, not live entitlement,
+and sends no model request.
 
 Use `/automodel temp clear` to return to the global mappings and
 `/automodel status` to check which mappings are effective. Busy-session changes

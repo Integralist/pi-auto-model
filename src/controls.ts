@@ -8,7 +8,7 @@ import { formatPair, readSettings, validateMappings, validatePreferences, writeS
 type ControlState = Preferences & { fixed?: PhysicalPair };
 type Action = { kind: "configure" } | { kind: "mode"; mode: Preferences["mode"] } | { kind: "save"; policy: Configuration }
   | { kind: "activate-policy"; policy: Configuration } | { kind: "activate-mode"; preferences: Preferences }
-  | { kind: "temp"; group: "bedrock" | undefined };
+  | { kind: "temp"; group: TemporaryGroup | undefined };
 type Hooks = {
   directory?: string;
   readPolicy(): unknown;
@@ -21,19 +21,31 @@ type Hooks = {
 
 const entryType = "pi-auto-model.controls";
 const temporaryEntryType = "pi-auto-model.temp";
-const bedrock = {
-  tiers: {
-    trivial: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "medium" },
-    moderate: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "high" },
-    complex: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "high" },
-    frontier: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "xhigh" },
+type TemporaryGroup = "bedrock" | "gemini";
+const temporaryPresets = {
+  bedrock: {
+    tiers: {
+      trivial: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "medium" },
+      moderate: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "high" },
+      complex: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "high" },
+      frontier: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "xhigh" },
+    },
+    classifier: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "low" },
   },
-  classifier: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "low" },
-} satisfies { tiers: Configuration["tiers"]; classifier: PhysicalPair };
+  gemini: {
+    tiers: {
+      trivial: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "medium" },
+      moderate: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "high" },
+      complex: { provider: "google-vertex", model: "gemini-4-argon", effort: "off" },
+      frontier: { provider: "google-vertex", model: "gemini-4-argon", effort: "off" },
+    },
+    classifier: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "medium" },
+  },
+} satisfies Record<TemporaryGroup, { tiers: Configuration["tiers"]; classifier: PhysicalPair }>;
 
-function temporaryPolicy(config: Configuration, group: "bedrock" | undefined): Configuration {
+function temporaryPolicy(config: Configuration, group: TemporaryGroup | undefined): Configuration {
   if (!group) return config;
-  const mappings = structuredClone(bedrock);
+  const mappings = structuredClone(temporaryPresets[group]);
   return { ...config, tiers: mappings.tiers, classifier: { ...config.classifier, ...mappings.classifier } };
 }
 
@@ -69,7 +81,7 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   let preferences: Preferences = { version: 2, mode: "model-and-effort" };
   let control: ControlState = { ...preferences }, initialized = false;
   let configurationFailure: string | undefined, branchFailure: string | undefined;
-  let temporaryGroup: "bedrock" | undefined, temporaryFailure: string | undefined;
+  let temporaryGroup: TemporaryGroup | undefined, temporaryFailure: string | undefined;
   let sessionId: string | undefined, epoch = 0;
   let queue: Action[] = [], timer: ReturnType<typeof setTimeout> | undefined;
   let active: object | undefined;
@@ -110,8 +122,9 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
     if (entry?.type === "custom") {
       const raw = entry.data as { version?: unknown; group?: unknown } | null;
       if (!raw || typeof raw !== "object" || Array.isArray(raw) || raw.version !== 1
-        || Object.keys(raw).sort().join(",") !== "group,version" || (raw.group !== "bedrock" && raw.group !== null)) {
-        temporaryFailure = "Invalid temporary Auto preset at branch entry " + entry.id + ": expected version 1 and group bedrock or null. Use /automodel temp clear.";
+        || Object.keys(raw).sort().join(",") !== "group,version"
+        || (raw.group !== "bedrock" && raw.group !== "gemini" && raw.group !== null)) {
+        temporaryFailure = "Invalid temporary Auto preset at branch entry " + entry.id + ": expected version 1 and a known preset group or null. Use /automodel temp clear.";
         report(ctx, temporaryFailure, "error");
       } else temporaryGroup = raw.group ?? undefined;
     }
@@ -205,7 +218,7 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
 
   pi.registerCommand("automodel", {
     description: "Auto status/mode/configure/temp — select Auto or a physical model through /model",
-    getArgumentCompletions: (prefix) => ["status", "configure", "mode model-and-effort", "mode effort-only", "temp bedrock", "temp clear"]
+    getArgumentCompletions: (prefix) => ["status", "configure", "mode model-and-effort", "mode effort-only", "temp bedrock", "temp gemini", "temp clear"]
       .filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
     handler: async (args, ctx) => {
       const words = args.trim().split(/\s+/), verb = words[0] || "status";
@@ -227,10 +240,10 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
       if (verb === "mode" && words.length === 2 && ["model-and-effort", "effort-only"].includes(words[1]!)) {
         await defer({ kind: "mode", mode: words[1] as Preferences["mode"] }, ctx); return;
       }
-      if (verb === "temp" && words.length === 2 && ["bedrock", "clear"].includes(words[1]!)) {
-        await defer({ kind: "temp", group: words[1] === "bedrock" ? "bedrock" : undefined }, ctx); return;
+      if (verb === "temp" && words.length === 2 && ["bedrock", "gemini", "clear"].includes(words[1]!)) {
+        await defer({ kind: "temp", group: words[1] === "clear" ? undefined : words[1] as TemporaryGroup }, ctx); return;
       }
-      report(ctx, "Use /model to enter or leave Auto. Use /automodel status|configure or /automodel mode model-and-effort|effort-only or /automodel temp bedrock|clear.", "error");
+      report(ctx, "Use /model to enter or leave Auto. Use /automodel status|configure or /automodel mode model-and-effort|effort-only or /automodel temp bedrock|gemini|clear.", "error");
     },
   });
   pi.on("session_start", async (_event, ctx) => {

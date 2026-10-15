@@ -10,6 +10,8 @@ import { createUI } from "./support/ui.ts";
 
 const provider = "amazon-bedrock";
 const haiku = "anthropic.claude-haiku-5-5", opus = "anthropic.claude-opus-5-5";
+const geminiProvider = "google-vertex";
+const flash = "gemini-3.8-flash", argon = "gemini-4-argon";
 const skills = ["trivial", "moderate", "complex", "frontier"].map((tier) => ({ name: tier, description: tier + " work", tier }));
 const last = (f: Fixture) => f.session.messages.filter((message) => message.role === "assistant").at(-1)!;
 
@@ -31,6 +33,12 @@ async function fixture(options: Parameters<typeof createFixture>[0] = {}) {
   return { ...f, get session() { return f.session; }, display, bedrock };
 }
 
+async function addGeminiProvider(f: Fixture) {
+  const gemini = fauxProvider({ provider: geminiProvider, models: [{ id: flash, reasoning: true }, { id: argon, reasoning: false }], tokensPerSecond: 1000000 });
+  f.runtime.registerNativeProvider(gemini.provider); await f.runtime.refresh({ allowNetwork: false });
+  return gemini;
+}
+
 async function selectAuto(f: Fixture) { await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); }
 async function status(f: Awaited<ReturnType<typeof fixture>>) {
   await f.session.prompt("/automodel status"); return f.display.notices.at(-1)!.text;
@@ -40,6 +48,83 @@ function gate() {
   const promise = new Promise<void>((resolve) => { release = resolve; });
   return { promise, release };
 }
+
+test("the Gemini preset uses the exact screenshot mappings only in this session", async () => {
+  const f = await fixture();
+  try {
+    const gemini = await addGeminiProvider(f), files = readdirSync(f.dir), selected = f.session.model;
+    await f.session.prompt("/automodel temp gemini");
+    const text = await status(f);
+    expect(text).toContain("mappings: session preset gemini");
+    expect(text).toContain("trivial: google-vertex/" + flash + " (medium)");
+    expect(text).toContain("moderate: google-vertex/" + flash + " (high)");
+    expect(text).toContain("complex: google-vertex/" + argon + " (off)");
+    expect(text).toContain("frontier: google-vertex/" + argon + " (off)");
+    expect(text).toContain("classifier: google-vertex/" + flash + " (medium)");
+    expect(f.session.model).toEqual(selected); expect(readdirSync(f.dir)).toEqual(files);
+    expect(f.faux.state.callCount + f.bedrock.state.callCount + gemini.state.callCount).toBe(0);
+  } finally { await f.owner.dispose(); f.close(); }
+});
+
+test.each([
+  ["trivial", flash, "medium"], ["moderate", flash, "high"],
+  ["complex", argon, "off"], ["frontier", argon, "off"],
+])("Gemini temporary %s dispatch uses exactly %s at %s", async (tier, model, effort) => {
+  const f = await fixture();
+  try {
+    const gemini = await addGeminiProvider(f);
+    await f.session.prompt("/automodel temp gemini"); await selectAuto(f);
+    gemini.setResponses([fauxAssistantMessage("main")]); await f.session.prompt("/skill:" + tier);
+    expect(last(f).provider).toBe(geminiProvider); expect(last(f).model).toBe(model); expect(last(f).thinkingLevel).toBe(effort);
+    expect(f.display.statuses.get("pi-auto-model")).toContain("temp gemini");
+    expect(f.faux.state.callCount).toBe(0); expect(f.bedrock.state.callCount).toBe(0);
+    expect(gemini.state.callCount).toBe(1); expect(f.errors).toEqual([]);
+  } finally { await f.owner.dispose(); f.close(); }
+});
+
+test.each(["provider missing", "off unsupported"])("an unavailable Gemini preset (%s) leaves the active preset unchanged", async (reason) => {
+  const f = await fixture();
+  try {
+    await f.session.prompt("/automodel temp bedrock");
+    let gemini: Awaited<ReturnType<typeof addGeminiProvider>> | undefined;
+    if (reason === "off unsupported") {
+      gemini = await addGeminiProvider(f);
+      const model = gemini.getModel(argon)!; model.reasoning = true; model.thinkingLevelMap = { off: null };
+    }
+    const leaf = f.session.sessionManager.getLeafId(); await f.session.prompt("/automodel temp gemini");
+    expect(f.display.notices.at(-1)?.text).toContain("Unavailable exact Auto mapping");
+    expect(f.session.sessionManager.getLeafId()).toBe(leaf);
+    expect(await status(f)).toContain("mappings: session preset bedrock");
+    expect(f.faux.state.callCount + f.bedrock.state.callCount + (gemini?.state.callCount ?? 0)).toBe(0);
+  } finally { await f.owner.dispose(); f.close(); }
+});
+
+test("Gemini temporary classifier dispatch uses Flash at medium effort", async () => {
+  const f = await fixture();
+  try {
+    const gemini = await addGeminiProvider(f), requests: { model: string; effort?: string }[] = [];
+    await f.session.prompt("/automodel temp gemini"); await selectAuto(f);
+    gemini.setResponses(["trivial", "main"].map((reply) => (_context, options, _state, model) => {
+      requests.push({ model: model.id, effort: options?.reasoning }); return fauxAssistantMessage(reply);
+    }));
+    await f.session.prompt("write a short helper");
+    expect(last(f).provider).toBe(geminiProvider); expect(last(f).model).toBe(flash); expect(last(f).thinkingLevel).toBe("medium");
+    expect(requests).toEqual([{ model: flash, effort: "medium" }, { model: flash, effort: "medium" }]);
+    expect(f.faux.state.callCount + f.bedrock.state.callCount).toBe(0); expect(f.errors).toEqual([]);
+  } finally { await f.owner.dispose(); f.close(); }
+});
+
+test("Gemini preset survives reload, then a clear restores global mappings", async () => {
+  const f = await fixture();
+  try {
+    const gemini = await addGeminiProvider(f);
+    await f.session.prompt("/automodel temp gemini"); await f.session.reload();
+    expect(await status(f)).toContain("mappings: session preset gemini");
+    await selectAuto(f); gemini.setResponses([fauxAssistantMessage("main")]); await f.session.prompt("/skill:complex");
+    expect(last(f).provider).toBe(geminiProvider); expect(last(f).model).toBe(argon); expect(last(f).thinkingLevel).toBe("off");
+    await f.session.prompt("/automodel temp clear"); expect(await status(f)).toContain("mappings: saved/default");
+  } finally { await f.owner.dispose(); f.close(); }
+});
 
 test("the Bedrock preset changes all five mappings without selecting Auto or writing settings", async () => {
   const f = await fixture({ configuration: globalPolicy() });
@@ -276,7 +361,7 @@ test.each(["temp", "temp absent", "temp bedrock extra", "temp clear extra"])("in
   try {
     await f.session.prompt("/automodel temp bedrock");
     const before = f.session.sessionManager.getLeafId(); await f.session.prompt("/automodel " + args);
-    expect(f.display.notices.at(-1)?.text).toContain("/automodel temp bedrock|clear");
+    expect(f.display.notices.at(-1)?.text).toContain("/automodel temp bedrock|gemini|clear");
     expect(f.session.sessionManager.getLeafId()).toBe(before);
     expect(await status(f)).toContain("mappings: session preset bedrock");
   } finally { await f.owner.dispose(); f.close(); }
