@@ -81,7 +81,7 @@ test.each(
     expect(display.notices.at(-1)?.text).toMatch(/mode: model-and-effort; pending: 1/);
     answer.release(); await run;
     expect(last(f).stopReason).toBe("stop");
-    expect(requests).toEqual(Array.from({ length: stage === "classifier" ? 2 : 1 }, () => ({ model: "gpt-6-luna", effort: "high" })));
+    expect(requests).toEqual(stage === "classifier" ? [{ model: "gpt-6-luna", effort: "low" }, { model: "gpt-6-luna", effort: "high" }] : [{ model: "gpt-6-luna", effort: "high" }]);
     if (kind === "mode") await waitForMode(f, "effort-only");
     else await until(() => display.notices.some((notice) => notice.text.startsWith("Saved model mappings.")));
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
@@ -287,7 +287,7 @@ test.each(["configure", "status", "on"] as const)("headless %s returns observabl
     if (command === "configure") expect(text).toContain(join(f.dir, "pi-auto-model.json"));
     if (command === "status") {
       expect(text).toContain("Selection: github-copilot/gpt-6.1-sol"); expect(text).toContain("pending: 0");
-      expect(text).toContain("classifier: github-copilot/gpt-6-luna (high)"); expect(text).toContain("/model");
+      expect(text).toContain("classifier: github-copilot/gpt-6-luna (low)"); expect(text).toContain("/model");
     }
     if (command === "on") expect(text).toMatch(/Use \/model.*\/automodel status\|configure/);
     expect(readdirSync(f.dir)).toEqual(files); expect(f.session.model?.id).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(0);
@@ -536,7 +536,9 @@ test.each(["main", "classifier"] as const)("an approved configuration form retai
     expect(display.notices.at(-1)?.text).toContain("trivial: github-copilot/gpt-6-luna (medium)");
     expect(display.notices.at(-1)?.text).toContain("pending: 0");
     const initial = stage === "classifier" ? 2 : 1;
-    expect(requests).toEqual(Array.from({ length: initial }, () => ({ provider: "github-copilot", model: "gpt-6-luna", effort: "high" })));
+    expect(requests).toEqual(stage === "classifier"
+      ? [{ provider: "github-copilot", model: "gpt-6-luna", effort: "low" }, { provider: "github-copilot", model: "gpt-6-luna", effort: "high" }]
+      : [{ provider: "github-copilot", model: "gpt-6-luna", effort: "high" }]);
     f.faux.setResponses([(_context, options, _state, model) => {
       requests.push({ provider: model.provider, model: model.id, effort: options?.reasoning }); return fauxAssistantMessage("next");
     }]);

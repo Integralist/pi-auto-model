@@ -193,7 +193,10 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
         onClassifierUsage(record) {
           if (!userEntryId || version !== generation || sessionId !== activeSession || sessionId !== ctx.sessionManager.getSessionId()) return;
           if (!ctx.sessionManager.getBranch().some((item) => item.id === userEntryId)) return;
-          pi.appendEntry("pi-auto-model.classifier-usage", { sessionId, userEntryId, pair: record.pair, usage: record.usage });
+          pi.appendEntry("pi-auto-model.classifier-usage", {
+            sessionId, userEntryId, pair: record.pair, usage: record.usage,
+            outcome: record.outcome, ...(record.tier ? { tier: record.tier } : {}),
+          });
         },
       });
       request.signal?.throwIfAborted();

@@ -206,7 +206,7 @@ test.each(["tool", "retry", "classifier"] as const)("native %s work never manufa
     expect(f.session.isStreaming).toBe(true);
     finish.release(); await running;
     expect(display.overlays).toHaveLength(1);
-    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "high" }, { model: "gpt-6-luna", effort: "high" }]);
+    expect(requests).toEqual([{ model: "gpt-6-luna", effort: kind === "classifier" ? "low" : "high" }, { model: "gpt-6-luna", effort: "high" }]);
     expect(lastResponse(f).stopReason).toBe("stop"); expect(lastResponse(f).thinkingLevel).toBe("high");
     expect(f.session.messages.some((message) => message.role === "custom")).toBe(false);
     expect(display.notices).toEqual([]); expect(f.errors).toEqual([]);

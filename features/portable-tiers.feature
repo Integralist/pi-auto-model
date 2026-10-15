@@ -79,7 +79,7 @@ Feature: Portable skill tiers
     Given a loaded skill has "no model-tier key"
     And the offline classifier returns "complex"
     When standalone classification runs without starting a main conversation
-    Then classification uses physical Luna at high without tools or a virtual router
+    Then classification uses physical Luna at low without tools or a virtual router
     And selected Auto and its conversation and branch remain unchanged
 
   @AC008

@@ -134,7 +134,7 @@ When("I save that model as the classifier at high", async function (this: World)
 Then("the offered automatic efforts were exactly off and high", function (this: World) { assert.deepEqual(state(this).effortMenu, ["off", "high"]); });
 Then("the saved classifier and next classifier request use that exact pair", async function (this: World) {
   const s = state(this), saved = JSON.parse(readFileSync(policyPath(s), "utf8"));
-  assert.deepEqual(saved.classifier, policy().classifier); await enter(s);
+  assert.deepEqual(saved.classifier, { ...policy().classifier, effort: "high" }); await enter(s);
   s.f.faux.setResponses([observe(s, "trivial"), observe(s)]); await s.f.session.prompt("write a short title");
   assert.deepEqual(s.calls, [{ provider: "github-copilot", model: "gpt-6-luna", effort: "high" }, { provider: "github-copilot", model: "gpt-6-luna", effort: "high" }]);
   assert.equal(last(s.f).stopReason, "stop");

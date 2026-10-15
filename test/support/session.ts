@@ -48,7 +48,7 @@ export async function createFixture(options: Options = {}) {
     ],
     tokensPerSecond: 1000000,
   });
-  for (const model of fake.models) model.thinkingLevelMap = { high: "high", xhigh: "xhigh" };
+  for (const model of fake.models) model.thinkingLevelMap = { low: "low", high: "high", xhigh: "xhigh" };
   const runtime = await ModelRuntime.create({
     credentials: new InMemoryCredentialStore(),
     modelsStore: new InMemoryModelsStore(),

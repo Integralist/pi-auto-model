@@ -31,7 +31,7 @@ function configuration(classifier: Record<string, unknown> = {}) {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
     tiers: { trivial: { ...luna }, moderate: { ...luna }, complex: { ...sol }, frontier: { ...sol } },
-    classifier: { ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000, ...classifier },
+    classifier: { ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000, ...classifier },
   };
 }
 
@@ -44,7 +44,7 @@ function fixture(message: AssistantMessage = response()) {
     provider: "github-copilot",
     models: [{ id: "gpt-6-luna", reasoning: true }, { id: "gpt-6.1-sol", reasoning: true }],
   });
-  for (const model of fake.models) model.thinkingLevelMap = { high: "high", xhigh: "xhigh" };
+  for (const model of fake.models) model.thinkingLevelMap = { low: "low", high: "high", xhigh: "xhigh" };
   const available = new Set(fake.models.map((model) => model.id));
   const transport = vi.fn<Parameters<typeof resolveTaskRoute>[2]["streamSimple"]>(() => {
     const stream = createAssistantMessageEventStream();
@@ -99,7 +99,7 @@ describe("classification and payload isolation", () => {
     const f = fixture();
     const result = await resolveTaskRoute(undefined, task(), f.registry);
     expect(view(result)).toEqual({ ...luna, tier: "moderate", source: "tier" });
-    expect(result.classification).toEqual({ pair: luna, outcome: "tier", tier: "moderate", usage });
+    expect(result.classification).toEqual({ pair: { ...luna, effort: "low" }, outcome: "tier", tier: "moderate", usage });
   });
 
   test.each([
@@ -169,7 +169,7 @@ describe("classification and payload isolation", () => {
     expect(model.api).not.toBe("pi-virtual");
     expect(context.tools ?? []).toEqual([]);
     expect(context.messages).toHaveLength(1);
-    expect(options).toMatchObject({ reasoning: "high", maxTokens: 256, maxRetries: 0, toolChoice: "none", cacheRetention: "none" });
+    expect(options).toMatchObject({ reasoning: "low", maxTokens: 256, maxRetries: 0, toolChoice: "none", cacheRetention: "none" });
     expect(options?.sessionId).toBeUndefined();
     expect(options?.signal).toBeInstanceOf(AbortSignal);
   });
@@ -253,7 +253,7 @@ describe("unusable responses and unavailable access", () => {
       const f = fixture();
       const raw = condition === "missing-model" ? configuration({ model: "missing" }) : undefined;
       if (condition === "missing-auth") f.available.delete("gpt-6-luna");
-      if (condition === "unsupported-effort") f.fake.getModel("gpt-6-luna")!.thinkingLevelMap = { high: null };
+      if (condition === "unsupported-effort") f.fake.getModel("gpt-6-luna")!.thinkingLevelMap = { low: null };
       const result = await resolveTaskRoute(raw, task(), f.registry);
       expect(result.source).toBe("current");
       expect(result.classification?.outcome).toBe("unavailable");
@@ -318,7 +318,7 @@ describe("usage and bounded cancellation", () => {
     const result = await resolveTaskRoute(undefined, task(), f.registry, {
       onClassifierUsage(record) { records.push(structuredClone(record)); record.usage.output = 999; },
     });
-    expect(records).toEqual([{ pair: luna, usage }]);
+    expect(records).toEqual([{ pair: { ...luna, effort: "low" }, usage, outcome: "tier", tier: "moderate" }]);
     expect(result.classification?.usage).toEqual(usage);
   });
 
@@ -366,7 +366,7 @@ describe("usage and bounded cancellation", () => {
       await Promise.resolve();
       expect(view(result)).toEqual(before);
       expect(result.classification?.usage).toBeUndefined();
-      expect(records).toEqual([{ pair: luna, usage }]);
+      expect(records).toEqual([{ pair: { ...luna, effort: "low" }, usage, outcome: "canceled" }]);
     },
   );
 

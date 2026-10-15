@@ -24,7 +24,7 @@ function policy() {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
     tiers: { trivial: mapping(luna), moderate: mapping(luna), complex: mapping(sol), frontier: mapping(sol) },
-    classifier: { ...mapping(luna), maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
+    classifier: { ...mapping(luna), effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 },
   };
 }
 
@@ -309,7 +309,7 @@ Then("{int} classifier requests are made", function (this: World, count: number)
   for (const record of records) {
     const user = record.context.messages.find((message) => message.role === "user"); assert.equal(typeof user?.content, "string");
     const parsed = JSON.parse(user!.content as string); assert.ok(parsed.kind === "typed" || parsed.kind === "skill");
-    assert.notEqual(record.api, "pi-virtual"); assert.equal(record.model, "gpt-6-luna"); assert.equal(record.options?.reasoning, "high");
+    assert.notEqual(record.api, "pi-virtual"); assert.equal(record.model, "gpt-6-luna"); assert.equal(record.options?.reasoning, "low");
   }
 });
 Then("classification receives only the loaded name and description", function (this: World) {
@@ -337,10 +337,10 @@ Then("classification has no usable tier", function (this: World) {
   assert.equal(classifiers(s).length, s.outcome === "has no available physical model" ? 0 : 1);
   assert.equal(main(s).length, 1);
 });
-Then("classification uses physical Luna at high without tools or a virtual router", function (this: World) {
+Then("classification uses physical Luna at low without tools or a virtual router", function (this: World) {
   const records = classifiers(data(this)); assert.equal(records.length, 1);
   const request = records[0]!;
-  assert.equal(request.model, "gpt-6-luna"); assert.equal(request.options?.reasoning, "high"); assert.notEqual(request.api, "pi-virtual");
+  assert.equal(request.model, "gpt-6-luna"); assert.equal(request.options?.reasoning, "low"); assert.notEqual(request.api, "pi-virtual");
   assert.deepEqual(request.context.messages.flatMap((message) => message.role === "system" ? message.toolsAdded ?? [] : []), []);
   assert.equal(request.options?.toolChoice, "none"); assert.equal(request.options?.maxRetries, 0);
   assert.equal(data(this).standaloneUsage.length, 1);

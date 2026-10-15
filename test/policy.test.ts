@@ -38,7 +38,7 @@ function fixture() {
   });
   const catalog = new Map<string, Model<Api>>();
   for (const model of provider.models) {
-    model.thinkingLevelMap = { high: "high", xhigh: "xhigh" };
+    model.thinkingLevelMap = { low: "low", high: "high", xhigh: "xhigh" };
     catalog.set(`${model.provider}/${model.id}`, model);
   }
   const authenticated = new Set(["github-copilot"]);
@@ -89,11 +89,11 @@ function route(input: Parameters<typeof resolveRoute>[1], raw: unknown = undefin
 }
 
 describe("first-release defaults", () => {
-  test("use the trivial summary tier and bounded Luna/high classifier", () => {
+  test("use the trivial summary tier and bounded Luna/low classifier", () => {
     const config = validateConfiguration(undefined, fixture().registry);
     expect(config.summaryTier).toBe("trivial");
     expect(config.classifier).toEqual({
-      ...luna, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000,
+      ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000,
     });
   });
 });

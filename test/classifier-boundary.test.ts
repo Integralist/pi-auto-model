@@ -44,12 +44,12 @@ test("native physical classification is isolated from selected Auto and session 
     expect(observed).toHaveLength(1);
     expect(observed[0]!.model).toBe("gpt-6-luna");
     expect(observed[0]!.api).not.toBe("pi-virtual");
-    expect(observed[0]!.options).toMatchObject({ reasoning: "high", maxTokens: 256, maxRetries: 0, toolChoice: "none", cacheRetention: "none" });
+    expect(observed[0]!.options).toMatchObject({ reasoning: "low", maxTokens: 256, maxRetries: 0, toolChoice: "none", cacheRetention: "none" });
     expect(payload(observed[0]!.messages)).toEqual({ kind: "skill", name: "new-skill", description: "Draft a short PR" });
     expect(observed[0]!.messages.flatMap((message) => message.role === "system" ? message.toolsAdded ?? [] : [])).toEqual([]);
     expect(JSON.stringify(observed[0]!.messages)).not.toContain("PRIVATE_MAIN_CONVERSATION");
     expect(JSON.stringify(observed[0]!.messages)).not.toContain("POISON_INSTRUCTIONS");
-    expect(usageRecords).toEqual([{ pair: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" }, usage: result.classification!.usage }]);
+    expect(usageRecords).toEqual([{ pair: { provider: "github-copilot", model: "gpt-6-luna", effort: "low" }, usage: result.classification!.usage, outcome: "tier", tier: "moderate" }]);
     expect(result.classification?.usage?.input).toBeGreaterThan(0);
     expect(result.classification?.usage?.output).toBeGreaterThan(0);
     expect(fixture.faux.state.callCount).toBe(2);
