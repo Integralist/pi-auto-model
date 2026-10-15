@@ -95,6 +95,14 @@ afterEach(() => {
 });
 
 describe("classification and payload isolation", () => {
+  test("the classifier distinguishes direct factual answers from research", async () => {
+    const f = fixture();
+    await resolveTaskRoute(undefined, task("what's the time?"), f.registry);
+    const systemPrompt = f.transport.mock.calls[0]![1].systemPrompt ?? "";
+    expect(systemPrompt).toContain("one-step factual answers or direct lookups that need no research");
+    expect(systemPrompt).toContain("small contained tasks that need explanation, research, comparison or synthesis");
+  });
+
   test("a fresh typed task uses the physical classifier tier", async () => {
     const f = fixture();
     const result = await resolveTaskRoute(undefined, task(), f.registry);
