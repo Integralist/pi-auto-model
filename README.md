@@ -93,8 +93,8 @@ The `gemini` preset uses provider `google-vertex` with these exact pairs:
 | ---------- | ------------------ | -------- |
 | Trivial    | `gemini-3.8-flash` | `medium` |
 | Moderate   | `gemini-3.8-flash` | `high`   |
-| Complex    | `gemini-4-argon`   | `off`    |
-| Frontier   | `gemini-4-argon`   | `off`    |
+| Complex    | `gemini-4-argon`   | `high`   |
+| Frontier   | `gemini-4-argon`   | `high`   |
 | Classifier | `gemini-3.8-flash` | `medium` |
 
 The exact models and efforts must be available in Pi's configured catalog

@@ -36,8 +36,8 @@ const temporaryPresets = {
     tiers: {
       trivial: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "medium" },
       moderate: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "high" },
-      complex: { provider: "google-vertex", model: "gemini-4-argon", effort: "off" },
-      frontier: { provider: "google-vertex", model: "gemini-4-argon", effort: "off" },
+      complex: { provider: "google-vertex", model: "gemini-4-argon", effort: "high" },
+      frontier: { provider: "google-vertex", model: "gemini-4-argon", effort: "high" },
     },
     classifier: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "medium" },
   },
