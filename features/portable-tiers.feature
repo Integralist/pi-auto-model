@@ -85,8 +85,17 @@ Feature: Portable skill tiers
   @AC008
   Scenario: The next typed task is classified independently
     Given a completed declared frontier task used Sol at xhigh
+    And the last answer is older than the prompt cache window
     And the offline classifier returns "moderate"
     When I submit "draft a short PR description" while idle
     Then the main request uses "gpt-6-luna" at "xhigh"
     And 1 classifier requests are made
     And classification receives only that typed task
+
+  @AC053
+  Scenario: A smaller typed task keeps the current pair while the cache is warm
+    Given a completed declared frontier task used Sol at xhigh
+    And the offline classifier returns "moderate"
+    When I submit "draft a short PR description" while idle
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 1 classifier requests are made

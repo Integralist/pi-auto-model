@@ -8,7 +8,7 @@ Feature: First-release picker controls and portable saved mappings
 
   Scenario: Virtual thinking does not change the next tier dispatch
     When I enter Auto, choose medium virtual thinking, and submit a trivial skill
-    Then Auto remains selected and the request uses Luna at high
+    Then Auto remains selected and the request uses Luna at medium
 
   @AC018 @AC019 @AC029
   Scenario: Explicit physical selection preserves manual model and effort
@@ -96,5 +96,5 @@ Feature: First-release picker controls and portable saved mappings
   @AC022 @AC051
   Scenario: Busy configuration returns before completion and affects only the next task
     When I request an edited mapping during an active task
-    Then that task keeps Luna at high and the later fresh task uses Sol at high
+    Then that task keeps Luna at medium and the later fresh task uses Sol at high
     And non-mapping settings and mode-only preferences remain unchanged

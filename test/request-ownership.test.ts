@@ -79,7 +79,7 @@ test("an extension-origin idle message keeps the physical route", async () => {
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:small");
     f.respond(); await f.session.prompt("debug authentication", { source: "extension" });
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
     expect(f.faux.state.callCount).toBe(2); expect(usage(f)).toEqual([]);
   } finally { f.close(); }
 });
@@ -185,7 +185,7 @@ test("tree navigation and fork retain only the selected branch's physical eviden
     expect(last(f).model).toBe("gpt-6.1-sol");
     await f.session.navigateTree(smallAnswer.id, { summarize: false });
     f.respond(); await f.session.prompt("yes");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
     await f.owner.fork(smallAnswer.id, { position: "at" });
     expect(f.session.model?.id).toBe("auto");
     f.respond(); await f.session.prompt("yes");

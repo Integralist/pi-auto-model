@@ -4,6 +4,12 @@ Pi Auto Model routes the main conversation through configured physical model
 and effort pairs. It uses shared task-tier metadata when available and a bounded
 classifier otherwise. The extension is opt-in; Pi owns model selection.
 
+A switch re-sends the whole conversation without the provider's prompt cache.
+So for an hour after an answer, a typed task only switches up to a bigger tier;
+a same-size or smaller one keeps the current pair. A `/skill:` command starts a
+new task and always uses its own tier. Editing a mapping or applying a
+temporary preset still takes effect on the next task.
+
 ## Requirements
 
 - Pi 1.2.0. Newer host versions have not been verified.
@@ -68,13 +74,13 @@ Use different Auto mappings in two repos without changing their shared settings:
 
 The `bedrock` preset uses provider `amazon-bedrock` with these exact pairs:
 
-| Use        | Model                        | Effort   |
-| ---------- | ---------------------------- | -------- |
-| Trivial    | `anthropic.claude-haiku-5-5` | `medium` |
-| Moderate   | `anthropic.claude-haiku-5-5` | `high`   |
-| Complex    | `anthropic.claude-opus-5-5`  | `high`   |
-| Frontier   | `anthropic.claude-opus-5-5`  | `xhigh`  |
-| Classifier | `anthropic.claude-haiku-5-5` | `low`    |
+| Use        | Model                         | Effort   |
+| ---------- | ----------------------------- | -------- |
+| Trivial    | `anthropic.claude-haiku-5-5`  | `medium` |
+| Moderate   | `anthropic.claude-sonnet-5-5` | `high`   |
+| Complex    | `anthropic.claude-opus-5-5`   | `high`   |
+| Frontier   | `anthropic.claude-opus-5-5`   | `xhigh`  |
+| Classifier | `anthropic.claude-haiku-5-5`  | `low`    |
 
 All five pairs must be available in Pi's configured catalog before activation.
 This checks configured availability, not live entitlement, and sends no model
@@ -95,7 +101,7 @@ The `gemini` preset uses provider `google-vertex` with these exact pairs:
 | Moderate   | `gemini-3.8-flash` | `high`   |
 | Complex    | `gemini-4-argon`   | `high`   |
 | Frontier   | `gemini-4-argon`   | `high`   |
-| Classifier | `gemini-3.8-flash` | `medium` |
+| Classifier | `gemini-3.8-flash` | `low`    |
 
 The exact models and efforts must be available in Pi's configured catalog
 before activation. This checks configured availability, not live entitlement,

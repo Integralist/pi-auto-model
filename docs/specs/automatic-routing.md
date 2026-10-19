@@ -20,7 +20,7 @@ The four tiers are ordered from smallest to hardest:
 
 | Task tier  | Default physical model       | Default effort |
 | ---------- | ---------------------------- | -------------- |
-| `trivial`  | `github-copilot/gpt-6-luna`  | `high`         |
+| `trivial`  | `github-copilot/gpt-6-luna`  | `medium`       |
 | `moderate` | `github-copilot/gpt-6-luna`  | `xhigh`        |
 | `complex`  | `github-copilot/gpt-6.1-sol` | `xhigh`        |
 | `frontier` | `github-copilot/gpt-6.1-sol` | `xhigh`        |
@@ -43,6 +43,13 @@ instructions or slash arguments.
 Classify each new typed task independently. Do not reuse a prior skill's tier.
 A confirmation, active task, retry, or extension-origin continuation keeps the
 current physical pair.
+
+A switch re-sends the whole conversation without the provider's prompt cache.
+So while the branch's last answer is under an hour old and the current pair is
+still the configured pair for its tier, a typed task whose tier is the same or
+smaller keeps the current pair; only a bigger tier switches. A skill slash
+command starts a new task and always routes by its tier, since over a long job
+the cheaper pair repays the re-send. Direct summaries are not held.
 
 Classification is bounded and best-effort. If it returns no usable tier or
 fails, keep the current physical pair. Classification does not use tools, route
@@ -124,7 +131,7 @@ Feature: Native Auto routing
   Scenario: Virtual thinking does not change the next tier dispatch
     When I enter Auto, choose medium virtual thinking, and submit a trivial
     skill
-    Then Auto remains selected and the request uses Luna at high
+    Then Auto remains selected and the request uses Luna at medium
 
   Scenario Outline: A declared tier selects its configured pair
     Given a loaded skill declares "<tier>"
@@ -148,9 +155,28 @@ Feature: Native Auto routing
   Scenario: Each new typed task is classified independently
     Given Auto uses model-and-effort mode
     And a skill task used the complex tier
+    And its answer is older than the prompt cache window
     When I submit a new typed task that classifies as moderate
     Then the moderate physical pair is used
     And the skill's tier is not reused
+
+  Scenario: A smaller typed task keeps the current pair while the cache is warm
+    Given Auto uses model-and-effort mode
+    And a skill task used the complex tier within the prompt cache window
+    When I submit a new typed task that classifies as moderate
+    Then the complex physical pair is kept
+
+  Scenario: A bigger typed task steps up while the cache is warm
+    Given Auto uses model-and-effort mode
+    And a skill task used the trivial tier within the prompt cache window
+    When I submit a new typed task that classifies as complex
+    Then the complex physical pair is used
+
+  Scenario: A skill slash command routes by its tier while the cache is warm
+    Given Auto uses model-and-effort mode
+    And a skill task used the complex tier within the prompt cache window
+    When I invoke a skill that declares the trivial tier
+    Then the trivial physical pair is used
 
   Scenario: An unusable classification keeps the current physical pair
     Given the current physical pair is Sol at xhigh
@@ -196,7 +222,7 @@ Feature: Native Auto routing
     Given the main task is running on Sol at xhigh
     And the default summary tier is trivial
     When Pi requests a summary through Auto
-    Then the summary uses Luna at high
+    Then the summary uses Luna at medium
     And the main task route and branch state remain unchanged
 
   Scenario: Explicit child settings remain independent

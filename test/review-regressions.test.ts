@@ -1,6 +1,7 @@
 import { ModelRegistry } from "@earendil-works/pi-coding-agent";
 import { fauxAssistantMessage, type ImageContent } from "@earendil-works/pi-ai";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
+import { WARM_MS } from "../src/policy.ts";
 import { createFixture, type Fixture } from "./support/session.ts";
 
 const small = { name: "small", description: "Small work", tier: "trivial" };
@@ -77,7 +78,7 @@ test.each(["skill", "typed"])("host image omission preserves the accepted %s tas
       : [fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
     await f.session.prompt(kind === "skill" ? "/skill:small" : "draft a short PR", { images });
     expect(last(f).model).toBe("gpt-6-luna");
-    expect(last(f).thinkingLevel).toBe(kind === "skill" ? "high" : "xhigh");
+    expect(last(f).thinkingLevel).toBe(kind === "skill" ? "medium" : "xhigh");
     expect(f.faux.state.callCount).toBe(kind === "skill" ? 1 : 2);
     const user = f.session.messages.findLast((message) => message.role === "user");
     expect(JSON.stringify(user)).toMatch(/image|Image/);
@@ -144,15 +145,17 @@ test.each(["small", "hard"])("initial steering does not displace the %s starting
   try {
     await select(f);
     f.respond(); await f.session.prompt(name === "small" ? "/skill:hard" : "/skill:small");
+    // Past the warm window, so the starting skill's own tier routes it.
+    vi.useFakeTimers({ toFake: ["Date"] }); vi.setSystemTime(Date.now() + WARM_MS + 1);
     pause = true; f.respond();
     const pending = f.session.prompt("/skill:" + name);
     await started.wait; await f.session.prompt("routine queued note", { streamingBehavior: "steer" });
     finish.release(); await pending;
     expect(last(f).model).toBe(name === "small" ? "gpt-6-luna" : "gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe(name === "small" ? "high" : "xhigh");
+    expect(last(f).thinkingLevel).toBe(name === "small" ? "medium" : "xhigh");
     expect(f.faux.state.callCount).toBe(2);
     expect(f.session.messages.filter((message) => message.role === "user")).toHaveLength(3);
-  } finally { finish.release(); f.close(); }
+  } finally { vi.useRealTimers(); finish.release(); f.close(); }
 });
 
 test.each(["new", "fork"])("a later veto of %s preserves the running task and session", async (transition) => {

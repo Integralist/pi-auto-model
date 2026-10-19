@@ -79,7 +79,7 @@ Given("two physical providers and another virtual model are registered", async f
 Given("a physical catalog model supports only off and high", async function (this: World) {
   const s = state(this), model = s.f.faux.getModel("gpt-6-luna")!;
   model.thinkingLevelMap = { minimal: null, low: null, medium: null, high: "high", xhigh: null, max: null };
-  const raw = JSON.parse(s.originalPolicy); raw.tiers.moderate.effort = "high"; raw.classifier.effort = "off";
+  const raw = JSON.parse(s.originalPolicy); raw.tiers.trivial.effort = "high"; raw.tiers.moderate.effort = "high"; raw.classifier.effort = "off";
   s.originalPolicy = JSON.stringify(raw, null, 2) + "\n"; writeFileSync(policyPath(s), s.originalPolicy);
   await s.f.session.reload();
   assert.equal(JSON.parse(readFileSync(policyPath(s), "utf8")).classifier.effort, "off");
@@ -88,9 +88,9 @@ When("I enter Auto, choose medium virtual thinking, and submit a trivial skill",
   const s = state(this); await enter(s); s.f.session.setThinkingLevel("medium");
   await prompt(s, "/skill:acceptance-trivial");
 });
-Then("Auto remains selected and the request uses Luna at high", function (this: World) {
+Then("Auto remains selected and the request uses Luna at medium", function (this: World) {
   const s = state(this); assert.equal(s.f.session.model?.id, "auto");
-  assert.equal(last(s.f).model, "gpt-6-luna"); assert.equal(last(s.f).thinkingLevel, "high");
+  assert.equal(last(s.f).model, "gpt-6-luna"); assert.equal(last(s.f).thinkingLevel, "medium");
 });
 When("I enter Auto, route a task, then choose physical Sol at high", async function (this: World) {
   const s = state(this); await enter(s); await prompt(s, "/skill:acceptance-trivial");
@@ -185,7 +185,7 @@ When("an edited mapping cannot be saved because of {string}", async function (th
 Then("the saved policy, preferences and selection remain unchanged", function (this: World) { stableFiles(state(this)); });
 Then("the next automatic request still uses the original physical pair", async function (this: World) {
   const s = state(this); await enter(s); await prompt(s, "/skill:acceptance-trivial");
-  assert.deepEqual(s.calls, [{ provider: "github-copilot", model: "gpt-6-luna", effort: "high" }]); assert.equal(last(s.f).stopReason, "stop");
+  assert.deepEqual(s.calls, [{ provider: "github-copilot", model: "gpt-6-luna", effort: "medium" }]); assert.equal(last(s.f).stopReason, "stop");
 });
 Then("configuration feedback adds no chat message or provider probe", function (this: World) {
   const s = state(this); assert.equal(s.f.session.messages.some((m) => m.role === "custom"), false); assert.equal(s.display.overlays.length, 0); assert.deepEqual(s.f.errors, []);
@@ -237,9 +237,9 @@ When("I request an edited mapping during an active task", async function (this: 
     assert.ok(s.display.notices.some((notice) => notice.text.startsWith("Saved model mappings.")));
   } finally { finish.release(); await running.catch(() => {}); }
 });
-Then("that task keeps Luna at high and the later fresh task uses Sol at high", async function (this: World) {
-  const s = state(this); assert.equal(last(s.f).model, "gpt-6-luna"); assert.equal(last(s.f).thinkingLevel, "high");
+Then("that task keeps Luna at medium and the later fresh task uses Sol at high", async function (this: World) {
+  const s = state(this); assert.equal(last(s.f).model, "gpt-6-luna"); assert.equal(last(s.f).thinkingLevel, "medium");
   await prompt(s, "/skill:acceptance-trivial"); assert.deepEqual(s.calls, [
-    { provider: "github-copilot", model: "gpt-6-luna", effort: "high" }, { provider: "github-copilot", model: "gpt-6.1-sol", effort: "high" },
+    { provider: "github-copilot", model: "gpt-6-luna", effort: "medium" }, { provider: "github-copilot", model: "gpt-6.1-sol", effort: "high" },
   ]); assert.equal(last(s.f).stopReason, "stop"); assert.equal(s.f.session.model?.id, "auto");
 });

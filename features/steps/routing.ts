@@ -10,8 +10,15 @@ import {
   type SimpleStreamOptions,
   type TranscriptContext,
 } from "@earendil-works/pi-ai";
-import { resolveTaskRoute, type PhysicalPair } from "../../src/policy.ts";
+import { WARM_MS, resolveTaskRoute, type PhysicalPair } from "../../src/policy.ts";
 import { createFixture, type Fixture } from "../../test/support/session.ts";
+
+const realNow = Date.now;
+After(() => { Date.now = realNow; });
+Given("the last answer is older than the prompt cache window", function () {
+  const offset = WARM_MS + 1;
+  Date.now = () => realNow.call(Date) + offset;
+});
 
 const sol: PhysicalPair = { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" };
 const luna: PhysicalPair = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };

@@ -72,10 +72,10 @@ test("native physical classification is isolated from selected Auto and session 
 
 test.each([
   ["plan a new feature", "complex", "gpt-6.1-sol", "xhigh"],
-  ["implement the approved task list", "complex", "gpt-6.1-sol", "xhigh"],
-  ["debug authentication", "complex", "gpt-6.1-sol", "xhigh"],
-  ["draft a short PR description", "moderate", "gpt-6-luna", "xhigh"],
-  ["summarize the completed work", "trivial", "gpt-6-luna", "high"],
+  ["implement the approved task list", "moderate", "gpt-6-luna", "xhigh"],
+  ["debug authentication", "moderate", "gpt-6-luna", "xhigh"],
+  ["draft a short PR description", "trivial", "gpt-6-luna", "medium"],
+  ["summarize the completed work", "trivial", "gpt-6-luna", "medium"],
 ])("native classifier observes only the typed task: %s", async (text, tier, model, effort) => {
   const fixture = await createFixture();
   try {

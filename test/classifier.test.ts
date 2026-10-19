@@ -100,7 +100,7 @@ describe("classification and payload isolation", () => {
     await resolveTaskRoute(undefined, task("what's the time?"), f.registry);
     const systemPrompt = f.transport.mock.calls[0]![1].systemPrompt ?? "";
     expect(systemPrompt).toContain("one-step factual answers or direct lookups that need no research");
-    expect(systemPrompt).toContain("small contained tasks that need explanation, research, comparison or synthesis");
+    expect(systemPrompt).toContain("project planning and big-picture thinking");
   });
 
   test("a fresh typed task uses the physical classifier tier", async () => {
@@ -111,7 +111,7 @@ describe("classification and payload isolation", () => {
   });
 
   test.each([
-    ["trivial", "gpt-6-luna", "high"], ["moderate", "gpt-6-luna", "xhigh"],
+    ["trivial", "gpt-6-luna", "medium"], ["moderate", "gpt-6-luna", "xhigh"],
     ["complex", "gpt-6.1-sol", "xhigh"], ["frontier", "gpt-6.1-sol", "xhigh"],
   ])("valid metadata %s avoids classifier work", async (tier, model, effort) => {
     const f = fixture(response("trivial"));

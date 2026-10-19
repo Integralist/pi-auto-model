@@ -9,7 +9,7 @@ import {
   type ExtensionAPI,
   type ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
-import { resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type TaskInput, type Tier } from "../src/policy.ts";
+import { WARM_MS, resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type TaskInput, type Tier } from "../src/policy.ts";
 
 type State = { version: 1; current: PhysicalPair; captured?: PhysicalPair; tier?: Tier };
 type Candidate = {
@@ -88,6 +88,14 @@ function branchCurrent(ctx: ExtensionContext): PhysicalPair | undefined {
     }
   }
   return undefined;
+}
+
+// The saved tier while the branch's last answer is recent enough for its prompt cache to be warm.
+function warmTier(ctx: ExtensionContext, saved: State | undefined): Tier | undefined {
+  const last = ctx.sessionManager.getBranch().findLast((entry) => entry.type === "message"
+    && entry.message.role === "assistant" && entry.message.stopReason !== "error" && entry.message.stopReason !== "aborted");
+  if (!saved?.tier || last?.type !== "message") return undefined;
+  return Date.now() - last.message.timestamp < WARM_MS ? saved.tier : undefined;
 }
 
 function lastUser(ctx: ExtensionContext) {
@@ -190,6 +198,8 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
       const originSignal = lifecycle.signal;
       const result = await resolveTaskRoute(controls.policy(ctx), {
         task: owned ? candidate.task : undefined, current, captured: startup,
+        // A typed prompt while the cache is warm is likely the same task; a typed skill starts a new one.
+        warmTier: owned && candidate.task?.kind === "typed" ? warmTier(ctx, saved) : undefined,
       }, ctx.modelRegistry, {
         signal: request.signal, lifecycleSignal: originSignal,
         onClassifierUsage(record) {

@@ -32,7 +32,7 @@ test("successful native state is portable JSON containing physical current and c
     const decoded = JSON.parse(JSON.stringify(entry.data)) as { state: unknown };
     expect(decoded.state).toEqual({
       version: 1,
-      current: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
+      current: { provider: "github-copilot", model: "gpt-6-luna", effort: "medium" },
       captured: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
       tier: "trivial",
     });

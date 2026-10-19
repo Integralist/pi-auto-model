@@ -9,7 +9,7 @@ import {
 } from "../src/policy.ts";
 
 const luna: PhysicalPair = {
-  provider: "github-copilot", model: "gpt-6-luna", effort: "high",
+  provider: "github-copilot", model: "gpt-6-luna", effort: "medium",
 };
 const lunaXhigh: PhysicalPair = { ...luna, effort: "xhigh" };
 const sol: PhysicalPair = {
@@ -210,6 +210,30 @@ describe("ordered exact availability", () => {
   });
 });
 
+describe("warm prompt cache", () => {
+  test("a smaller classified tier keeps the current pair", () => {
+    expect(route({ classifiedTier: "trivial", current: sol, warmTier: "complex" }))
+      .toEqual({ ...sol, tier: "complex", source: "current" });
+  });
+
+  test("a bigger tier still steps up", () => {
+    expect(route({ classifiedTier: "complex", current: luna, warmTier: "trivial" }))
+      .toEqual({ ...sol, tier: "complex", source: "tier" });
+  });
+
+  test("a changed mapping for the warm tier routes as usual", () => {
+    const raw = configuration();
+    raw.tiers.complex = { ...sol, model: "huge" };
+    expect(route({ classifiedTier: "trivial", current: sol, warmTier: "complex" }, raw))
+      .toEqual({ ...luna, tier: "trivial", source: "tier" });
+  });
+
+  test("a direct summary ignores the warm tier", () => {
+    expect(route({ direct: true, current: sol, warmTier: "complex" }))
+      .toEqual({ ...luna, tier: "trivial", source: "tier" });
+  });
+});
+
 describe("physical evidence and effort-only", () => {
   test("current evidence takes precedence over captured evidence", () => {
     expect(route({ current: luna, captured: sol }))
@@ -263,7 +287,7 @@ describe("physical evidence and effort-only", () => {
     const raw = configuration();
     raw.mode = "effort-only";
     expect(view(resolveRoute(raw, { classifiedTier: "complex", captured: sol }, f.registry)))
-      .toEqual({ ...sol, effort: "high", tier: "trivial", source: "tier" });
+      .toEqual({ ...sol, effort: "medium", tier: "trivial", source: "tier" });
   });
 
   test("effort-only does not retain another model's current evidence", () => {

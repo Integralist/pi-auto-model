@@ -9,7 +9,7 @@ import { createFixture, type Fixture } from "./support/session.ts";
 import { createUI } from "./support/ui.ts";
 
 const provider = "amazon-bedrock";
-const haiku = "anthropic.claude-haiku-5-5", opus = "anthropic.claude-opus-5-5";
+const haiku = "anthropic.claude-haiku-5-5", sonnet = "anthropic.claude-sonnet-5-5", opus = "anthropic.claude-opus-5-5";
 const geminiProvider = "google-vertex";
 const flash = "gemini-3.8-flash", argon = "gemini-4-argon";
 const skills = ["trivial", "moderate", "complex", "frontier"].map((tier) => ({ name: tier, description: tier + " work", tier }));
@@ -26,7 +26,7 @@ function globalPolicy() {
 async function fixture(options: Parameters<typeof createFixture>[0] = {}) {
   const display = createUI();
   const f = await createFixture({ skills, mode: "tui", ui: options.mode === "print" || options.mode === "json" ? undefined : display.ui, ...options });
-  const bedrock = fauxProvider({ provider, models: [{ id: haiku, reasoning: true }, { id: opus, reasoning: true }], tokensPerSecond: 1000000 });
+  const bedrock = fauxProvider({ provider, models: [{ id: haiku, reasoning: true }, { id: sonnet, reasoning: true }, { id: opus, reasoning: true }], tokensPerSecond: 1000000 });
   for (const model of bedrock.models) model.thinkingLevelMap = { low: "low", medium: "medium", high: "high", xhigh: "xhigh" };
   f.runtime.registerNativeProvider(bedrock.provider);
   await f.runtime.refresh({ allowNetwork: false });
@@ -61,7 +61,7 @@ test("the Gemini preset uses the exact screenshot mappings only in this session"
     expect(text).toContain("moderate: google-vertex/" + flash + " (high)");
     expect(text).toContain("complex: google-vertex/" + argon + " (high)");
     expect(text).toContain("frontier: google-vertex/" + argon + " (high)");
-    expect(text).toContain("classifier: google-vertex/" + flash + " (medium)");
+    expect(text).toContain("classifier: google-vertex/" + flash + " (low)");
     expect(f.session.model).toEqual(selected); expect(readdirSync(f.dir)).toEqual(files);
     expect(f.faux.state.callCount + f.bedrock.state.callCount + gemini.state.callCount).toBe(0);
   } finally { await f.owner.dispose(); f.close(); }
@@ -100,7 +100,7 @@ test.each(["provider missing", "effort unsupported"])("an unavailable Gemini pre
   } finally { await f.owner.dispose(); f.close(); }
 });
 
-test("Gemini temporary classifier dispatch uses Flash at medium effort", async () => {
+test("Gemini temporary classifier dispatch uses Flash at low effort", async () => {
   const f = await fixture();
   try {
     const gemini = await addGeminiProvider(f), requests: { model: string; effort?: string }[] = [];
@@ -110,7 +110,7 @@ test("Gemini temporary classifier dispatch uses Flash at medium effort", async (
     }));
     await f.session.prompt("write a short helper");
     expect(last(f).provider).toBe(geminiProvider); expect(last(f).model).toBe(flash); expect(last(f).thinkingLevel).toBe("medium");
-    expect(requests).toEqual([{ model: flash, effort: "medium" }, { model: flash, effort: "medium" }]);
+    expect(requests).toEqual([{ model: flash, effort: "low" }, { model: flash, effort: "medium" }]);
     expect(f.faux.state.callCount + f.bedrock.state.callCount).toBe(0); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });
@@ -135,7 +135,7 @@ test("the Bedrock preset changes all five mappings without selecting Auto or wri
     const text = await status(f);
     expect(text).toContain("mappings: session preset bedrock");
     expect(text).toContain("trivial: amazon-bedrock/" + haiku + " (medium)");
-    expect(text).toContain("moderate: amazon-bedrock/" + haiku + " (high)");
+    expect(text).toContain("moderate: amazon-bedrock/" + sonnet + " (high)");
     expect(text).toContain("complex: amazon-bedrock/" + opus + " (high)");
     expect(text).toContain("frontier: amazon-bedrock/" + opus + " (xhigh)");
     expect(text).toContain("classifier: amazon-bedrock/" + haiku + " (low)");
@@ -147,7 +147,7 @@ test("the Bedrock preset changes all five mappings without selecting Auto or wri
 });
 
 test.each([
-  ["trivial", haiku, "medium"], ["moderate", haiku, "high"],
+  ["trivial", haiku, "medium"], ["moderate", sonnet, "high"],
   ["complex", opus, "high"], ["frontier", opus, "xhigh"],
 ])("temporary %s dispatch uses exactly %s at %s", async (tier, model, effort) => {
   const f = await fixture();
@@ -173,9 +173,9 @@ test("classification and summaries use the temporary pairs while preserving boun
     const summary = await new ModelRegistry(f.runtime).streamSimple(f.runtime.getModel("pi-auto-model", "auto")!, {
       messages: [{ role: "user", content: "summary", timestamp: 0 }],
     }).result();
-    expect(summary.model).toBe(haiku);
+    expect(summary.model).toBe(sonnet);
     expect(requests.map(({ model, effort }) => ({ model, effort }))).toEqual([
-      { model: haiku, effort: "low" }, { model: opus, effort: "xhigh" }, { model: haiku, effort: "high" },
+      { model: haiku, effort: "low" }, { model: opus, effort: "xhigh" }, { model: sonnet, effort: "high" },
     ]);
     expect(requests[0]!.maxTokens).toBe(48);
     expect(f.faux.state.callCount).toBe(0); expect(f.errors).toEqual([]);
@@ -194,7 +194,7 @@ test("sessions in two repos sharing the same global settings can route through d
     await first.session.prompt("/automodel temp bedrock"); await selectAuto(first); await selectAuto(second);
     first.bedrock.setResponses([fauxAssistantMessage("Bedrock")]); second.respond("Copilot");
     await Promise.all([first.session.prompt("/skill:moderate"), second.session.prompt("/skill:moderate")]);
-    expect(last(first).provider).toBe(provider); expect(last(first).model).toBe(haiku); expect(last(first).thinkingLevel).toBe("high");
+    expect(last(first).provider).toBe(provider); expect(last(first).model).toBe(sonnet); expect(last(first).thinkingLevel).toBe("high");
     expect(last(second).provider).toBe("github-copilot"); expect(last(second).model).toBe("gpt-6-luna"); expect(last(second).thinkingLevel).toBe("xhigh");
     expect(await status(second)).toContain("mappings: saved/default");
     expect(readFileSync(join(first.dir, "pi-auto-model.json"), "utf8")).toBe(raw);
@@ -226,7 +226,7 @@ test("temporary mappings survive reload, but a genuinely new session starts with
     await f.owner.newSession();
     expect(await status(f)).toContain("mappings: saved/default");
     await selectAuto(f); f.respond(); await f.session.prompt("/skill:trivial");
-    expect(last(f).provider).toBe("github-copilot"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).provider).toBe("github-copilot"); expect(last(f).thinkingLevel).toBe("medium");
   } finally { await f.owner.dispose(); f.close(); }
 });
 
@@ -381,7 +381,7 @@ test.each(["main", "classifier"])("busy temporary activation leaves the active %
     await f.session.prompt("/automodel temp bedrock");
     expect(await status(f)).toContain("mappings: saved/default"); expect(f.session.isStreaming).toBe(true);
     finish.release(); await pending;
-    expect(last(f).provider).toBe("github-copilot"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).provider).toBe("github-copilot"); expect(last(f).thinkingLevel).toBe("medium");
     await expect.poll(async () => status(f)).toContain("mappings: session preset bedrock");
     f.bedrock.setResponses([fauxAssistantMessage("next")]); await f.session.prompt("/skill:trivial");
     expect(last(f).provider).toBe(provider); expect(last(f).thinkingLevel).toBe("medium"); expect(f.errors).toEqual([]);

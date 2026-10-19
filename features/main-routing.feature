@@ -59,6 +59,7 @@ Feature: Main-conversation routing
   @AC014
   Scenario: Short task intent is not a confirmation
     Given a completed declared complex task used Sol at xhigh
+    And the last answer is older than the prompt cache window
     And the offline classifier returns "moderate"
     When I submit "debug authentication" while idle
     Then the main request uses "gpt-6-luna" at "xhigh"
