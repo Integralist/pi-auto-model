@@ -69,6 +69,10 @@ test.each([8, 12, 30, 80, 160])("popup output fits %s terminal columns and inclu
   const lines = a.overlays[0]!.component.render(width);
   for (const line of lines) expect(visibleWidth(line)).toBeLessThanOrEqual(width);
   if (width === 160) {
+    expect(a.overlays[0]!.options?.width).toBe(43);
+    expect(lines).toHaveLength(4);
+    expect(lines[0]).toContain("╭─");
+    expect(lines[3]).toContain("╰─");
     expect(lines.join("\n")).toContain("github-copilot/gpt-6.1-sol (xhigh)");
     expect(lines.join("\n")).toContain("github-copilot/gpt-6-luna (high)");
   }

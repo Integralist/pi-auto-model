@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth, type OverlayHandle, type TUI } from "@earendil-works/pi-tui";
+import { truncateToWidth, visibleWidth, type OverlayHandle, type TUI } from "@earendil-works/pi-tui";
 import type { Configuration, PhysicalPair } from "./policy.ts";
 import { formatPair } from "./settings.ts";
 
@@ -27,16 +27,29 @@ export function registerPopups(pi: ExtensionAPI, hooks: {
       if (!settings.enabled) return;
       const owner = generation, origin = sessionId, deadline = performance.now() + settings.durationMs;
       const localTui = tui;
+      const from = "From " + formatPair(previous), to = "To   " + formatPair(pair);
+      const boxWidth = Math.max("Auto switch".length + 2, visibleWidth(from), visibleWidth(to)) + 4;
       handle = localTui.showOverlay({
         invalidate() {},
         render(width) {
           try {
-            const activeTheme = ctx.ui.theme ?? theme!;
-            return ["Auto switch", "From " + formatPair(previous), "To   " + formatPair(pair)]
-              .map((line, index) => truncateToWidth(activeTheme.fg(index === 0 ? "accent" : "muted", line), Math.max(0, width)));
+            const activeTheme = ctx.ui.theme ?? theme!, max = Math.max(0, width);
+            if (max < 4) {
+              return ["Auto switch", from, to]
+                .map((line, index) => truncateToWidth(activeTheme.fg(index === 0 ? "accent" : "muted", line), max));
+            }
+            const inner = max - 4, border = (s: string) => activeTheme.fg("muted", s);
+            const row = (raw: string, color: "muted" | "text") => {
+              const clipped = truncateToWidth(raw, inner);
+              return truncateToWidth(border("│ ") + activeTheme.fg(color, clipped) + " ".repeat(Math.max(0, inner - visibleWidth(clipped))) + border(" │"), max);
+            };
+            const label = truncateToWidth(" Auto switch ", Math.max(0, max - 3));
+            const top = truncateToWidth(border("╭─") + activeTheme.fg("accent", label) + border("─".repeat(Math.max(0, max - 3 - visibleWidth(label))) + "╮"), max);
+            const bottom = truncateToWidth(border("╰" + "─".repeat(Math.max(0, max - 2)) + "╯"), max);
+            return [top, row(from, "muted"), row(to, "text"), bottom];
           } catch { return []; }
         },
-      }, { nonCapturing: true, anchor: "top-right", width: "70%", margin: 1 });
+      }, { nonCapturing: true, anchor: "top-right", width: boxWidth, margin: 1 });
       const expire = () => {
         if (owner !== generation || origin !== sessionId) return;
         const remaining = deadline - performance.now();
