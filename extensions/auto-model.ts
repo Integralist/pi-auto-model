@@ -251,7 +251,7 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
         expected = args ? `${block}\n\n${args}` : block;
         task = { kind: "skill", name, description: command.description ?? "", content };
       } catch { return; }
-    } else if (event.text.startsWith("/")) return;
+    } else if (/^\/[a-zA-Z0-9:_-]+(?:\s|$)/.test(event.text)) return;
     else if (!confirmation(event.text) && event.text.trim()) task = { kind: "typed", text: event.text };
     raw = { expected, task, path, sessionId: ctx.sessionManager.getSessionId(), lastUserId: lastUser(ctx)?.id, generation };
   });

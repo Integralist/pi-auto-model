@@ -269,6 +269,22 @@ test("all configured tiers unavailable retain a known physical pair without step
   } finally { f.close(); }
 });
 
+test("a prompt starting with an absolute file path classifies on a cold Auto session", async () => {
+  const manager = SessionManager.inMemory();
+  manager.appendModelChange("pi-auto-model", "auto"); manager.appendThinkingLevelChange("xhigh");
+  manager.appendMessage({ role: "user", content: "seed", timestamp: 0 });
+  const f = await createFixture({ restore: true, sessionManager: manager });
+  try {
+    expect(f.session.model?.id).toBe("auto");
+    f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
+    await f.session.prompt("/var/folders/1k/tmp/Screenshot\\ 2026-10-19.png\n\nthe UI here is a bit ugly");
+    expect(last(f).stopReason).toBe("stop");
+    expect(last(f).model).toBe("gpt-6-luna");
+    expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(f.faux.state.callCount).toBe(2);
+  } finally { f.close(); }
+});
+
 test("an unusable classified tier with no captured or active pair requires physical selection", async () => {
   const manager = SessionManager.inMemory();
   manager.appendModelChange("pi-auto-model", "auto"); manager.appendThinkingLevelChange("xhigh");
