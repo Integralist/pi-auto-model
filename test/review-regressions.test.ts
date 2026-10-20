@@ -42,7 +42,7 @@ test("credential-filtered tier candidates step down without dispatching excluded
     }]);
     await f.session.prompt("/skill:hard");
     expect(dispatched).toEqual(["gpt-6-luna"]);
-    expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).thinkingLevel).toBe("high");
     expect(f.errors).toEqual([]);
   } finally { f.close(); }
 });
@@ -78,7 +78,7 @@ test.each(["skill", "typed"])("host image omission preserves the accepted %s tas
       : [fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
     await f.session.prompt(kind === "skill" ? "/skill:small" : "draft a short PR", { images });
     expect(last(f).model).toBe("gpt-6-luna");
-    expect(last(f).thinkingLevel).toBe(kind === "skill" ? "medium" : "xhigh");
+    expect(last(f).thinkingLevel).toBe(kind === "skill" ? "medium" : "high");
     expect(f.faux.state.callCount).toBe(kind === "skill" ? 1 : 2);
     const user = f.session.messages.findLast((message) => message.role === "user");
     expect(JSON.stringify(user)).toMatch(/image|Image/);
@@ -112,7 +112,7 @@ test.each(["error", "aborted"] as const)("confirmation keeps the newer dispatche
     expect(last(f).model).toBe("gpt-6.1-sol");
     f.respond(); await f.session.prompt("yes");
     expect(last(f).model).toBe("gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(3);
   } finally { f.close(); }
 });
@@ -152,7 +152,7 @@ test.each(["small", "hard"])("initial steering does not displace the %s starting
     await started.wait; await f.session.prompt("routine queued note", { streamingBehavior: "steer" });
     finish.release(); await pending;
     expect(last(f).model).toBe(name === "small" ? "gpt-6-luna" : "gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe(name === "small" ? "medium" : "xhigh");
+    expect(last(f).thinkingLevel).toBe(name === "small" ? "medium" : "high");
     expect(f.faux.state.callCount).toBe(2);
     expect(f.session.messages.filter((message) => message.role === "user")).toHaveLength(3);
   } finally { vi.useRealTimers(); finish.release(); f.close(); }
@@ -178,7 +178,7 @@ test.each(["new", "fork"])("a later veto of %s preserves the running task and se
     expect(f.session).toBe(session); expect(f.session.sessionManager.getSessionId()).toBe(id);
     finish.release(); await pending;
     expect(last(f).stopReason).toBe("stop");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2);
   } finally { finish.release(); f.close(); }
 });

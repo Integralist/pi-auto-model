@@ -195,7 +195,7 @@ test("sessions in two repos sharing the same global settings can route through d
     first.bedrock.setResponses([fauxAssistantMessage("Bedrock")]); second.respond("Copilot");
     await Promise.all([first.session.prompt("/skill:moderate"), second.session.prompt("/skill:moderate")]);
     expect(last(first).provider).toBe(provider); expect(last(first).model).toBe(sonnet); expect(last(first).thinkingLevel).toBe("high");
-    expect(last(second).provider).toBe("github-copilot"); expect(last(second).model).toBe("gpt-6-luna"); expect(last(second).thinkingLevel).toBe("xhigh");
+    expect(last(second).provider).toBe("github-copilot"); expect(last(second).model).toBe("gpt-6-luna"); expect(last(second).thinkingLevel).toBe("high");
     expect(await status(second)).toContain("mappings: saved/default");
     expect(readFileSync(join(first.dir, "pi-auto-model.json"), "utf8")).toBe(raw);
     expect(readFileSync(join(first.dir, "pi-auto-model-state.json"), "utf8")).toBe(preferences);
@@ -282,7 +282,7 @@ test("configure still edits global mappings without copying the active temporary
     await f.session.prompt("/automodel temp bedrock");
     f.display.answers.push("Review and save", true); await f.session.prompt("/automodel configure");
     const saved = JSON.parse(readFileSync(join(f.dir, "pi-auto-model.json"), "utf8"));
-    expect(saved.tiers.moderate).toEqual({ provider: "github-copilot", model: "gpt-6-luna", effort: "xhigh" });
+    expect(saved.tiers.moderate).toEqual({ provider: "github-copilot", model: "gpt-6-luna", effort: "high" });
     expect(saved.classifier.provider).toBe("github-copilot");
     expect(await status(f)).toContain("mappings: session preset bedrock");
     await f.session.prompt("/automodel temp clear"); expect(await status(f)).toContain("mappings: saved/default");

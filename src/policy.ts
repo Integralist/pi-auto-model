@@ -55,13 +55,13 @@ const defaults: Configuration = {
   summaryTier: "trivial",
   tiers: {
     trivial: { provider: "github-copilot", model: "gpt-6-luna", effort: "medium" },
-    moderate: { provider: "github-copilot", model: "gpt-6-luna", effort: "xhigh" },
-    complex: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
+    moderate: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
+    complex: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "high" },
     frontier: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" },
   },
   classifier: {
     provider: "github-copilot", model: "gpt-6-luna", effort: "low",
-    maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000,
+    maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000,
   },
 };
 

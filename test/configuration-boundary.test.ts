@@ -86,7 +86,7 @@ test.each(
     else await until(() => display.notices.some((notice) => notice.text.startsWith("Saved model mappings.")));
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
     expect(last(f).model).toBe(kind === "mode" ? "gpt-6-luna" : "gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe(kind === "mode" ? "xhigh" : "high");
+    expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(stage === "classifier" ? 3 : 2); expect(f.errors).toEqual([]);
     expect(f.session.model?.id).toBe("auto");
   } finally {
@@ -147,7 +147,7 @@ test.each(["mode", "policy"] as const)("queued %s still activates after a slower
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("pending: 0");
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
     expect(last(f).model).toBe(kind === "mode" ? "gpt-6-luna" : "gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe(kind === "mode" ? "xhigh" : "high");
+    expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(3); expect(f.errors).toEqual([]);
   } finally {
     finishCompact.release(); finishObserver.release(); await compact?.catch(() => {});
@@ -210,7 +210,7 @@ test.each(
     mode: "tui", ui: display.ui, skills: [hard] });
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
     const branch = structuredClone(f.session.sessionManager.getBranch()), messages = structuredClone(f.session.messages);
     const popupCount = display.overlays.length;
     const requests: { provider: string; model: string; effort?: string }[] = [];
@@ -225,7 +225,7 @@ test.each(
     expect(f.session.sessionManager.getBranch()).toEqual(branch); expect(f.session.messages).toEqual(messages);
     expect(display.overlays).toHaveLength(popupCount);
     f.respond(); await f.session.prompt("yes");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(3); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });
@@ -248,7 +248,7 @@ test.each(["model-and-effort", "effort-only"] as const)("%s direct summaries nee
       messages: [{ role: "user", content: "direct summary", timestamp: 0 }],
     }).result();
     expect(summary.stopReason).toBe("stop"); expect(summary.model).toBe("gpt-6-luna");
-    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "xhigh" }]);
+    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "high" }]);
     expect(f.faux.state.callCount).toBe(1); expect(manager.getBranch()).toEqual(branch);
     if (mode === "effort-only") {
       await f.session.prompt("Main request still needs its own captured physical identity");
@@ -418,7 +418,7 @@ test.each(["mode", "policy"] as const)("a %s save remains ahead of a queued comm
     }
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("pending: 0");
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe(kind === "mode" ? "xhigh" : "high");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(3); expect(f.errors).toEqual([]); expect(f.session.model?.id).toBe("auto");
   } finally {
     disk.release(); first.release(); second.release(); await save?.catch(() => {}); await run1?.catch(() => {}); await run2?.catch(() => {});
@@ -451,7 +451,7 @@ test.each([false, true])("three commands preserve arrival order when the middle 
     expect(JSON.parse(readFileSync(join(f.dir, "pi-auto-model-state.json"), "utf8"))).toEqual({ version: 2, mode: "effort-only" });
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("mode: effort-only; pending: 0");
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2); expect(f.errors).toEqual([]); expect(f.session.model?.id).toBe("auto");
   } finally {
     disk.release(); finish.release(); await older?.catch(() => {}); await middle?.catch(() => {}); await run?.catch(() => {});

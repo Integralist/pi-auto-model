@@ -21,13 +21,13 @@ The four tiers are ordered from smallest to hardest:
 | Task tier  | Default physical model       | Default effort |
 | ---------- | ---------------------------- | -------------- |
 | `trivial`  | `github-copilot/gpt-6-luna`  | `medium`       |
-| `moderate` | `github-copilot/gpt-6-luna`  | `xhigh`        |
-| `complex`  | `github-copilot/gpt-6.1-sol` | `xhigh`        |
+| `moderate` | `github-copilot/gpt-6-luna`  | `high`         |
+| `complex`  | `github-copilot/gpt-6.1-sol` | `high`         |
 | `frontier` | `github-copilot/gpt-6.1-sol` | `xhigh`        |
 
 Users can configure all four tier mappings and the classifier pair. The default
 classifier uses `github-copilot/gpt-6-luna` at `low`, with a 12,000-character
-input bound, a 256-token output bound, and a 10,000 ms deadline. The policy also
+input bound, a 256-token output bound, and a 6,000 ms deadline. The policy also
 names a summary tier, which selects one of the tier mappings; the default is
 `trivial`. Configured physical pairs must name a physical model and an exact
 supported effort. Automatic routing does not use `max`.
@@ -46,10 +46,9 @@ current physical pair.
 
 A switch re-sends the whole conversation without the provider's prompt cache.
 So while the branch's last answer is under an hour old and the current pair is
-still the configured pair for its tier, a typed task whose tier is the same or
-smaller keeps the current pair; only a bigger tier switches. A skill slash
-command starts a new task and always routes by its tier, since over a long job
-the cheaper pair repays the re-send. Direct summaries are not held.
+still the configured pair for its tier, a typed task or skill slash command
+whose tier is the same or smaller keeps the current pair; only a bigger tier
+switches. Direct summaries are not held.
 
 Classification is bounded and best-effort. If it returns no usable tier or
 fails, keep the current physical pair. Classification does not use tools, route
@@ -172,11 +171,11 @@ Feature: Native Auto routing
     When I submit a new typed task that classifies as complex
     Then the complex physical pair is used
 
-  Scenario: A skill slash command routes by its tier while the cache is warm
+  Scenario: A smaller skill slash command keeps the current pair while the cache is warm
     Given Auto uses model-and-effort mode
     And a skill task used the complex tier within the prompt cache window
     When I invoke a skill that declares the trivial tier
-    Then the trivial physical pair is used
+    Then the complex physical pair is kept
 
   Scenario: An unusable classification keeps the current physical pair
     Given the current physical pair is Sol at xhigh

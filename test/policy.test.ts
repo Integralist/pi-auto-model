@@ -11,7 +11,11 @@ import {
 const luna: PhysicalPair = {
   provider: "github-copilot", model: "gpt-6-luna", effort: "medium",
 };
+const lunaHigh: PhysicalPair = { ...luna, effort: "high" };
 const lunaXhigh: PhysicalPair = { ...luna, effort: "xhigh" };
+const solHigh: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.1-sol", effort: "high",
+};
 const sol: PhysicalPair = {
   provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh",
 };
@@ -93,16 +97,16 @@ describe("first-release defaults", () => {
   test("use the trivial summary tier and bounded Luna/low classifier", () => {
     const config = validateConfiguration(undefined, fixture().registry);
     expect(config.summaryTier).toBe("trivial");
-    expect(config.tiers).toEqual({ trivial: luna, moderate: lunaXhigh, complex: sol, frontier: sol });
+    expect(config.tiers).toEqual({ trivial: luna, moderate: lunaHigh, complex: solHigh, frontier: sol });
     expect(config.classifier).toEqual({
-      ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000,
+      ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000,
     });
   });
 });
 
 describe("portable tiers", () => {
   test.each<[string, PhysicalPair]>([
-    ["trivial", luna], ["moderate", lunaXhigh], ["complex", sol], ["frontier", sol],
+    ["trivial", luna], ["moderate", lunaHigh], ["complex", solHigh], ["frontier", sol],
   ])("declared %s selects its exact default pair", (tier, pair) => {
     expect(route({ skillContent: skill(tier), classifiedTier: "frontier" }))
       .toEqual({ ...pair, tier, source: "tier" });
@@ -110,14 +114,14 @@ describe("portable tiers", () => {
 
   test("trimmed metadata wins over the familiar commit name and classification", () => {
     expect(route({ skillContent: skill("  CoMpLeX  "), classifiedTier: "trivial" }))
-      .toEqual({ ...sol, tier: "complex", source: "tier" });
+      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
   });
 
   test.each(["", "unknown", ["trivial"], 4, null, true, { tier: "complex" }]
     .map((value) => ({ value })))(
     "invalid scalar metadata $value allows the classified tier", ({ value }) => {
       expect(route({ skillContent: skill(value), classifiedTier: "moderate" }))
-        .toEqual({ ...lunaXhigh, tier: "moderate", source: "tier" });
+        .toEqual({ ...lunaHigh, tier: "moderate", source: "tier" });
     },
   );
 
@@ -129,12 +133,12 @@ describe("portable tiers", () => {
     "---\nmetadata: {}\n---\nmodel-tier: frontier",
   ])("absent or malformed frontmatter is non-fatal: %s", (skillContent) => {
     expect(route({ skillContent, classifiedTier: "complex" }))
-      .toEqual({ ...sol, tier: "complex", source: "tier" });
+      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
   });
 
   test("typed input uses its own supplied classifier result", () => {
     expect(route({ classifiedTier: "moderate", current: sol }))
-      .toEqual({ ...lunaXhigh, tier: "moderate", source: "tier" });
+      .toEqual({ ...lunaHigh, tier: "moderate", source: "tier" });
   });
 
   test.each([undefined, "unknown", "complex because", ["complex"], 2, null]
@@ -182,8 +186,8 @@ describe("ordered exact availability", () => {
   test("unsupported exact xhigh steps down rather than clamping", () => {
     const f = fixture();
     f.catalog.get("github-copilot/gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
-    expect(view(resolveRoute(undefined, { classifiedTier: "complex" }, f.registry)))
-      .toEqual({ ...lunaXhigh, tier: "moderate", source: "tier" });
+    expect(view(resolveRoute(undefined, { classifiedTier: "frontier" }, f.registry)))
+      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
   });
 
   test("non-reasoning targets do not silently accept high effort", () => {
@@ -212,13 +216,13 @@ describe("ordered exact availability", () => {
 
 describe("warm prompt cache", () => {
   test("a smaller classified tier keeps the current pair", () => {
-    expect(route({ classifiedTier: "trivial", current: sol, warmTier: "complex" }))
-      .toEqual({ ...sol, tier: "complex", source: "current" });
+    expect(route({ classifiedTier: "trivial", current: solHigh, warmTier: "complex" }))
+      .toEqual({ ...solHigh, tier: "complex", source: "current" });
   });
 
   test("a bigger tier still steps up", () => {
     expect(route({ classifiedTier: "complex", current: luna, warmTier: "trivial" }))
-      .toEqual({ ...sol, tier: "complex", source: "tier" });
+      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
   });
 
   test("a changed mapping for the warm tier routes as usual", () => {

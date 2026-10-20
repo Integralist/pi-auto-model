@@ -9,6 +9,7 @@ import { createUI } from "./support/ui.ts";
 
 const small = { name: "small", description: "Small work", tier: "trivial" };
 const hard = { name: "hard", description: "Hard work", tier: "complex" };
+const hardest = { name: "hardest", description: "Frontier work", tier: "frontier" };
 const last = (f: Fixture) => f.session.messages.filter((message) => message.role === "assistant").at(-1)!;
 const wait = async (check: () => boolean) => { await expect.poll(check).toBe(true); };
 async function selectAuto(f: Fixture) { await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); }
@@ -117,7 +118,7 @@ test("busy mode changes return promptly and leave the active task's physical pai
     await wait(() => readdirSync(f.dir).includes("pi-auto-model-state.json"));
     await f.session.prompt("/automodel status");
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2);
   } finally { finish.release(); await f.owner.dispose(); f.close(); }
 });
@@ -183,7 +184,7 @@ test("all five catalog mappings save without credentials or hidden Copilot dispa
     await f.session.prompt("/automodel configure");
     const saved = JSON.parse(readFileSync(join(f.dir, "pi-auto-model.json"), "utf8"));
     expect(Object.values(saved.tiers)).toEqual([pair, pair, pair, pair]);
-    expect(saved.classifier).toEqual({ ...pair, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000 });
+    expect(saved.classifier).toEqual({ ...pair, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000 });
     expect(saved.switchPopup).toEqual({ enabled: true, durationMs: 10000 }); expect(saved.summaryTier).toBe("trivial");
     expect(f.session.model?.provider).toBe(physicalProvider); expect(f.faux.state.callCount).toBe(0);
     expect(f.runtime.hasConfiguredAuth("github-copilot")).toBe(false);
@@ -398,7 +399,7 @@ test.each(["gpt-6-luna", "gpt-6.1-sol"])("a newer explicit mode capture of %s st
 });
 
 test.each(["reload", "resume"] as const)("older mode effort cannot replace unsupported newer native capture after %s", async (lifecycle) => {
-  const f = await createFixture({ skills: [small, hard] }); let resumed: Fixture | undefined;
+  const f = await createFixture({ skills: [small, hardest] }); let resumed: Fixture | undefined;
   try {
     await f.session.prompt("/automodel mode effort-only");
     await selectAuto(f); f.respond(); await f.session.prompt("/skill:small");
@@ -413,7 +414,7 @@ test.each(["reload", "resume"] as const)("older mode effort cannot replace unsup
     } else {
       const manager = SessionManager.inMemory(undefined, undefined,
         [f.session.sessionManager.getHeader()!, ...JSON.parse(JSON.stringify(f.session.sessionManager.getEntries()))]);
-      resumed = await createFixture({ restore: true, sessionManager: manager, skills: [small, hard] }); active = resumed;
+      resumed = await createFixture({ restore: true, sessionManager: manager, skills: [small, hardest] }); active = resumed;
       active.faux.getModel("gpt-6-luna")!.thinkingLevelMap = { medium: null, high: null, xhigh: "xhigh" };
     }
     const before = active.faux.state.callCount;
@@ -422,7 +423,7 @@ test.each(["reload", "resume"] as const)("older mode effort cannot replace unsup
     expect(last(active).stopReason).toBe("error");
     expect(last(active).errorMessage).toMatch(/no usable active or captured physical pair/);
     expect(active.faux.state.callCount).toBe(before);
-    await active.session.prompt("/skill:hard");
+    await active.session.prompt("/skill:hardest");
     expect(last(active).model).toBe("gpt-6-luna"); expect(last(active).thinkingLevel).toBe("xhigh");
     expect(active.faux.state.callCount).toBe(before + 1);
   } finally { await resumed?.owner.dispose(); resumed?.close(); await f.owner.dispose(); f.close(); }

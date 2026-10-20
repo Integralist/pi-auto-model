@@ -261,8 +261,8 @@ test("native effort-only feedback shows an observed effort change on the same ph
     expect(text).toContain("From github-copilot/gpt-6.1-sol (xhigh)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (medium)");
     f.respond(); await f.session.prompt("/skill:popup-hard");
     text = display.overlays.at(-1)!.component.render(160).join("\n");
-    expect(text).toContain("From github-copilot/gpt-6.1-sol (medium)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (xhigh)");
-    expect(lastResponse(f).model).toBe("gpt-6.1-sol"); expect(lastResponse(f).thinkingLevel).toBe("xhigh"); expect(display.overlays).toHaveLength(2);
+    expect(text).toContain("From github-copilot/gpt-6.1-sol (medium)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (high)");
+    expect(lastResponse(f).model).toBe("gpt-6.1-sol"); expect(lastResponse(f).thinkingLevel).toBe("high"); expect(display.overlays).toHaveLength(2);
     expect(f.faux.state.callCount).toBe(2); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });

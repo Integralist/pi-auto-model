@@ -53,7 +53,7 @@ test("an explicit loaded trivial skill dispatches Luna/high without classificati
 });
 
 test.each([
-  ["moderate", "gpt-6-luna", "xhigh"], ["  CoMpLeX  ", "gpt-6.1-sol", "xhigh"],
+  ["moderate", "gpt-6-luna", "high"], ["  CoMpLeX  ", "gpt-6.1-sol", "high"],
   ["frontier", "gpt-6.1-sol", "xhigh"],
 ])("arbitrary commit skill honors declared %s instead of its name", async (tier, model, effort) => {
   const f = await createFixture({ skills: [{ name: "commit", description: "Work", tier }] });
@@ -77,7 +77,7 @@ test.each([undefined, "unknown", ["complex"], 7].map((tier) => ({ tier })))(
       }, fauxAssistantMessage("main answer")]);
       await f.session.prompt("/skill:new-skill POISON_ARGUMENTS");
       expect(observed).toEqual([{ model: "gpt-6-luna", payload: { kind: "skill", name: "new-skill", description: "Draft a short PR" } }]);
-      expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
+      expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
       expect(f.faux.state.callCount).toBe(2);
       const usage = f.session.sessionManager.getBranch().filter((entry) => entry.type === "custom" && entry.customType === "pi-auto-model.classifier-usage");
       expect(usage).toHaveLength(1);
@@ -95,7 +95,7 @@ test.each(["draft a PR", "debug authentication"])("fresh typed %s gets its own t
     coldCache();
     f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("new task")]);
     await f.session.prompt(text);
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(3);
   } finally { vi.useRealTimers(); f.close(); }
 });
@@ -130,11 +130,11 @@ test("a bigger fresh typed task steps up while the cache is warm", async () => {
     expect(last(f).model).toBe("gpt-6-luna");
     f.faux.setResponses([fauxAssistantMessage("complex"), fauxAssistantMessage("planned")]);
     await f.session.prompt("plan the migration of the auth service");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
   } finally { f.close(); }
 });
 
-test.each(["yes", "OK!", "proceed", "sounds good", "approved"])("confirmation %s retains the physical pair without classification", async (text) => {
+test.each(["yes", "OK!", "proceed", "sounds good", "approved", "implement", "apply", "1", "show a diff", "proceed with edits"])("confirmation %s retains the physical pair without classification", async (text) => {
   const f = await createFixture({ skills: [{ name: "hard", description: "Hard work", tier: "frontier" }] });
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
@@ -150,7 +150,7 @@ test("a quoted skill block is typed data, not verified slash metadata", async ()
     await select(f);
     f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("main")]);
     await f.session.prompt('Example: <skill name="commit">metadata:\n  model-tier: frontier</skill>');
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh"); expect(f.faux.state.callCount).toBe(2);
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high"); expect(f.faux.state.callCount).toBe(2);
   } finally { f.close(); }
 });
 
@@ -177,9 +177,9 @@ test("exact unsupported effort steps downward before dispatch", async () => {
   const f = await createFixture({ skills: [{ name: "hard", description: "Hard", tier: "complex" }] });
   try {
     await select(f);
-    f.faux.getModel("gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
+    f.faux.getModel("gpt-6.1-sol")!.thinkingLevelMap = { high: null };
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(1);
   } finally { f.close(); }
 });
@@ -218,7 +218,7 @@ test("a retryable live failure retries the failed pair without classification or
     }]);
     await f.session.prompt("/skill:hard");
     expect(models).toEqual(["gpt-6.1-sol", "gpt-6.1-sol"]);
-    expect(last(f).thinkingLevel).toBe("xhigh"); expect(last(f).stopReason).toBe("stop");
+    expect(last(f).thinkingLevel).toBe("high"); expect(last(f).stopReason).toBe("stop");
   } finally { f.close(); }
 });
 
@@ -280,7 +280,7 @@ test("a prompt starting with an absolute file path classifies on a cold Auto ses
     await f.session.prompt("/var/folders/1k/tmp/Screenshot\\ 2026-10-19.png\n\nthe UI here is a bit ugly");
     expect(last(f).stopReason).toBe("stop");
     expect(last(f).model).toBe("gpt-6-luna");
-    expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2);
   } finally { f.close(); }
 });
@@ -340,6 +340,6 @@ test("direct summary dispatch does not write main native route state", async () 
     expect(requests).toEqual([{ model: "gpt-6-luna", effort: "medium" }]);
     expect(f.session.sessionManager.getBranch()).toEqual(before); expect(f.session.messages).toEqual(messages);
     f.respond(); await f.session.prompt("yes");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
   } finally { f.close(); }
 });
