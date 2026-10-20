@@ -1,4 +1,4 @@
-.PHONY: deps test test-unit test-acceptance typecheck load-check
+.PHONY: deps test test-unit test-acceptance typecheck load-check try
 
 deps:
 	npm install --ignore-scripts
@@ -13,6 +13,11 @@ test-acceptance:
 
 typecheck:
 	./node_modules/.bin/tsc --noEmit
+
+# Run Pi with only this checkout's extension, so an installed copy does not load twice.
+# Pass extra Pi flags with ARGS, e.g. make try ARGS="--no-session".
+try:
+	pi --no-extensions -e ./extensions/auto-model.ts $(ARGS)
 
 load-check:
 	node --import tsx --input-type=module -e 'const m = await import("./extensions/auto-model.ts"); if (typeof m.default !== "function") throw new Error("Missing extension factory"); console.log("Extension module loads");'
