@@ -99,7 +99,8 @@ describe("classification and payload isolation", () => {
     const f = fixture();
     await resolveTaskRoute(undefined, task("what's the time?"), f.registry);
     const systemPrompt = f.transport.mock.calls[0]![1].systemPrompt ?? "";
-    expect(systemPrompt).toContain("one-step factual answers or direct lookups that need no research");
+    expect(systemPrompt).toContain("factual answers or direct lookups that need no research");
+    expect(systemPrompt).toContain("repo-state checks (is a commit, branch or slice merged");
     expect(systemPrompt).toContain("project planning and big-picture thinking");
   });
 
