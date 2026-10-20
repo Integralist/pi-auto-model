@@ -21,7 +21,7 @@ export type RouteInput = {
   current?: PhysicalPair;
   captured?: PhysicalPair;
   direct?: boolean;
-  /** For a typed task, the current pair's tier while the prompt cache is warm; only a bigger tier leaves it. */
+  /** For a prompt or skill task, the current pair's tier while the prompt cache is warm; only a bigger tier leaves it. */
   warmTier?: Tier;
 };
 export type RouteDecision = {

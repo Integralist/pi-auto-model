@@ -5,10 +5,10 @@ and effort pairs. It uses shared task-tier metadata when available and a bounded
 classifier otherwise. The extension is opt-in; Pi owns model selection.
 
 A switch re-sends the whole conversation without the provider's prompt cache.
-So for an hour after an answer, a typed task only switches up to a bigger tier;
-a same-size or smaller one keeps the current pair. A `/skill:` command starts a
-new task and always uses its own tier. Editing a mapping or applying a
-temporary preset still takes effect on the next task.
+So for an hour after an answer, a typed task or a `/skill:` command only
+switches up to a bigger tier; a same-size or smaller one keeps the current
+pair. Editing a mapping or applying a temporary preset still takes effect on
+the next task.
 
 ## Requirements
 

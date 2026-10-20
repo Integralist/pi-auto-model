@@ -251,6 +251,8 @@ Given("the routing configuration has {string}", function (this: World, problem: 
 
 When("I invoke that skill as an idle slash command", async function (this: World) { await submit(this, `/skill:${data(this).name}`, "skill"); });
 When("I invoke that skill with poison arguments while idle", async function (this: World) { await submit(this, `/skill:${data(this).name} POISON_ARGUMENTS`, "skill"); });
+// The seed skill declares its tier in its own file; metadata set here makes transport() answer the main request, not a classifier.
+When("I invoke the declared trivial skill as an idle slash command", async function (this: World) { data(this).metadata = "trivial"; await submit(this, "/skill:seed-small", "skill"); });
 When("I submit {string} while idle", async function (this: World, value: string) { await submit(this, value, "typed"); });
 When("standalone classification runs without starting a main conversation", async function (this: World) {
   const s = data(this), f = await app(this); s.standalone = snapshot(f);

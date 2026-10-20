@@ -198,8 +198,8 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
       const originSignal = lifecycle.signal;
       const result = await resolveTaskRoute(controls.policy(ctx), {
         task: owned ? candidate.task : undefined, current, captured: startup,
-        // A typed prompt while the cache is warm is likely the same task; a typed skill starts a new one.
-        warmTier: owned && candidate.task?.kind === "typed" ? warmTier(ctx, saved) : undefined,
+        // A prompt or skill while the cache is warm is re-sent uncached on a switch, so only a bigger tier is worth it.
+        warmTier: owned && candidate.task ? warmTier(ctx, saved) : undefined,
       }, ctx.modelRegistry, {
         signal: request.signal, lifecycleSignal: originSignal,
         onClassifierUsage(record) {

@@ -111,7 +111,7 @@ test("a smaller fresh typed task keeps the frontier pair while the cache is warm
   } finally { f.close(); }
 });
 
-test("a typed skill starts a new task, so it routes by its tier even while the cache is warm", async () => {
+test("a skill keeps a bigger model for a smaller tier while the cache is warm", async () => {
   const f = await createFixture({ skills: [
     { name: "hard", description: "Hard work", tier: "frontier" },
     { name: "small", description: "Small work", tier: "trivial" },
@@ -119,7 +119,7 @@ test("a typed skill starts a new task, so it routes by its tier even while the c
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
     f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
   } finally { f.close(); }
 });
 

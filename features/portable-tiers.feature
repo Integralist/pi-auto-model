@@ -99,3 +99,10 @@ Feature: Portable skill tiers
     When I submit "draft a short PR description" while idle
     Then the main request uses "gpt-6.1-sol" at "xhigh"
     And 1 classifier requests are made
+
+  @AC054
+  Scenario: A smaller declared skill keeps the current pair while the cache is warm
+    Given a completed declared frontier task used Sol at xhigh
+    When I invoke the declared trivial skill as an idle slash command
+    Then the main request uses "gpt-6.1-sol" at "xhigh"
+    And 0 classifier requests are made
