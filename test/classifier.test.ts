@@ -102,6 +102,7 @@ describe("classification and payload isolation", () => {
     expect(systemPrompt).toContain("factual answers or direct lookups that need no research");
     expect(systemPrompt).toContain("repo-state checks (is a commit, branch or slice merged");
     expect(systemPrompt).toContain("project planning and big-picture thinking");
+    expect(systemPrompt).toContain("slices, task lists");
   });
 
   test("a fresh typed task uses the physical classifier tier", async () => {

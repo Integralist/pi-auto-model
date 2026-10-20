@@ -138,7 +138,7 @@ function startingTextMatches(candidate: Candidate, value: string): boolean {
 }
 
 function confirmation(value: string) {
-  return /^(yes|y|yep|yeah|ok|okay|k|sure|no|nope|thanks|thank you|go|go ahead|go on|continue|keep going|do it|proceed|proceed with edits|apply|implement|lgtm|approve|approved|sounds good|looks good|carry on|ship it|yes please|please do|next|show(?: a| the)?(?: full)? diff|\d+)[.!]*$/i.test(value.trim());
+  return /^(yes|y|yep|yeah|ok|okay|k|sure|no|nope|thanks|thank you|go|go ahead|go on|continue|keep going|do it|proceed(?: with (?:edits|updates|changes))?|apply|implement|lgtm|approve|approved|sounds good|looks good|carry on|ship it|yes please|please do|next|show(?: a| the)?(?: full| proposed)? diff|\d+)[.!]*$/i.test(value.trim());
 }
 
 export default function autoModel(pi: ExtensionAPI, configuration?: unknown, options: { directory?: string } = {}): void {

@@ -134,7 +134,7 @@ test("a bigger fresh typed task steps up while the cache is warm", async () => {
   } finally { f.close(); }
 });
 
-test.each(["yes", "OK!", "proceed", "sounds good", "approved", "implement", "apply", "1", "show a diff", "proceed with edits"])("confirmation %s retains the physical pair without classification", async (text) => {
+test.each(["yes", "OK!", "proceed", "sounds good", "approved", "implement", "apply", "1", "show a diff", "show the proposed diff", "proceed with edits", "proceed with updates", "proceed with changes"])("confirmation %s retains the physical pair without classification", async (text) => {
   const f = await createFixture({ skills: [{ name: "hard", description: "Hard work", tier: "frontier" }] });
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
