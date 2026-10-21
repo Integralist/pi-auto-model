@@ -10,6 +10,9 @@ switches up to a bigger tier; a same-size or smaller one keeps the current
 pair. Editing a mapping or applying a temporary preset still takes effect on
 the next task.
 
+For selection, routing, and fallback rules, see the
+[model state diagrams](docs/model-state.md).
+
 ## Requirements
 
 - Pi 1.2.0. Newer host versions have not been verified.
