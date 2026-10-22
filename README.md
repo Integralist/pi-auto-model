@@ -130,3 +130,8 @@ pi remove git:github.com/Integralist/pi-auto-model
 
 Start a new Pi process after removal. Delete the policy or preferences files
 only if you intend to discard those settings.
+
+## Live classifier checks
+
+`PI_AUTO_MODEL_LIVE_EVAL=1 make test-unit` sends 16 live requests using the
+default classifier and configured credentials; provider charges may apply.
