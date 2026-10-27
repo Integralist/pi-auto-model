@@ -225,6 +225,11 @@ describe("warm prompt cache", () => {
       .toEqual({ ...solHigh, tier: "complex", source: "current" });
   });
 
+  test("a smaller classified tier on the same physical model lowers effort while the cache is warm", () => {
+    expect(route({ classifiedTier: "trivial", current: lunaHigh, warmTier: "moderate" }))
+      .toEqual({ ...luna, tier: "trivial", source: "tier" });
+  });
+
   test("a bigger tier still steps up", () => {
     expect(route({ classifiedTier: "complex", current: luna, warmTier: "trivial" }))
       .toEqual({ ...solHigh, tier: "complex", source: "tier" });

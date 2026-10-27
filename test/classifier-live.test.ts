@@ -7,6 +7,7 @@ const cases = [
   ["bounded troubleshooting", "moderate", "Pi renders Source labels that I cannot open in Ghostty. Check how its links work and turn the fix into a reusable instruction."],
   ["targeted research", "moderate", "Research how Ghostty opens Pi's links and codify a fix for relative file targets."],
   ["wording-only instruction", "trivial", "Update AGENTS.md to say use absolute file URLs instead of relative links; no investigation needed."],
+  ["readme skill entry", "trivial", "can you update the README.md with the new skill"],
   ["commit", "trivial", "apply and commit to main"],
   ["feature planning", "complex", "Write a specification and implementation plan for per-project routing overrides, covering policy validation, persistence, migration, and tests."],
   ["architectural research", "complex", "Research alternative model-routing architectures, compare failure modes and trade-offs, and propose a design for our next implementation."],
