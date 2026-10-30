@@ -66,6 +66,18 @@ just because a mode preference exists.
 There is no `/automodel on` or `/automodel off` option. Select Auto or a physical
 model with Pi's `/model` picker.
 
+## Default GPT mappings
+
+The built-in defaults use the `github-copilot` provider:
+
+| Use        | Model         | Effort   |
+| ---------- | ------------- | -------- |
+| Trivial    | `gpt-6-luna`  | `medium` |
+| Moderate   | `gpt-6-luna`  | `high`   |
+| Complex    | `gpt-6.1-sol` | `high`   |
+| Frontier   | `gpt-6.1-sol` | `xhigh`  |
+| Classifier | `gpt-6-luna`  | `low`    |
+
 ## Session-only presets
 
 Use different Auto mappings in two repos without changing their shared settings:
