@@ -90,11 +90,13 @@ function branchCurrent(ctx: ExtensionContext): PhysicalPair | undefined {
   return undefined;
 }
 
-// The saved tier while the branch's last answer after any compaction is recent enough for its prompt cache to be warm.
+// The saved tier while the branch's last answer after any cache-invalidating rewrite is recent enough for its prompt cache to be warm.
 function warmTier(ctx: ExtensionContext, saved: State | undefined): Tier | undefined {
   const branch = ctx.sessionManager.getBranch();
-  const compacted = branch.findLastIndex((entry) => entry.type === "compaction");
-  const last = branch.slice(compacted + 1).findLast((entry) => entry.type === "message"
+  const invalidated = branch.findLastIndex((entry) => entry.type === "compaction"
+    || entry.type === "context_edit"
+    || (entry.type === "custom" && entry.customType === "pi-shake"));
+  const last = branch.slice(invalidated + 1).findLast((entry) => entry.type === "message"
     && entry.message.role === "assistant" && entry.message.stopReason !== "error" && entry.message.stopReason !== "aborted");
   if (!saved?.tier || last?.type !== "message") return undefined;
   return Date.now() - last.message.timestamp < WARM_MS ? saved.tier : undefined;

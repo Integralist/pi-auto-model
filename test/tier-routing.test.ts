@@ -111,7 +111,7 @@ test("a smaller fresh typed task keeps the frontier pair while the cache is warm
   } finally { f.close(); }
 });
 
-test("compaction invalidates the warm cache so the next smaller task steps down immediately", async () => {
+test.each(["compaction", "pi-shake"] as const)("%s invalidates the warm cache so the next smaller task steps down immediately", async (kind) => {
   const f = await createFixture({ skills: [
     { name: "hard", description: "Hard work", tier: "frontier" },
     { name: "small", description: "Small work", tier: "trivial" },
@@ -120,7 +120,11 @@ test("compaction invalidates the warm cache so the next smaller task steps down 
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
     expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
     const branch = f.session.sessionManager.getBranch();
-    f.session.sessionManager.appendCompaction("compacted summary", branch.at(-1)!.id, 4000);
+    if (kind === "compaction") {
+      f.session.sessionManager.appendCompaction("compacted summary", branch.at(-1)!.id, 4000);
+    } else {
+      f.session.sessionManager.appendCustomEntry("pi-shake", { v: 1, modes: { tools: true, images: true, thinking: true } });
+    }
     f.respond(); await f.session.prompt("/skill:small");
     expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
   } finally { f.close(); }
