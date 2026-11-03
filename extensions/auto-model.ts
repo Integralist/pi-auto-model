@@ -9,7 +9,7 @@ import {
   type ExtensionAPI,
   type ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
-import { WARM_MS, resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type TaskInput, type Tier } from "../src/policy.ts";
+import { WARM_MS, resolveRoute, resolveTaskRoute, type AutomaticEffort, type PhysicalPair, type PreviousTurn, type TaskInput, type Tier } from "../src/policy.ts";
 
 type State = { version: 1; current: PhysicalPair; captured?: PhysicalPair; tier?: Tier };
 type Candidate = {
@@ -90,12 +90,71 @@ function branchCurrent(ctx: ExtensionContext): PhysicalPair | undefined {
   return undefined;
 }
 
-// The saved tier while the branch's last answer is recent enough for its prompt cache to be warm.
+// The saved tier while the branch's last answer after any compaction is recent enough for its prompt cache to be warm.
 function warmTier(ctx: ExtensionContext, saved: State | undefined): Tier | undefined {
-  const last = ctx.sessionManager.getBranch().findLast((entry) => entry.type === "message"
+  const branch = ctx.sessionManager.getBranch();
+  const compacted = branch.findLastIndex((entry) => entry.type === "compaction");
+  const last = branch.slice(compacted + 1).findLast((entry) => entry.type === "message"
     && entry.message.role === "assistant" && entry.message.stopReason !== "error" && entry.message.stopReason !== "aborted");
   if (!saved?.tier || last?.type !== "message") return undefined;
   return Date.now() - last.message.timestamp < WARM_MS ? saved.tier : undefined;
+}
+
+const mainToolArgKeys = ["path", "file_path", "command", "query", "pattern", "url", "task", "name", "action"] as const;
+
+function toolSummary(block: unknown): string | undefined {
+  if (!block || typeof block !== "object") return undefined;
+  const call = block as { type?: unknown; name?: unknown; arguments?: unknown };
+  if (call.type !== "toolCall" || typeof call.name !== "string" || !call.name.trim()) return undefined;
+  const args = call.arguments && typeof call.arguments === "object" && !Array.isArray(call.arguments)
+    ? call.arguments as Record<string, unknown> : undefined;
+  let detail = "";
+  if (args) {
+    for (const key of mainToolArgKeys) {
+      const value = args[key];
+      if (typeof value === "string" && value.trim()) { detail = value.trim(); break; }
+      if (Array.isArray(value)) {
+        const joined = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0).join(" ");
+        if (joined) { detail = joined; break; }
+      }
+    }
+  }
+  return (detail ? `${call.name} ${detail}` : call.name).replace(/\s+/g, " ").trim().slice(0, 100);
+}
+
+function previousTurn(ctx: ExtensionContext, boundary: number, currentEntryIndex: number): PreviousTurn | undefined {
+  const branch = ctx.sessionManager.getBranch();
+  const compacted = branch.findLastIndex((entry) => entry.type === "compaction");
+  if (boundary <= compacted || boundary < 0 || currentEntryIndex <= boundary) return undefined;
+  const start = branch[boundary];
+  if (start?.type !== "message" || start.message.role !== "user") return undefined;
+  const user = text(start.message.content).trim();
+  if (!user || user.startsWith("<skill ")) return undefined;
+  const tools: string[] = [];
+  let failedToolCalls = 0;
+  let assistant = "";
+  for (const entry of branch.slice(boundary + 1, currentEntryIndex)) {
+    if (entry.type !== "message") continue;
+    if (entry.message.role === "assistant" && entry.message.stopReason !== "error" && entry.message.stopReason !== "aborted") {
+      const reply = text(entry.message.content).trim();
+      if (reply) assistant = reply;
+      if (Array.isArray(entry.message.content)) {
+        for (const block of entry.message.content) {
+          const summary = toolSummary(block);
+          if (summary && !tools.includes(summary)) tools.push(summary);
+        }
+      }
+    } else if (entry.message.role === "toolResult" && entry.message.isError) {
+      failedToolCalls++;
+    }
+  }
+  if (!assistant && !tools.length && !failedToolCalls) return undefined;
+  return {
+    user,
+    ...(tools.length ? { tools: tools.slice(-8) } : {}),
+    ...(failedToolCalls > 0 ? { failedToolCalls } : {}),
+    ...(assistant ? { assistant } : {}),
+  };
 }
 
 function lastUser(ctx: ExtensionContext) {
@@ -181,9 +240,10 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
       const branch = ctx.sessionManager.getBranch();
       const boundary = candidate?.lastUserId
         ? branch.findIndex((entry) => entry.id === candidate.lastUserId) : -1;
-      const entry = candidate?.startingMessage ? branch.slice(boundary + 1).find(
-        (entry) => entry.type === "message" && entry.message.role === "user",
-      ) : undefined;
+      const entryIndex = candidate?.startingMessage ? branch.findIndex(
+        (item, index) => index > boundary && item.type === "message" && item.message.role === "user",
+      ) : -1;
+      const entry = entryIndex >= 0 ? branch[entryIndex] : undefined;
       const starting = candidate?.startingMessage;
       const represented = starting && request.messages.some((message) => message.role === "user"
         && message.timestamp === starting.timestamp && text(message.content) === starting.text);
@@ -196,8 +256,12 @@ export default function autoModel(pi: ExtensionAPI, configuration?: unknown, opt
       const sessionId = ctx.sessionManager.getSessionId();
       const userEntryId = owned ? entry.id : undefined;
       const originSignal = lifecycle.signal;
+      const prev = owned && candidate.task?.kind === "typed" ? previousTurn(ctx, boundary, entryIndex) : undefined;
+      const task = owned && candidate.task
+        ? (candidate.task.kind === "typed" && prev ? { ...candidate.task, previousTurn: prev } : candidate.task)
+        : undefined;
       const result = await resolveTaskRoute(controls.policy(ctx), {
-        task: owned ? candidate.task : undefined, current, captured: startup,
+        task, current, captured: startup,
         // A prompt or skill while the cache is warm is re-sent uncached on a switch, so only a bigger tier is worth it.
         warmTier: owned && candidate.task ? warmTier(ctx, saved) : undefined,
       }, ctx.modelRegistry, {

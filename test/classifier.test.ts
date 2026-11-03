@@ -171,6 +171,72 @@ describe("classification and payload isolation", () => {
     expect(f.transport).not.toHaveBeenCalled();
   });
 
+  test("long typed requests keep head and tail with omission marker and requestSize", async () => {
+    const f = fixture();
+    const longText = "HEAD_" + "h".repeat(600) + "MIDDLE_" + "m".repeat(2000) + "TAIL_" + "t".repeat(600) + "_END";
+    await resolveTaskRoute(configuration({ maxInputChars: 500 }), task(longText), f.registry);
+    const raw = userPayload(f);
+    expect(raw.length).toBeLessThanOrEqual(500);
+    const parsed = JSON.parse(raw) as { kind: string; text: string; requestSize?: string };
+    expect(parsed.kind).toBe("typed");
+    expect(parsed.text.startsWith("HEAD_")).toBe(true);
+    expect(parsed.text).toContain("characters omitted ...]");
+    expect(parsed.text.endsWith("_END")).toBe(true);
+    expect(parsed.requestSize).toBe(`${longText.length} characters, about ${Math.ceil(longText.length / 4)} tokens`);
+  });
+
+  test("previousTurn context sheds tools, user, and assistant progressively before truncating text", async () => {
+    const baseInput: TaskInput = {
+      task: {
+        kind: "typed",
+        text: "fix the second failure",
+        previousTurn: {
+          user: "run the auth test suite and check why refresh fails",
+          tools: ["read src/auth.ts", "bash make test"],
+          failedToolCalls: 2,
+          assistant: "START_" + "a".repeat(500) + "_PROPOSAL_END",
+        },
+      },
+      current: sol,
+      captured: sol,
+    };
+
+    const fullFixture = fixture();
+    await resolveTaskRoute(configuration({ maxInputChars: 12000 }), baseInput, fullFixture.registry);
+    const full = JSON.parse(userPayload(fullFixture));
+    expect(full).toEqual({
+      kind: "typed",
+      text: "fix the second failure",
+      previousTurn: {
+        user: "run the auth test suite and check why refresh fails",
+        tools: ["read src/auth.ts", "bash make test"],
+        failedToolCalls: 2,
+        assistant: "START_" + "a".repeat(500) + "_PROPOSAL_END",
+      },
+    });
+
+    const noToolsFixture = fixture();
+    await resolveTaskRoute(configuration({ maxInputChars: 680 }), baseInput, noToolsFixture.registry);
+    const noTools = JSON.parse(userPayload(noToolsFixture));
+    expect(noTools.text).toBe("fix the second failure");
+    expect(noTools.previousTurn.tools).toBeUndefined();
+    expect(noTools.previousTurn.user).toBeDefined();
+    expect(noTools.previousTurn.failedToolCalls).toBe(2);
+
+    const noUserFixture = fixture();
+    await resolveTaskRoute(configuration({ maxInputChars: 620 }), baseInput, noUserFixture.registry);
+    const noUser = JSON.parse(userPayload(noUserFixture));
+    expect(noUser.text).toBe("fix the second failure");
+    expect(noUser.previousTurn.user).toBeUndefined();
+    expect(noUser.previousTurn.assistant).toBeDefined();
+    expect(noUser.previousTurn.failedToolCalls).toBe(2);
+
+    const droppedPrevFixture = fixture();
+    await resolveTaskRoute(configuration({ maxInputChars: 120 }), baseInput, droppedPrevFixture.registry);
+    const droppedPrev = JSON.parse(userPayload(droppedPrevFixture));
+    expect(droppedPrev).toEqual({ kind: "typed", text: "fix the second failure" });
+  });
+
   test("tools/retries/cache sharing are off and the physical effort/output cap is exact", async () => {
     const f = fixture();
     await resolveTaskRoute(undefined, task(), f.registry);

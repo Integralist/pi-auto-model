@@ -111,6 +111,69 @@ test("a smaller fresh typed task keeps the frontier pair while the cache is warm
   } finally { f.close(); }
 });
 
+test("compaction invalidates the warm cache so the next smaller task steps down immediately", async () => {
+  const f = await createFixture({ skills: [
+    { name: "hard", description: "Hard work", tier: "frontier" },
+    { name: "small", description: "Small work", tier: "trivial" },
+  ] });
+  try {
+    await select(f); f.respond(); await f.session.prompt("/skill:hard");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("xhigh");
+    const branch = f.session.sessionManager.getBranch();
+    f.session.sessionManager.appendCompaction("compacted summary", branch.at(-1)!.id, 4000);
+    f.respond(); await f.session.prompt("/skill:small");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
+  } finally { f.close(); }
+});
+
+test("a follow-up typed task includes previous typed turn tools and failures in classifier payload", async () => {
+  const f = await createFixture({ tools: ["read"] });
+  try {
+    await select(f);
+    const observed: unknown[] = [];
+    f.faux.setResponses([
+      fauxAssistantMessage("moderate"),
+      fauxAssistantMessage([fauxToolCall("read", { path: "/nonexistent-auto-model-path" })], { stopReason: "toolUse" }),
+      fauxAssistantMessage("The file read failed; want me to check another path?"),
+      (context) => {
+        const user = context.messages.find((message) => message.role === "user");
+        observed.push(JSON.parse(user!.content as string));
+        return fauxAssistantMessage("complex");
+      },
+      fauxAssistantMessage("escalated answer"),
+    ]);
+    await f.session.prompt("check the missing config file");
+    await f.session.prompt("redistribute the config loader across modules");
+    expect(observed).toEqual([{
+      kind: "typed",
+      text: "redistribute the config loader across modules",
+      previousTurn: {
+        user: "check the missing config file",
+        tools: ["read /nonexistent-auto-model-path"],
+        failedToolCalls: 1,
+        assistant: "The file read failed; want me to check another path?",
+      },
+    }]);
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
+    const branch = f.session.sessionManager.getBranch();
+    f.session.sessionManager.appendCompaction("compacted summary", branch.at(-1)!.id, 4000);
+    f.faux.setResponses([
+      (context) => {
+        const user = context.messages.find((message) => message.role === "user");
+        observed.push(JSON.parse(user!.content as string));
+        return fauxAssistantMessage("trivial");
+      },
+      fauxAssistantMessage("post-compaction answer"),
+    ]);
+    await f.session.prompt("rename the variable");
+    expect(observed.at(-1)).toEqual({
+      kind: "typed",
+      text: "rename the variable",
+    });
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
+  } finally { f.close(); }
+});
+
 test("a skill keeps a bigger model for a smaller tier while the cache is warm", async () => {
   const f = await createFixture({ skills: [
     { name: "hard", description: "Hard work", tier: "frontier" },
