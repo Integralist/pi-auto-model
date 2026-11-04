@@ -101,6 +101,8 @@ describe("classification and payload isolation", () => {
     const systemPrompt = f.transport.mock.calls[0]![1].systemPrompt ?? "";
     expect(systemPrompt).toContain("factual answers or direct lookups that need no research");
     expect(systemPrompt).toContain("repo-state checks (is a commit, branch or slice merged");
+    expect(systemPrompt).toContain("codebase or topic research");
+    expect(systemPrompt).not.toContain("open-ended research");
     expect(systemPrompt).toContain("project planning and big-picture thinking");
     expect(systemPrompt).toContain("slices, task lists");
   });

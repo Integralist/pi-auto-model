@@ -103,12 +103,12 @@ not change models: mappings may reuse a model with different efforts. The
 classifier judges the immediate action, not the broader project mentioned as
 background:
 
-| Tier       | Typical task                                                                              |
-| ---------- | ----------------------------------------------------------------------------------------- |
-| `trivial`  | Mechanical work, short writing, factual answers, direct lookups.                          |
-| `moderate` | Hands-on code changes, debugging, tests, multi-file work, code explanation or comparison. |
-| `complex`  | Specs, plans, research, architecture, code or security review.                            |
-| `frontier` | Whole-system redesign or planning a very large migration.                                 |
+| Tier       | Typical task                                                                                        |
+| ---------- | --------------------------------------------------------------------------------------------------- |
+| `trivial`  | Mechanical work, short writing, factual answers, direct lookups.                                    |
+| `moderate` | Hands-on code changes, debugging, tests, multi-file work, research, code explanation or comparison. |
+| `complex`  | Specs, plans, architecture, code or security review.                                                |
+| `frontier` | Whole-system redesign or planning a very large migration.                                           |
 
 The cache is treated as **warm for less than one hour after the active
 branch's last successful assistant message**, provided a saved tier exists.
