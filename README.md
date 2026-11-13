@@ -110,13 +110,13 @@ With `--no-session`, it cannot survive closing Pi.
 
 The `gemini` preset uses provider `google-vertex` with these exact pairs:
 
-| Use        | Model              | Effort   |
-| ---------- | ------------------ | -------- |
-| Trivial    | `gemini-3.8-flash` | `medium` |
-| Moderate   | `gemini-3.8-flash` | `high`   |
-| Complex    | `gemini-4-argon`   | `high`   |
-| Frontier   | `gemini-4-argon`   | `high`   |
-| Classifier | `gemini-3.8-flash` | `low`    |
+| Use        | Model               | Effort   |
+| ---------- | ------------------- | -------- |
+| Trivial    | `gemini-3.8-flash`  | `medium` |
+| Moderate   | `gemini-4-hydrogen` | `high`   |
+| Complex    | `gemini-4-carbon`   | `medium` |
+| Frontier   | `gemini-4-carbon`   | `high`   |
+| Classifier | `gemini-3.8-flash`  | `low`    |
 
 The exact models and efforts must be available in Pi's configured catalog
 before activation. This checks configured availability, not live entitlement,

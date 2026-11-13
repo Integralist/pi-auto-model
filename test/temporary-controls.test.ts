@@ -11,7 +11,7 @@ import { createUI } from "./support/ui.ts";
 const provider = "amazon-bedrock";
 const haiku = "anthropic.claude-haiku-5-5", sonnet = "anthropic.claude-sonnet-5-5", opus = "anthropic.claude-opus-5-5";
 const geminiProvider = "google-vertex";
-const flash = "gemini-3.8-flash", argon = "gemini-4-argon";
+const flash = "gemini-3.8-flash", hydrogen = "gemini-4-hydrogen", carbon = "gemini-4-carbon";
 const skills = ["trivial", "moderate", "complex", "frontier"].map((tier) => ({ name: tier, description: tier + " work", tier }));
 const last = (f: Fixture) => f.session.messages.filter((message) => message.role === "assistant").at(-1)!;
 
@@ -34,8 +34,8 @@ async function fixture(options: Parameters<typeof createFixture>[0] = {}) {
 }
 
 async function addGeminiProvider(f: Fixture) {
-  const gemini = fauxProvider({ provider: geminiProvider, models: [{ id: flash, reasoning: true }, { id: argon, reasoning: true }], tokensPerSecond: 1000000 });
-  gemini.getModel(argon)!.thinkingLevelMap = { off: null, minimal: null, low: "low", medium: "medium", high: "high", xhigh: null, max: null };
+  const gemini = fauxProvider({ provider: geminiProvider, models: [{ id: flash, reasoning: true }, { id: hydrogen, reasoning: true }, { id: carbon, reasoning: true }], tokensPerSecond: 1000000 });
+  for (const id of [hydrogen, carbon]) gemini.getModel(id)!.thinkingLevelMap = { off: null, minimal: null, low: "low", medium: "medium", high: "high", xhigh: null, max: null };
   f.runtime.registerNativeProvider(gemini.provider); await f.runtime.refresh({ allowNetwork: false });
   return gemini;
 }
@@ -58,9 +58,9 @@ test("the Gemini preset uses the exact screenshot mappings only in this session"
     const text = await status(f);
     expect(text).toContain("mappings: session preset gemini");
     expect(text).toContain("trivial: google-vertex/" + flash + " (medium)");
-    expect(text).toContain("moderate: google-vertex/" + flash + " (high)");
-    expect(text).toContain("complex: google-vertex/" + argon + " (high)");
-    expect(text).toContain("frontier: google-vertex/" + argon + " (high)");
+    expect(text).toContain("moderate: google-vertex/" + hydrogen + " (high)");
+    expect(text).toContain("complex: google-vertex/" + carbon + " (medium)");
+    expect(text).toContain("frontier: google-vertex/" + carbon + " (high)");
     expect(text).toContain("classifier: google-vertex/" + flash + " (low)");
     expect(f.session.model).toEqual(selected); expect(readdirSync(f.dir)).toEqual(files);
     expect(f.faux.state.callCount + f.bedrock.state.callCount + gemini.state.callCount).toBe(0);
@@ -68,8 +68,8 @@ test("the Gemini preset uses the exact screenshot mappings only in this session"
 });
 
 test.each([
-  ["trivial", flash, "medium"], ["moderate", flash, "high"],
-  ["complex", argon, "high"], ["frontier", argon, "high"],
+  ["trivial", flash, "medium"], ["moderate", hydrogen, "high"],
+  ["complex", carbon, "medium"], ["frontier", carbon, "high"],
 ])("Gemini temporary %s dispatch uses exactly %s at %s", async (tier, model, effort) => {
   const f = await fixture();
   try {
@@ -90,7 +90,7 @@ test.each(["provider missing", "effort unsupported"])("an unavailable Gemini pre
     let gemini: Awaited<ReturnType<typeof addGeminiProvider>> | undefined;
     if (reason === "effort unsupported") {
       gemini = await addGeminiProvider(f);
-      gemini.getModel(argon)!.thinkingLevelMap = { off: null, minimal: null, low: "low", medium: "medium", high: null, xhigh: null, max: null };
+      gemini.getModel(carbon)!.thinkingLevelMap = { off: null, minimal: null, low: "low", medium: "medium", high: null, xhigh: null, max: null };
     }
     const leaf = f.session.sessionManager.getLeafId(); await f.session.prompt("/automodel temp gemini");
     expect(f.display.notices.at(-1)?.text).toContain("Unavailable exact Auto mapping");
@@ -122,7 +122,7 @@ test("Gemini preset survives reload, then a clear restores global mappings", asy
     await f.session.prompt("/automodel temp gemini"); await f.session.reload();
     expect(await status(f)).toContain("mappings: session preset gemini");
     await selectAuto(f); gemini.setResponses([fauxAssistantMessage("main")]); await f.session.prompt("/skill:complex");
-    expect(last(f).provider).toBe(geminiProvider); expect(last(f).model).toBe(argon); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).provider).toBe(geminiProvider); expect(last(f).model).toBe(carbon); expect(last(f).thinkingLevel).toBe("medium");
     await f.session.prompt("/automodel temp clear"); expect(await status(f)).toContain("mappings: saved/default");
   } finally { await f.owner.dispose(); f.close(); }
 });
