@@ -46,6 +46,8 @@ export async function createFixture(options: Options = {}) {
     models: [
       { id: "gpt-6.1-sol", reasoning: true },
       { id: "gpt-6-luna", reasoning: true },
+      { id: "gpt-6.2-sol", reasoning: true },
+      { id: "gpt-6.2-Astra", reasoning: true },
     ],
     tokensPerSecond: 1000000,
   });

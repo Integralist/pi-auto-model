@@ -11,7 +11,7 @@ const sol: PhysicalPair = { provider: "github-copilot", model: "gpt-6.1-sol", ef
 const luna: PhysicalPair = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };
 function app(mode: "regular" | "fullscreen" = "regular") {
   const display = createUI(mode), handlers = new Map<string, (event: any, ctx: ExtensionContext) => unknown>();
-  const fake = fauxProvider({ provider: "github-copilot", models: [{ id: sol.model, reasoning: true }, { id: luna.model, reasoning: true }] });
+  const fake = fauxProvider({ provider: "github-copilot", models: [{ id: sol.model, reasoning: true }, { id: luna.model, reasoning: true }, { id: "gpt-6.2-sol", reasoning: true }, { id: "gpt-6.2-Astra", reasoning: true }] });
   const registry = { find: (provider: string, id: string) => fake.models.find((model) => model.provider === provider && model.id === id), getAvailable: () => fake.models, hasConfiguredAuth: () => true };
   const config = validateConfiguration(undefined, registry);
   let sessionId = "original";
@@ -112,7 +112,7 @@ test("native main metadata creates feedback, while direct summaries create no po
   try {
     await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); f.respond(); await f.session.prompt("/skill:small");
     expect(ui.overlays).toHaveLength(1);
-    expect(ui.statuses.get("pi-auto-model")).toContain("gpt-6-luna (medium)");
+    expect(ui.statuses.get("pi-auto-model")).toContain("gpt-6-luna (high)");
     expect(ui.notices).toEqual([]);
     expect(f.session.messages.some((message) => message.role === "custom")).toBe(false);
     const before = structuredClone(f.session.sessionManager.getBranch());
@@ -210,8 +210,8 @@ test.each(["tool", "retry", "classifier"] as const)("native %s work never manufa
     expect(f.session.isStreaming).toBe(true);
     finish.release(); await running;
     expect(display.overlays).toHaveLength(1);
-    expect(requests).toEqual([{ model: "gpt-6-luna", effort: kind === "classifier" ? "low" : "medium" }, { model: "gpt-6-luna", effort: "medium" }]);
-    expect(lastResponse(f).stopReason).toBe("stop"); expect(lastResponse(f).thinkingLevel).toBe("medium");
+    expect(requests).toEqual([{ model: "gpt-6-luna", effort: kind === "classifier" ? "low" : "high" }, { model: "gpt-6-luna", effort: "high" }]);
+    expect(lastResponse(f).stopReason).toBe("stop"); expect(lastResponse(f).thinkingLevel).toBe("high");
     expect(f.session.messages.some((message) => message.role === "custom")).toBe(false);
     expect(display.notices).toEqual([]); expect(f.errors).toEqual([]);
   } finally { finish.release(); await running?.catch(() => {}); await f.owner.dispose(); f.close(); }
@@ -237,7 +237,7 @@ test.each(["regular", "fullscreen"] as const)("native work and %s editor input c
     dialog.hide(); expect(display.tui.hasOverlay()).toBe(false);
     display.sendInput(" kept"); expect(typed).toBe("draft kept");
     finish.release(); await running;
-    expect(lastResponse(f).model).toBe("gpt-6-luna"); expect(lastResponse(f).thinkingLevel).toBe("medium");
+    expect(lastResponse(f).model).toBe("gpt-6-luna"); expect(lastResponse(f).thinkingLevel).toBe("high");
     expect(lastResponse(f).stopReason).toBe("stop"); expect(f.faux.state.callCount).toBe(2); expect(f.errors).toEqual([]);
   } finally { finish.release(); await running?.catch(() => {}); await f.owner.dispose(); f.close(); display.tui.stop(); }
 });
@@ -247,7 +247,7 @@ test.each(["disabled", "print", "json", "rpc"] as const)("native %s routing succ
   const f = await createFixture({ mode: kind === "disabled" ? "tui" : kind, ui: display.ui, configuration: config, skills: [small] });
   try {
     await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); f.respond(); await f.session.prompt("/skill:popup-small");
-    expect(lastResponse(f).model).toBe("gpt-6-luna"); expect(lastResponse(f).thinkingLevel).toBe("medium"); expect(lastResponse(f).stopReason).toBe("stop");
+    expect(lastResponse(f).model).toBe("gpt-6-luna"); expect(lastResponse(f).thinkingLevel).toBe("high"); expect(lastResponse(f).stopReason).toBe("stop");
     expect(display.overlays).toHaveLength(0); expect(display.tui.hasOverlay()).toBe(false); expect(f.faux.state.callCount).toBe(1); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });
@@ -258,11 +258,11 @@ test("native effort-only feedback shows an observed effort change on the same ph
   try {
     await f.session.setModel(f.runtime.getModel("pi-auto-model", "auto")!); f.respond(); await f.session.prompt("/skill:popup-small");
     let text = display.overlays.at(-1)!.component.render(160).join("\n");
-    expect(text).toContain("From github-copilot/gpt-6.1-sol (xhigh)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (medium)");
+    expect(text).toContain("From github-copilot/gpt-6.1-sol (xhigh)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (high)");
     f.respond(); await f.session.prompt("/skill:popup-hard");
     text = display.overlays.at(-1)!.component.render(160).join("\n");
-    expect(text).toContain("From github-copilot/gpt-6.1-sol (medium)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (high)");
-    expect(lastResponse(f).model).toBe("gpt-6.1-sol"); expect(lastResponse(f).thinkingLevel).toBe("high"); expect(display.overlays).toHaveLength(2);
+    expect(text).toContain("From github-copilot/gpt-6.1-sol (high)"); expect(text).toContain("To   github-copilot/gpt-6.1-sol (xhigh)");
+    expect(lastResponse(f).model).toBe("gpt-6.1-sol"); expect(lastResponse(f).thinkingLevel).toBe("xhigh"); expect(display.overlays).toHaveLength(2);
     expect(f.faux.state.callCount).toBe(2); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });
@@ -290,7 +290,7 @@ test.each(["reload", "replacement", "resume", "tree", "manual"] as const)("a vis
     }
     active.respond(); await active.session.prompt(boundary === "replacement" ? "/skill:popup-small" : "/skill:popup-hard");
     expect(display.tui.hasOverlay()).toBe(true); expect(display.overlays.at(-1)!.handle.isFocused()).toBe(false);
-    expect(lastResponse(active).model).toBe(boundary === "replacement" ? "gpt-6-luna" : "gpt-6.1-sol");
+    expect(lastResponse(active).model).toBe(boundary === "replacement" ? "gpt-6-luna" : "gpt-6.2-sol");
     expect(active.errors).toEqual([]);
   } finally { await resumed?.owner.dispose(); resumed?.close(); await f.owner.dispose(); f.close(); expect(display.tui.hasOverlay()).toBe(false); }
 });
@@ -308,8 +308,8 @@ test.each(["admission", "render"] as const)("native %s failure cannot break rout
       themed.mockImplementation(() => { throw new Error("late render failure"); });
       expect(() => display.overlays[0]!.component.render(160)).not.toThrow(); expect(display.overlays[0]!.component.render(160)).toEqual([]);
     }
-    expect(lastResponse(f).model).toBe("gpt-6-luna"); expect(lastResponse(f).thinkingLevel).toBe("medium"); expect(lastResponse(f).stopReason).toBe("stop");
-    expect(display.statuses.get("pi-auto-model")).toContain("gpt-6-luna (medium)"); expect(display.notices).toEqual([]);
+    expect(lastResponse(f).model).toBe("gpt-6-luna"); expect(lastResponse(f).thinkingLevel).toBe("high"); expect(lastResponse(f).stopReason).toBe("stop");
+    expect(display.statuses.get("pi-auto-model")).toContain("gpt-6-luna (high)"); expect(display.notices).toEqual([]);
     expect(f.session.messages.some((message) => message.role === "custom")).toBe(false); expect(f.errors).toEqual([]); expect(f.faux.state.callCount).toBe(1);
   } finally { vi.restoreAllMocks(); await f.owner.dispose(); f.close(); }
 });

@@ -39,8 +39,8 @@ test("native physical classification is isolated from selected Auto and session 
       task: { kind: "skill", name: "new-skill", description: "Draft a short PR", content: "POISON_INSTRUCTIONS" },
       current: sol, captured: sol,
     }, registry, { onClassifierUsage: (record) => usageRecords.push(record) });
-    expect(result.model.id).toBe("gpt-6-luna");
-    expect(result.thinkingLevel).toBe("high");
+    expect(result.model.id).toBe("gpt-6.2-sol");
+    expect(result.thinkingLevel).toBe("low");
     expect(observed).toHaveLength(1);
     expect(observed[0]!.model).toBe("gpt-6-luna");
     expect(observed[0]!.api).not.toBe("pi-virtual");
@@ -71,11 +71,11 @@ test("native physical classification is isolated from selected Auto and session 
 });
 
 test.each([
-  ["plan a new feature", "complex", "gpt-6.1-sol", "high"],
-  ["implement the approved task list", "moderate", "gpt-6-luna", "high"],
-  ["debug authentication", "moderate", "gpt-6-luna", "high"],
-  ["draft a short PR description", "trivial", "gpt-6-luna", "medium"],
-  ["summarize the completed work", "trivial", "gpt-6-luna", "medium"],
+  ["plan a new feature", "complex", "gpt-6.2-sol", "xhigh"],
+  ["implement the approved task list", "moderate", "gpt-6.2-sol", "low"],
+  ["debug authentication", "moderate", "gpt-6.2-sol", "low"],
+  ["draft a short PR description", "trivial", "gpt-6-luna", "high"],
+  ["summarize the completed work", "trivial", "gpt-6-luna", "high"],
 ])("native classifier observes only the typed task: %s", async (text, tier, model, effort) => {
   const fixture = await createFixture();
   try {

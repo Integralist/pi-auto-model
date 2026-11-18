@@ -40,7 +40,7 @@ function configuration(mode: Configuration["mode"] = "model-and-effort", provide
   return raw;
 }
 function chooseSol(display: ReturnType<typeof createUI>) {
-  display.answers.push("trivial: github-copilot/gpt-6-luna (medium)", "gpt-6.1-sol",
+  display.answers.push("trivial: github-copilot/gpt-6-luna (high)", "gpt-6.1-sol",
     "github-copilot/gpt-6.1-sol — gpt-6.1-sol", "high", "Review and save", true);
 }
 async function waitForMode(f: Fixture, mode: Configuration["mode"]) {
@@ -81,12 +81,12 @@ test.each(
     expect(display.notices.at(-1)?.text).toMatch(/mode: model-and-effort; pending: 1/);
     answer.release(); await run;
     expect(last(f).stopReason).toBe("stop");
-    expect(requests).toEqual(stage === "classifier" ? [{ model: "gpt-6-luna", effort: "low" }, { model: "gpt-6-luna", effort: "medium" }] : [{ model: "gpt-6-luna", effort: "medium" }]);
+    expect(requests).toEqual(stage === "classifier" ? [{ model: "gpt-6-luna", effort: "low" }, { model: "gpt-6-luna", effort: "high" }] : [{ model: "gpt-6-luna", effort: "high" }]);
     if (kind === "mode") await waitForMode(f, "effort-only");
     else await until(() => display.notices.some((notice) => notice.text.startsWith("Saved model mappings.")));
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
     expect(last(f).model).toBe(kind === "mode" ? "gpt-6-luna" : "gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).thinkingLevel).toBe(kind === "mode" ? "xhigh" : "high");
     expect(f.faux.state.callCount).toBe(stage === "classifier" ? 3 : 2); expect(f.errors).toEqual([]);
     expect(f.session.model?.id).toBe("auto");
   } finally {
@@ -111,7 +111,7 @@ test("mode persistence finishing during input transformation preserves that task
     run = f.session.prompt("a fresh typed task"); await input.promise;
     disk.release(); await save; continueInput.release(); await run;
     expect(last(f).stopReason).toBe("stop"); expect(last(f).model).toBe("gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe("medium"); expect(f.faux.state.callCount).toBe(2);
+    expect(last(f).thinkingLevel).toBe("high"); expect(f.faux.state.callCount).toBe(2);
     expect(f.errors).toEqual([]);
   } finally {
     disk.release(); continueInput.release(); await save?.catch(() => {}); await run?.catch(() => {});
@@ -147,7 +147,7 @@ test.each(["mode", "policy"] as const)("queued %s still activates after a slower
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("pending: 0");
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
     expect(last(f).model).toBe(kind === "mode" ? "gpt-6-luna" : "gpt-6.1-sol");
-    expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).thinkingLevel).toBe(kind === "mode" ? "xhigh" : "high");
     expect(f.faux.state.callCount).toBe(3); expect(f.errors).toEqual([]);
   } finally {
     finishCompact.release(); finishObserver.release(); await compact?.catch(() => {});
@@ -209,8 +209,9 @@ test.each(
   const display = createUI(), f = await createFixture({ configuration: configuration(mode, provider), physicalProvider: provider,
     mode: "tui", ui: display.ui, skills: [hard] });
   try {
+    const expectedModel = mode === "effort-only" ? "gpt-6.1-sol" : "gpt-6.2-sol";
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe(expectedModel); expect(last(f).thinkingLevel).toBe("xhigh");
     const branch = structuredClone(f.session.sessionManager.getBranch()), messages = structuredClone(f.session.messages);
     const popupCount = display.overlays.length;
     const requests: { provider: string; model: string; effort?: string }[] = [];
@@ -220,12 +221,12 @@ test.each(
     const summary = await new ModelRegistry(f.runtime).streamSimple(f.runtime.getModel("pi-auto-model", "auto")!, {
       messages: [{ role: "user", content: "direct summary", timestamp: 0 }],
     }).result();
-    expect(requests).toEqual([{ provider, model: "gpt-6-luna", effort: "medium" }]);
+    expect(requests).toEqual([{ provider, model: "gpt-6-luna", effort: "high" }]);
     expect(summary.provider).toBe(provider); expect(summary.model).toBe("gpt-6-luna");
     expect(f.session.sessionManager.getBranch()).toEqual(branch); expect(f.session.messages).toEqual(messages);
     expect(display.overlays).toHaveLength(popupCount);
     f.respond(); await f.session.prompt("yes");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe(expectedModel); expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.faux.state.callCount).toBe(3); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });
@@ -247,8 +248,8 @@ test.each(["model-and-effort", "effort-only"] as const)("%s direct summaries nee
     const summary = await new ModelRegistry(f.runtime).streamSimple(f.runtime.getModel("pi-auto-model", "auto")!, {
       messages: [{ role: "user", content: "direct summary", timestamp: 0 }],
     }).result();
-    expect(summary.stopReason).toBe("stop"); expect(summary.model).toBe("gpt-6-luna");
-    expect(requests).toEqual([{ model: "gpt-6-luna", effort: "high" }]);
+    expect(summary.stopReason).toBe("stop"); expect(summary.model).toBe("gpt-6.2-sol");
+    expect(requests).toEqual([{ model: "gpt-6.2-sol", effort: "low" }]);
     expect(f.faux.state.callCount).toBe(1); expect(manager.getBranch()).toEqual(branch);
     if (mode === "effort-only") {
       await f.session.prompt("Main request still needs its own captured physical identity");
@@ -263,7 +264,7 @@ test("summary policy in effort-only mode does not require or mutate a captured m
   try {
     const raw = configuration("effort-only"), registry = new ModelRegistry(f.runtime);
     const decision = resolveRoute(raw, { direct: true }, registry);
-    expect(decision.model.id).toBe("gpt-6-luna"); expect(decision.thinkingLevel).toBe("medium");
+    expect(decision.model.id).toBe("gpt-6-luna"); expect(decision.thinkingLevel).toBe("high");
     expect(() => resolveRoute(raw, { classifiedTier: "trivial" }, registry)).toThrow(/no captured model/);
   } finally { await f.owner.dispose(); f.close(); }
 });
@@ -306,7 +307,7 @@ test("valid tree controls clear only the malformed-branch failure and restore th
     await f.session.navigateTree(good, { summarize: false });
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("mode: effort-only");
     await select(f); f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("medium"); expect(f.errors).toEqual([]);
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high"); expect(f.errors).toEqual([]);
   } finally { await f.owner.dispose(); f.close(); }
 });
 
@@ -418,7 +419,7 @@ test.each(["mode", "policy"] as const)("a %s save remains ahead of a queued comm
     }
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("pending: 0");
     f.respond(); await f.session.prompt(kind === "mode" ? "/skill:hard" : "/skill:small");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe(kind === "mode" ? "gpt-6.2-sol" : "gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe(kind === "mode" ? "xhigh" : "high");
     expect(f.faux.state.callCount).toBe(3); expect(f.errors).toEqual([]); expect(f.session.model?.id).toBe("auto");
   } finally {
     disk.release(); first.release(); second.release(); await save?.catch(() => {}); await run1?.catch(() => {}); await run2?.catch(() => {});
@@ -451,7 +452,7 @@ test.each([false, true])("three commands preserve arrival order when the middle 
     expect(JSON.parse(readFileSync(join(f.dir, "pi-auto-model-state.json"), "utf8"))).toEqual({ version: 2, mode: "effort-only" });
     await f.session.prompt("/automodel status"); expect(display.notices.at(-1)?.text).toContain("mode: effort-only; pending: 0");
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.faux.state.callCount).toBe(2); expect(f.errors).toEqual([]); expect(f.session.model?.id).toBe("auto");
   } finally {
     disk.release(); finish.release(); await older?.catch(() => {}); await middle?.catch(() => {}); await run?.catch(() => {});
@@ -537,8 +538,8 @@ test.each(["main", "classifier"] as const)("an approved configuration form retai
     expect(display.notices.at(-1)?.text).toContain("pending: 0");
     const initial = stage === "classifier" ? 2 : 1;
     expect(requests).toEqual(stage === "classifier"
-      ? [{ provider: "github-copilot", model: "gpt-6-luna", effort: "low" }, { provider: "github-copilot", model: "gpt-6-luna", effort: "medium" }]
-      : [{ provider: "github-copilot", model: "gpt-6-luna", effort: "medium" }]);
+      ? [{ provider: "github-copilot", model: "gpt-6-luna", effort: "low" }, { provider: "github-copilot", model: "gpt-6-luna", effort: "high" }]
+      : [{ provider: "github-copilot", model: "gpt-6-luna", effort: "high" }]);
     f.faux.setResponses([(_context, options, _state, model) => {
       requests.push({ provider: model.provider, model: model.id, effort: options?.reasoning }); return fauxAssistantMessage("next");
     }]);

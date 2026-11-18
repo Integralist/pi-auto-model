@@ -70,13 +70,13 @@ model with Pi's `/model` picker.
 
 The built-in defaults use the `github-copilot` provider:
 
-| Use        | Model         | Effort   |
-| ---------- | ------------- | -------- |
-| Trivial    | `gpt-6-luna`  | `medium` |
-| Moderate   | `gpt-6-luna`  | `high`   |
-| Complex    | `gpt-6.1-sol` | `high`   |
-| Frontier   | `gpt-6.1-sol` | `xhigh`  |
-| Classifier | `gpt-6-luna`  | `low`    |
+| Use        | Model           | Effort  |
+| ---------- | --------------- | ------- |
+| Trivial    | `gpt-6-luna`    | `high`  |
+| Moderate   | `gpt-6.2-sol`   | `low`   |
+| Complex    | `gpt-6.2-sol`   | `xhigh` |
+| Frontier   | `gpt-6.2-Astra` | `high`  |
+| Classifier | `gpt-6-luna`    | `low`   |
 
 ## Session-only presets
 
@@ -91,7 +91,7 @@ The `bedrock` preset uses provider `amazon-bedrock` with these exact pairs:
 
 | Use        | Model                         | Effort   |
 | ---------- | ----------------------------- | -------- |
-| Trivial    | `anthropic.claude-haiku-5-5`  | `medium` |
+| Trivial    | `anthropic.claude-haiku-5-5`  | `high`   |
 | Moderate   | `anthropic.claude-sonnet-5-5` | `high`   |
 | Complex    | `anthropic.claude-opus-5-5`   | `high`   |
 | Frontier   | `anthropic.claude-opus-5-5`   | `xhigh`  |
@@ -112,11 +112,11 @@ The `gemini` preset uses provider `google-vertex` with these exact pairs:
 
 | Use        | Model               | Effort   |
 | ---------- | ------------------- | -------- |
-| Trivial    | `gemini-3.8-flash`  | `medium` |
+| Trivial    | `gemini-4-hydrogen` | `medium` |
 | Moderate   | `gemini-4-hydrogen` | `high`   |
 | Complex    | `gemini-4-carbon`   | `medium` |
 | Frontier   | `gemini-4-carbon`   | `high`   |
-| Classifier | `gemini-3.8-flash`  | `low`    |
+| Classifier | `gemini-4-hydrogen` | `low`    |
 
 The exact models and efforts must be available in Pi's configured catalog
 before activation. This checks configured availability, not live entitlement,

@@ -25,7 +25,7 @@ type TemporaryGroup = "bedrock" | "gemini";
 const temporaryPresets = {
   bedrock: {
     tiers: {
-      trivial: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "medium" },
+      trivial: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "high" },
       moderate: { provider: "amazon-bedrock", model: "anthropic.claude-sonnet-5-5", effort: "high" },
       complex: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "high" },
       frontier: { provider: "amazon-bedrock", model: "anthropic.claude-opus-5-5", effort: "xhigh" },
@@ -34,12 +34,12 @@ const temporaryPresets = {
   },
   gemini: {
     tiers: {
-      trivial: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "medium" },
+      trivial: { provider: "google-vertex", model: "gemini-4-hydrogen", effort: "medium" },
       moderate: { provider: "google-vertex", model: "gemini-4-hydrogen", effort: "high" },
       complex: { provider: "google-vertex", model: "gemini-4-carbon", effort: "medium" },
       frontier: { provider: "google-vertex", model: "gemini-4-carbon", effort: "high" },
     },
-    classifier: { provider: "google-vertex", model: "gemini-3.8-flash", effort: "low" },
+    classifier: { provider: "google-vertex", model: "gemini-4-hydrogen", effort: "low" },
   },
 } satisfies Record<TemporaryGroup, { tiers: Configuration["tiers"]; classifier: PhysicalPair }>;
 

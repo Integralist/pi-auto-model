@@ -18,8 +18,8 @@ import {
 const luna: PhysicalPair = {
   provider: "github-copilot", model: "gpt-6-luna", effort: "high",
 };
-const sol: PhysicalPair = {
-  provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh",
+const sol2: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.2-sol", effort: "low",
 };
 const usage = {
   input: 12, output: 2, cacheRead: 3, cacheWrite: 4, reasoning: 1,
@@ -30,7 +30,7 @@ const usage = {
 function configuration(classifier: Record<string, unknown> = {}) {
   return {
     version: 1, mode: "model-and-effort", summaryTier: "trivial",
-    tiers: { trivial: { ...luna }, moderate: { ...luna, effort: "xhigh" }, complex: { ...sol }, frontier: { ...sol } },
+    tiers: { trivial: { ...luna }, moderate: { ...luna, effort: "xhigh" }, complex: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" }, frontier: { provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh" } },
     classifier: { ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 10000, ...classifier },
   };
 }
@@ -42,7 +42,12 @@ function response(content = "moderate") {
 function fixture(message: AssistantMessage = response()) {
   const fake = fauxProvider({
     provider: "github-copilot",
-    models: [{ id: "gpt-6-luna", reasoning: true }, { id: "gpt-6.1-sol", reasoning: true }],
+    models: [
+      { id: "gpt-6-luna", reasoning: true },
+      { id: "gpt-6.1-sol", reasoning: true },
+      { id: "gpt-6.2-sol", reasoning: true },
+      { id: "gpt-6.2-Astra", reasoning: true },
+    ],
   });
   for (const model of fake.models) model.thinkingLevelMap = { low: "low", high: "high", xhigh: "xhigh" };
   const available = new Set(fake.models.map((model) => model.id));
@@ -66,6 +71,10 @@ function view(result: TaskResult) {
     effort: result.thinkingLevel, tier: result.tier, source: result.source,
   };
 }
+
+const sol: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.1-sol", effort: "xhigh",
+};
 
 function task(text = "draft a short PR description"): TaskInput {
   return { task: { kind: "typed", text }, current: sol, captured: sol };
@@ -110,13 +119,13 @@ describe("classification and payload isolation", () => {
   test("a fresh typed task uses the physical classifier tier", async () => {
     const f = fixture();
     const result = await resolveTaskRoute(undefined, task(), f.registry);
-    expect(view(result)).toEqual({ ...luna, effort: "high", tier: "moderate", source: "tier" });
+    expect(view(result)).toEqual({ ...sol2, tier: "moderate", source: "tier" });
     expect(result.classification).toEqual({ pair: { ...luna, effort: "low" }, outcome: "tier", tier: "moderate", usage });
   });
 
   test.each([
-    ["trivial", "gpt-6-luna", "medium"], ["moderate", "gpt-6-luna", "high"],
-    ["complex", "gpt-6.1-sol", "high"], ["frontier", "gpt-6.1-sol", "xhigh"],
+    ["trivial", "gpt-6-luna", "high"], ["moderate", "gpt-6.2-sol", "low"],
+    ["complex", "gpt-6.2-sol", "xhigh"], ["frontier", "gpt-6.2-Astra", "high"],
   ])("valid metadata %s avoids classifier work", async (tier, model, effort) => {
     const f = fixture(response("trivial"));
     const result = await resolveTaskRoute(undefined, skill(`  ${tier.toUpperCase()}  `), f.registry);

@@ -9,10 +9,19 @@ import {
 } from "../src/policy.ts";
 
 const luna: PhysicalPair = {
-  provider: "github-copilot", model: "gpt-6-luna", effort: "medium",
+  provider: "github-copilot", model: "gpt-6-luna", effort: "high",
 };
-const lunaHigh: PhysicalPair = { ...luna, effort: "high" };
+const lunaMedium: PhysicalPair = { ...luna, effort: "medium" };
 const lunaXhigh: PhysicalPair = { ...luna, effort: "xhigh" };
+const solLow: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.2-sol", effort: "low",
+};
+const sol2: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.2-sol", effort: "xhigh",
+};
+const astra: PhysicalPair = {
+  provider: "github-copilot", model: "gpt-6.2-Astra", effort: "high",
+};
 const solHigh: PhysicalPair = {
   provider: "github-copilot", model: "gpt-6.1-sol", effort: "high",
 };
@@ -38,7 +47,7 @@ function configuration() {
 function fixture() {
   const provider = fauxProvider({
     provider: "github-copilot",
-    models: ["gpt-6-luna", "gpt-6.1-sol", "tiny", "small", "large", "huge"]
+    models: ["gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-sol", "gpt-6.2-Astra", "tiny", "small", "large", "huge"]
       .map((id) => ({ id, reasoning: true })),
   });
   const catalog = new Map<string, Model<Api>>();
@@ -97,7 +106,7 @@ describe("first-release defaults", () => {
   test("use the trivial summary tier and bounded Luna/low classifier", () => {
     const config = validateConfiguration(undefined, fixture().registry);
     expect(config.summaryTier).toBe("trivial");
-    expect(config.tiers).toEqual({ trivial: luna, moderate: lunaHigh, complex: solHigh, frontier: sol });
+    expect(config.tiers).toEqual({ trivial: luna, moderate: solLow, complex: sol2, frontier: astra });
     expect(config.classifier).toEqual({
       ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000,
     });
@@ -106,7 +115,7 @@ describe("first-release defaults", () => {
 
 describe("portable tiers", () => {
   test.each<[string, PhysicalPair]>([
-    ["trivial", luna], ["moderate", lunaHigh], ["complex", solHigh], ["frontier", sol],
+    ["trivial", luna], ["moderate", solLow], ["complex", sol2], ["frontier", astra],
   ])("declared %s selects its exact default pair", (tier, pair) => {
     expect(route({ skillContent: skill(tier), classifiedTier: "frontier" }))
       .toEqual({ ...pair, tier, source: "tier" });
@@ -114,14 +123,14 @@ describe("portable tiers", () => {
 
   test("trimmed metadata wins over the familiar commit name and classification", () => {
     expect(route({ skillContent: skill("  CoMpLeX  "), classifiedTier: "trivial" }))
-      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
+      .toEqual({ ...sol2, tier: "complex", source: "tier" });
   });
 
   test.each(["", "unknown", ["trivial"], 4, null, true, { tier: "complex" }]
     .map((value) => ({ value })))(
     "invalid scalar metadata $value allows the classified tier", ({ value }) => {
       expect(route({ skillContent: skill(value), classifiedTier: "moderate" }))
-        .toEqual({ ...lunaHigh, tier: "moderate", source: "tier" });
+        .toEqual({ ...solLow, tier: "moderate", source: "tier" });
     },
   );
 
@@ -133,12 +142,12 @@ describe("portable tiers", () => {
     "---\nmetadata: {}\n---\nmodel-tier: frontier",
   ])("absent or malformed frontmatter is non-fatal: %s", (skillContent) => {
     expect(route({ skillContent, classifiedTier: "complex" }))
-      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
+      .toEqual({ ...sol2, tier: "complex", source: "tier" });
   });
 
   test("typed input uses its own supplied classifier result", () => {
     expect(route({ classifiedTier: "moderate", current: sol }))
-      .toEqual({ ...lunaHigh, tier: "moderate", source: "tier" });
+      .toEqual({ ...solLow, tier: "moderate", source: "tier" });
   });
 
   test.each([undefined, "unknown", "complex because", ["complex"], 2, null]
@@ -185,9 +194,9 @@ describe("ordered exact availability", () => {
 
   test("unsupported exact xhigh steps down rather than clamping", () => {
     const f = fixture();
-    f.catalog.get("github-copilot/gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
-    expect(view(resolveRoute(undefined, { classifiedTier: "frontier" }, f.registry)))
-      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
+    f.catalog.get("github-copilot/gpt-6.2-sol")!.thinkingLevelMap = { xhigh: null };
+    expect(view(resolveRoute(undefined, { classifiedTier: "complex" }, f.registry)))
+      .toEqual({ ...solLow, tier: "moderate", source: "tier" });
   });
 
   test("non-reasoning targets do not silently accept high effort", () => {
@@ -216,23 +225,23 @@ describe("ordered exact availability", () => {
 
 describe("warm prompt cache", () => {
   test("a smaller classified tier keeps the current pair", () => {
-    expect(route({ classifiedTier: "trivial", current: solHigh, warmTier: "complex" }))
-      .toEqual({ ...solHigh, tier: "complex", source: "current" });
+    expect(route({ classifiedTier: "trivial", current: sol2, warmTier: "complex" }))
+      .toEqual({ ...sol2, tier: "complex", source: "current" });
   });
 
   test("a smaller classified tier keeps the warm model at its configured effort when only effort changed", () => {
-    expect(route({ classifiedTier: "moderate", current: sol, warmTier: "complex" }))
-      .toEqual({ ...solHigh, tier: "complex", source: "current" });
+    expect(route({ classifiedTier: "trivial", current: { ...sol2, effort: "high" }, warmTier: "complex" }))
+      .toEqual({ ...sol2, tier: "complex", source: "current" });
   });
 
   test("a smaller classified tier on the same physical model lowers effort while the cache is warm", () => {
-    expect(route({ classifiedTier: "trivial", current: lunaHigh, warmTier: "moderate" }))
-      .toEqual({ ...luna, tier: "trivial", source: "tier" });
+    expect(route({ classifiedTier: "moderate", current: sol2, warmTier: "complex" }))
+      .toEqual({ ...solLow, tier: "moderate", source: "tier" });
   });
 
   test("a bigger tier still steps up", () => {
     expect(route({ classifiedTier: "complex", current: luna, warmTier: "trivial" }))
-      .toEqual({ ...solHigh, tier: "complex", source: "tier" });
+      .toEqual({ ...sol2, tier: "complex", source: "tier" });
   });
 
   test("a changed mapping for the warm tier routes as usual", () => {
@@ -300,6 +309,7 @@ describe("physical evidence and effort-only", () => {
     f.catalog.get("github-copilot/gpt-6.1-sol")!.thinkingLevelMap = { xhigh: null };
     const raw = configuration();
     raw.mode = "effort-only";
+    raw.tiers.trivial = { ...lunaMedium };
     expect(view(resolveRoute(raw, { classifiedTier: "complex", captured: sol }, f.registry)))
       .toEqual({ ...sol, effort: "medium", tier: "trivial", source: "tier" });
   });
@@ -307,7 +317,7 @@ describe("physical evidence and effort-only", () => {
   test("effort-only does not retain another model's current evidence", () => {
     const raw = configuration();
     raw.mode = "effort-only";
-    expect(route({ current: luna, captured: sol }, raw))
+    expect(route({ current: lunaMedium, captured: sol }, raw))
       .toEqual({ ...sol, tier: undefined, source: "captured" });
   });
 

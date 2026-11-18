@@ -18,12 +18,12 @@ model and effort used for a provider request.
 
 The four tiers are ordered from smallest to hardest:
 
-| Task tier  | Default physical model       | Default effort |
-| ---------- | ---------------------------- | -------------- |
-| `trivial`  | `github-copilot/gpt-6-luna`  | `medium`       |
-| `moderate` | `github-copilot/gpt-6-luna`  | `high`         |
-| `complex`  | `github-copilot/gpt-6.1-sol` | `high`         |
-| `frontier` | `github-copilot/gpt-6.1-sol` | `xhigh`        |
+| Task tier  | Default physical model         | Default effort |
+| ---------- | ------------------------------ | -------------- |
+| `trivial`  | `github-copilot/gpt-6-luna`    | `high`         |
+| `moderate` | `github-copilot/gpt-6.2-sol`   | `low`          |
+| `complex`  | `github-copilot/gpt-6.2-sol`   | `xhigh`        |
+| `frontier` | `github-copilot/gpt-6.2-Astra` | `high`         |
 
 Users can configure all four tier mappings and the classifier pair. The default
 classifier uses `github-copilot/gpt-6-luna` at `low`, with a 12,000-character
@@ -130,7 +130,7 @@ Feature: Native Auto routing
   Scenario: Virtual thinking does not change the next tier dispatch
     When I enter Auto, choose medium virtual thinking, and submit a trivial
     skill
-    Then Auto remains selected and the request uses Luna at medium
+    Then Auto remains selected and the request uses Luna at high
 
   Scenario Outline: A declared tier selects its configured pair
     Given a loaded skill declares "<tier>"
@@ -221,7 +221,7 @@ Feature: Native Auto routing
     Given the main task is running on Sol at xhigh
     And the default summary tier is trivial
     When Pi requests a summary through Auto
-    Then the summary uses Luna at medium
+    Then the summary uses Luna at high
     And the main task route and branch state remain unchanged
 
   Scenario: Explicit child settings remain independent

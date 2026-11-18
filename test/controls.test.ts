@@ -25,7 +25,7 @@ test("only Pi model selection enters or leaves Auto; routing does not write an e
     expect(f.session.model?.id).toBe("gpt-6.1-sol"); expect(f.faux.state.callCount).toBe(0);
     await selectAuto(f);
     f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     await f.session.setModel(f.faux.getModel("gpt-6.1-sol")!);
     f.session.setThinkingLevel("xhigh");
     expect(f.session.model?.id).toBe("gpt-6.1-sol"); expect(f.session.thinkingLevel).toBe("xhigh");
@@ -66,13 +66,13 @@ test("fresh sessions retain only mode and never automatically select Auto", asyn
   try {
     await f.session.prompt("/automodel mode effort-only"); await selectAuto(f);
     f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
     expect(JSON.parse(readFileSync(join(f.dir, "pi-auto-model-state.json"), "utf8")))
       .toEqual({ version: 2, mode: "effort-only" });
     await f.owner.newSession();
     expect(f.session.model?.provider).toBe("github-copilot"); expect(f.session.model?.id).toBe("gpt-6.1-sol");
     await selectAuto(f); f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe("gpt-6.1-sol"); expect(last(f).thinkingLevel).toBe("high");
   } finally { await f.owner.dispose(); f.close(); }
 });
 
@@ -99,7 +99,7 @@ test("resume retains Pi's native Auto selection and the branch's portable mode",
     restored = await createFixture({ restore: true, sessionManager: manager, skills: [small] });
     expect(restored.session.model?.provider).toBe("pi-auto-model");
     restored.respond(); await restored.session.prompt("/skill:small");
-    expect(last(restored).model).toBe("gpt-6.1-sol"); expect(last(restored).thinkingLevel).toBe("medium");
+    expect(last(restored).model).toBe("gpt-6.1-sol"); expect(last(restored).thinkingLevel).toBe("high");
     expect(restored.faux.state.callCount).toBe(1);
   } finally { await restored?.owner.dispose(); restored?.close(); await first.owner.dispose(); first.close(); }
 });
@@ -114,11 +114,11 @@ test("busy mode changes return promptly and leave the active task's physical pai
     await f.session.prompt("/automodel mode effort-only");
     expect(f.session.model?.id).toBe("auto"); expect(f.session.isStreaming).toBe(true);
     finish.release(); await pending;
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     await wait(() => readdirSync(f.dir).includes("pi-auto-model-state.json"));
     await f.session.prompt("/automodel status");
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("xhigh");
     expect(f.faux.state.callCount).toBe(2);
   } finally { finish.release(); await f.owner.dispose(); f.close(); }
 });
@@ -267,7 +267,7 @@ test("busy configuration opens only after settling and cannot replace the active
 test("a no-match catalog search directs the user to Pi rather than inventing a provider/model", async () => {
   const display = createUI(), f = await createFixture({ ui: display.ui, mode: "tui" });
   try {
-    display.answers.push("trivial: github-copilot/gpt-6-luna (medium)", "absent-provider/absent-model", "Cancel");
+    display.answers.push("trivial: github-copilot/gpt-6-luna (high)", "absent-provider/absent-model", "Cancel");
     await f.session.prompt("/automodel configure");
     expect(display.notices.at(-1)?.text).toMatch(/No matching physical model.*Configure/);
     expect(display.dialogs.flatMap((dialog) => dialog.choices ?? []).some((label) => label.includes("absent-model"))).toBe(false);
@@ -346,13 +346,13 @@ test.each(
     await f.session.setModel(f.faux.getModel(previous)!);
     if (explicitMode) await f.session.prompt("/automodel mode effort-only");
     await selectAuto(f); f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe(previous); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe(previous); expect(last(f).thinkingLevel).toBe("high");
     await f.session.setModel(f.faux.getModel(target)!);
-    f.session.setThinkingLevel("high");
+    f.session.setThinkingLevel("low");
     await selectAuto(f);
     if (dispatched) {
       f.respond(); await f.session.prompt("/skill:small");
-      expect(last(f).model).toBe(target); expect(last(f).thinkingLevel).toBe("medium");
+      expect(last(f).model).toBe(target); expect(last(f).thinkingLevel).toBe("high");
     }
     const checkpoint = f.session.sessionManager.getLeafId()!;
     let active = f;
@@ -367,10 +367,10 @@ test.each(
     }
     if (dispatched) {
       active.respond(); await active.session.prompt("yes");
-      expect(last(active).model).toBe(target); expect(last(active).thinkingLevel).toBe("medium");
+      expect(last(active).model).toBe(target); expect(last(active).thinkingLevel).toBe("high");
     }
     active.respond(); await active.session.prompt("/skill:small");
-    expect(last(active).model).toBe(target); expect(last(active).thinkingLevel).toBe("medium");
+    expect(last(active).model).toBe(target); expect(last(active).thinkingLevel).toBe("high");
     expect(active.session.model?.provider).toBe("pi-auto-model");
     if (lifecycle === "resume") expect(active.faux.state.callCount).toBe(1 + Number(dispatched));
     else expect(active.faux.state.callCount).toBe(2 + 2 * Number(dispatched) + Number(lifecycle === "tree"));
@@ -392,21 +392,21 @@ test.each(["gpt-6-luna", "gpt-6.1-sol"])("a newer explicit mode capture of %s st
     await f.session.prompt("/automodel mode effort-only");
     await selectAuto(f); await f.session.reload();
     f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe(target); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe(target); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2); expect(f.errors).toEqual([]);
     expect(f.session.model?.provider).toBe("pi-auto-model");
   } finally { await f.owner.dispose(); f.close(); }
 });
 
 test.each(["reload", "resume"] as const)("older mode effort cannot replace unsupported newer native capture after %s", async (lifecycle) => {
-  const f = await createFixture({ skills: [small, hardest] }); let resumed: Fixture | undefined;
+  const f = await createFixture({ skills: [small, hard] }); let resumed: Fixture | undefined;
   try {
     await f.session.prompt("/automodel mode effort-only");
     await selectAuto(f); f.respond(); await f.session.prompt("/skill:small");
     await f.session.setModel(f.faux.getModel("gpt-6-luna")!);
     f.session.setThinkingLevel("high"); await selectAuto(f);
     f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("medium");
+    expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");
     let active = f;
     if (lifecycle === "reload") {
       f.faux.getModel("gpt-6-luna")!.thinkingLevelMap = { medium: null, high: null, xhigh: "xhigh" };
@@ -414,7 +414,7 @@ test.each(["reload", "resume"] as const)("older mode effort cannot replace unsup
     } else {
       const manager = SessionManager.inMemory(undefined, undefined,
         [f.session.sessionManager.getHeader()!, ...JSON.parse(JSON.stringify(f.session.sessionManager.getEntries()))]);
-      resumed = await createFixture({ restore: true, sessionManager: manager, skills: [small, hardest] }); active = resumed;
+      resumed = await createFixture({ restore: true, sessionManager: manager, skills: [small, hard] }); active = resumed;
       active.faux.getModel("gpt-6-luna")!.thinkingLevelMap = { medium: null, high: null, xhigh: "xhigh" };
     }
     const before = active.faux.state.callCount;
@@ -423,7 +423,7 @@ test.each(["reload", "resume"] as const)("older mode effort cannot replace unsup
     expect(last(active).stopReason).toBe("error");
     expect(last(active).errorMessage).toMatch(/no usable active or captured physical pair/);
     expect(active.faux.state.callCount).toBe(before);
-    await active.session.prompt("/skill:hardest");
+    await active.session.prompt("/skill:hard");
     expect(last(active).model).toBe("gpt-6-luna"); expect(last(active).thinkingLevel).toBe("xhigh");
     expect(active.faux.state.callCount).toBe(before + 1);
   } finally { await resumed?.owner.dispose(); resumed?.close(); await f.owner.dispose(); f.close(); }
