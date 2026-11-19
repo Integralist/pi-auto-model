@@ -114,8 +114,8 @@ The `gemini` preset uses provider `google-vertex` with these exact pairs:
 | ---------- | ------------------- | -------- |
 | Trivial    | `gemini-4-hydrogen` | `medium` |
 | Moderate   | `gemini-4-hydrogen` | `high`   |
-| Complex    | `gemini-4-carbon`   | `medium` |
-| Frontier   | `gemini-4-carbon`   | `high`   |
+| Complex    | `gemini-4-neon`     | `high`   |
+| Frontier   | `gemini-4-neon`     | `xhigh`  |
 | Classifier | `gemini-4-hydrogen` | `low`    |
 
 The exact models and efforts must be available in Pi's configured catalog
