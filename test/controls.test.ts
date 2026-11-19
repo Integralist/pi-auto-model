@@ -184,7 +184,7 @@ test("all five catalog mappings save without credentials or hidden Copilot dispa
     await f.session.prompt("/automodel configure");
     const saved = JSON.parse(readFileSync(join(f.dir, "pi-auto-model.json"), "utf8"));
     expect(Object.values(saved.tiers)).toEqual([pair, pair, pair, pair]);
-    expect(saved.classifier).toEqual({ ...pair, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000 });
+    expect(saved.classifier).toEqual({ ...pair, maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 15000 });
     expect(saved.switchPopup).toEqual({ enabled: true, durationMs: 10000 }); expect(saved.summaryTier).toBe("trivial");
     expect(f.session.model?.provider).toBe(physicalProvider); expect(f.faux.state.callCount).toBe(0);
     expect(f.runtime.hasConfiguredAuth("github-copilot")).toBe(false);

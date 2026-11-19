@@ -142,7 +142,7 @@ later, the task may move either up or down.
 Classifier errors, timeout, unavailable access, or invalid output yield no
 tier. There is **no keyword guess or default task tier**. The classifier's
 configured bounds default to 12,000 input characters, 256 output tokens, and
-6 seconds, with no tools or retries.
+15 seconds, with no tools or retries.
 
 Cancellation, model selection, session replacement, or branch navigation
 invalidates pending task intent. A late classifier result cannot dispatch into

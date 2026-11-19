@@ -108,7 +108,7 @@ describe("first-release defaults", () => {
     expect(config.summaryTier).toBe("trivial");
     expect(config.tiers).toEqual({ trivial: luna, moderate: solLow, complex: sol2, frontier: astra });
     expect(config.classifier).toEqual({
-      ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000,
+      ...luna, effort: "low", maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 15000,
     });
   });
 });

@@ -61,7 +61,7 @@ const defaults: Configuration = {
   },
   classifier: {
     provider: "github-copilot", model: "gpt-6-luna", effort: "low",
-    maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 6000,
+    maxInputChars: 12000, maxOutputTokens: 256, timeoutMs: 15000,
   },
 };
 
