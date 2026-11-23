@@ -2,13 +2,18 @@ import { join } from "node:path";
 import { getSupportedThinkingLevels, type Api, type Model } from "@earendil-works/pi-ai";
 import { getAgentDir, VIRTUAL_MODEL_STATE_ENTRY, type ExtensionAPI, type ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { configureMappings } from "./configure.ts";
-import { validateConfiguration, type Configuration, type PhysicalPair } from "./policy.ts";
-import { formatPair, readSettings, validateMappings, validatePreferences, writeSettings, type Preferences } from "./settings.ts";
+import { defaultMappings, validateConfiguration, type Configuration, type PhysicalPair } from "./policy.ts";
+import {
+  formatPair, providerPresets, readSettings, validateMappings, validatePreferences, validateProviderPreference,
+  writeSettings, type Preferences, type ProviderPreset,
+} from "./settings.ts";
 
 type ControlState = Preferences & { fixed?: PhysicalPair };
 type Action = { kind: "configure" } | { kind: "mode"; mode: Preferences["mode"] } | { kind: "save"; policy: Configuration }
   | { kind: "activate-policy"; policy: Configuration } | { kind: "activate-mode"; preferences: Preferences }
-  | { kind: "temp"; group: TemporaryGroup | undefined };
+  | { kind: "temp"; group: ProviderPreset | undefined }
+  | { kind: "provider"; provider: ProviderPreset | undefined }
+  | { kind: "activate-provider"; provider: ProviderPreset | undefined };
 type Hooks = {
   directory?: string;
   readPolicy(): unknown;
@@ -21,8 +26,7 @@ type Hooks = {
 
 const entryType = "pi-auto-model.controls";
 const temporaryEntryType = "pi-auto-model.temp";
-type TemporaryGroup = "bedrock" | "gemini";
-const temporaryPresets = {
+const namedPresets = {
   bedrock: {
     tiers: {
       trivial: { provider: "amazon-bedrock", model: "anthropic.claude-haiku-5-5", effort: "high" },
@@ -41,11 +45,11 @@ const temporaryPresets = {
     },
     classifier: { provider: "google-vertex", model: "gemini-4-hydrogen", effort: "low" },
   },
-} satisfies Record<TemporaryGroup, { tiers: Configuration["tiers"]; classifier: PhysicalPair }>;
+} satisfies Record<Exclude<ProviderPreset, "gpt">, { tiers: Configuration["tiers"]; classifier: PhysicalPair }>;
 
-function temporaryPolicy(config: Configuration, group: TemporaryGroup | undefined): Configuration {
+function presetPolicy(config: Configuration, group: ProviderPreset | undefined): Configuration {
   if (!group) return config;
-  const mappings = structuredClone(temporaryPresets[group]);
+  const mappings = group === "gpt" ? defaultMappings() : structuredClone(namedPresets[group]);
   return { ...config, tiers: mappings.tiers, classifier: { ...config.classifier, ...mappings.classifier } };
 }
 
@@ -77,11 +81,14 @@ function branchState(ctx: ExtensionContext): ControlState | undefined {
 
 export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   const directory = hooks.directory ?? getAgentDir();
-  const policyPath = join(directory, "pi-auto-model.json"), preferencesPath = join(directory, "pi-auto-model-state.json");
+  const policyPath = join(directory, "pi-auto-model.json");
+  const preferencesPath = join(directory, "pi-auto-model-state.json");
+  const providerPath = join(directory, "pi-auto-model-provider.json");
   let preferences: Preferences = { version: 2, mode: "model-and-effort" };
   let control: ControlState = { ...preferences }, initialized = false;
   let configurationFailure: string | undefined, branchFailure: string | undefined;
-  let temporaryGroup: TemporaryGroup | undefined, temporaryFailure: string | undefined;
+  let persistedProvider: ProviderPreset | undefined;
+  let temporaryGroup: ProviderPreset | undefined, temporaryFailure: string | undefined;
   let sessionId: string | undefined, epoch = 0;
   let queue: Action[] = [], timer: ReturnType<typeof setTimeout> | undefined;
   let active: object | undefined;
@@ -93,8 +100,9 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   };
   function status(ctx: ExtensionContext) {
     const current = hooks.current(ctx);
+    const preset = temporaryGroup ? " · temp " + temporaryGroup : persistedProvider ? " · " + persistedProvider : "";
     ctx.ui.setStatus("pi-auto-model", isAuto(ctx.model)
-      ? "Auto · " + control.mode + (temporaryGroup ? " · temp " + temporaryGroup : "")
+      ? "Auto · " + control.mode + preset
         + (current ? " → " + formatPair(current) : " · no physical dispatch yet") : undefined);
   }
   function cancel() {
@@ -123,10 +131,10 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
       const raw = entry.data as { version?: unknown; group?: unknown } | null;
       if (!raw || typeof raw !== "object" || Array.isArray(raw) || raw.version !== 1
         || Object.keys(raw).sort().join(",") !== "group,version"
-        || (raw.group !== "bedrock" && raw.group !== "gemini" && raw.group !== null)) {
+        || (raw.group !== null && (typeof raw.group !== "string" || !providerPresets.includes(raw.group as ProviderPreset)))) {
         temporaryFailure = "Invalid temporary Auto preset at branch entry " + entry.id + ": expected version 1 and a known preset group or null. Use /automodel temp clear.";
         report(ctx, temporaryFailure, "error");
-      } else temporaryGroup = raw.group ?? undefined;
+      } else temporaryGroup = (raw.group as ProviderPreset | null) ?? undefined;
     }
     status(ctx);
   }
@@ -135,12 +143,35 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
     if (!ctx.isIdle() || ctx.hasPendingMessages()) { queue.unshift(action); flush(ctx); return; }
     if (configurationFailure) throw new Error(configurationFailure);
     if (action.kind === "temp") {
-      if (action.group) validateMappings(temporaryPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), action.group), ctx.modelRegistry);
+      if (action.group) validateMappings(presetPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), action.group), ctx.modelRegistry);
       pi.appendEntry(temporaryEntryType, { version: 1, group: action.group ?? null });
       temporaryGroup = action.group; temporaryFailure = undefined;
       hooks.clearPopup(); status(ctx);
-      report(ctx, (temporaryGroup ? "Temporary preset " + temporaryGroup + " is active for this session; /automodel temp clear restores saved mappings."
-        : "Temporary preset cleared; using saved/default mappings.") + " Model selection and mode preference are unchanged.");
+      const fallback = persistedProvider ? "persisted provider " + persistedProvider : "saved/default mappings";
+      report(ctx, (temporaryGroup ? "Temporary preset " + temporaryGroup + " is active for this session; /automodel temp clear restores " + fallback + "."
+        : "Temporary preset cleared; using " + fallback + ".") + " Model selection and mode preference are unchanged.");
+      return;
+    }
+    if (action.kind === "provider") {
+      if (action.provider) validateMappings(presetPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), action.provider), ctx.modelRegistry);
+      await writeSettings(providerPath, { version: 1, provider: action.provider ?? null }, () => valid(ctx, owner));
+      if (valid(ctx, owner)) await apply({ kind: "activate-provider", provider: action.provider }, ctx, owner);
+      return;
+    }
+    if (action.kind === "activate-provider") {
+      persistedProvider = action.provider;
+      hooks.clearPopup(); status(ctx);
+      if (temporaryGroup) {
+        report(ctx, (persistedProvider ? "Saved persisted provider " + persistedProvider + " for future sessions."
+          : "Cleared persisted provider for future sessions.")
+          + " Temporary preset " + temporaryGroup + " remains active; use /automodel temp clear to use "
+          + (persistedProvider ? "persisted provider " + persistedProvider : "saved/default mappings")
+          + ". Model selection and mode preference are unchanged.");
+      } else {
+        report(ctx, (persistedProvider ? "Persisted provider " + persistedProvider + " is active for this and future sessions; /automodel provider clear restores saved/default mappings."
+          : "Persisted provider cleared; using saved/default mappings.")
+          + " Model selection and mode preference are unchanged.");
+      }
       return;
     }
     if (action.kind === "configure") {
@@ -160,8 +191,11 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
     }
     if (action.kind === "activate-policy") {
       hooks.setPolicy(action.policy); hooks.clearPopup();
-      status(ctx); report(ctx, "Saved model mappings. Model selection and mode preference are unchanged."
-        + (temporaryGroup ? " Temporary preset " + temporaryGroup + " remains active; use /automodel temp clear to use the saved mappings." : ""));
+      status(ctx);
+      const activePreset = temporaryGroup
+        ? " Temporary preset " + temporaryGroup + " remains active; use /automodel temp clear to use the saved mappings."
+        : persistedProvider ? " Persisted provider " + persistedProvider + " remains active; use /automodel provider clear to use the saved mappings." : "";
+      report(ctx, "Saved model mappings. Model selection and mode preference are unchanged." + activePreset);
       return;
     }
     if (action.kind === "mode") {
@@ -213,13 +247,16 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   }
   function policy(ctx: ExtensionContext): Configuration {
     if (configurationFailure || branchFailure || temporaryFailure) throw new Error(configurationFailure ?? branchFailure ?? temporaryFailure);
-    return { ...temporaryPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), temporaryGroup), mode: control.mode };
+    return { ...presetPolicy(validateConfiguration(hooks.readPolicy(), ctx.modelRegistry), temporaryGroup ?? persistedProvider), mode: control.mode };
   }
 
   pi.registerCommand("automodel", {
-    description: "Auto status/mode/configure/temp — select Auto or a physical model through /model",
-    getArgumentCompletions: (prefix) => ["status", "configure", "mode model-and-effort", "mode effort-only", "temp bedrock", "temp gemini", "temp clear"]
-      .filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
+    description: "Auto status/mode/configure/provider/temp — select Auto or a physical model through /model",
+    getArgumentCompletions: (prefix) => [
+      "status", "configure", "mode model-and-effort", "mode effort-only",
+      "provider gpt", "provider bedrock", "provider gemini", "provider clear",
+      "temp gpt", "temp bedrock", "temp gemini", "temp clear",
+    ].filter((value) => value.startsWith(prefix)).map((value) => ({ value, label: value })),
     handler: async (args, ctx) => {
       const words = args.trim().split(/\s+/), verb = words[0] || "status";
       if (verb === "status" && words.length === 1) {
@@ -227,9 +264,12 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
           const config = policy(ctx), available = ctx.modelRegistry.getAvailable();
           const label = (pair: PhysicalPair) => formatPair(pair) + (available.some((model) => model.api !== "pi-virtual"
             && model.provider === pair.provider && model.id === pair.model && getSupportedThinkingLevels(model).includes(pair.effort)) ? "" : " [unavailable]");
+          const mappings = temporaryGroup
+            ? "session preset " + temporaryGroup + (persistedProvider ? " (overrides persisted provider " + persistedProvider + ")" : "")
+            : persistedProvider ? "persisted provider " + persistedProvider : "saved/default";
           report(ctx, "Selection: " + (isAuto(ctx.model) ? "Auto" : ctx.model?.provider + "/" + ctx.model?.id)
             + "; mode: " + control.mode + "; pending: " + queue.length + "; policy: " + policyPath
-            + "; mappings: " + (temporaryGroup ? "session preset " + temporaryGroup : "saved/default") + "\n"
+            + "; mappings: " + mappings + "\n"
             + Object.entries(config.tiers).map(([tier, pair]) => tier + ": " + label(pair)).join("\n")
             + "\nclassifier: " + label(config.classifier) + "; configured availability is not live entitlement."
             + "\nUse /model to select Auto or leave it for a physical model.");
@@ -240,14 +280,17 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
       if (verb === "mode" && words.length === 2 && ["model-and-effort", "effort-only"].includes(words[1]!)) {
         await defer({ kind: "mode", mode: words[1] as Preferences["mode"] }, ctx); return;
       }
-      if (verb === "temp" && words.length === 2 && ["bedrock", "gemini", "clear"].includes(words[1]!)) {
-        await defer({ kind: "temp", group: words[1] === "clear" ? undefined : words[1] as TemporaryGroup }, ctx); return;
+      if (verb === "provider" && words.length === 2 && [...providerPresets, "clear"].includes(words[1]!)) {
+        await defer({ kind: "provider", provider: words[1] === "clear" ? undefined : words[1] as ProviderPreset }, ctx); return;
       }
-      report(ctx, "Use /model to enter or leave Auto. Use /automodel status|configure or /automodel mode model-and-effort|effort-only or /automodel temp bedrock|gemini|clear.", "error");
+      if (verb === "temp" && words.length === 2 && [...providerPresets, "clear"].includes(words[1]!)) {
+        await defer({ kind: "temp", group: words[1] === "clear" ? undefined : words[1] as ProviderPreset }, ctx); return;
+      }
+      report(ctx, "Use /model to enter or leave Auto. Use /automodel status|configure or /automodel mode model-and-effort|effort-only or /automodel provider gpt|bedrock|gemini|clear or /automodel temp gpt|bedrock|gemini|clear.", "error");
     },
   });
   pi.on("session_start", async (_event, ctx) => {
-    cancel(); initialized = false; configurationFailure = undefined; branchFailure = undefined;
+    cancel(); initialized = false; configurationFailure = undefined; branchFailure = undefined; persistedProvider = undefined;
     sessionId = ctx.sessionManager.getSessionId();
     try {
       const raw = await readSettings(policyPath);
@@ -258,6 +301,9 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
       const saved = await readSettings(preferencesPath);
       try { preferences = saved === undefined ? { version: 2, mode: config.mode } : validatePreferences(saved); }
       catch (error) { throw new Error(preferencesPath + ": " + String(error)); }
+      const savedProvider = await readSettings(providerPath);
+      try { persistedProvider = savedProvider === undefined ? undefined : validateProviderPreference(savedProvider).provider ?? undefined; }
+      catch (error) { throw new Error(providerPath + ": " + String(error)); }
       initialized = true; restoreBranch(ctx);
     } catch (error) {
       initialized = true; configurationFailure = error instanceof Error ? error.message : String(error);
@@ -282,6 +328,6 @@ export function registerControls(pi: ExtensionAPI, hooks: Hooks) {
   pi.on("session_compact", (_event, ctx) => { flush(ctx); status(ctx); });
   pi.on("session_compact_failed", (_event, ctx) => { flush(ctx); });
   pi.on("session_tree", (_event, ctx) => { cancel(); restoreBranch(ctx); });
-  pi.on("session_shutdown", () => { cancel(); initialized = false; sessionId = undefined; });
+  pi.on("session_shutdown", () => { cancel(); initialized = false; sessionId = undefined; persistedProvider = undefined; });
   return { policy };
 }

@@ -27,17 +27,19 @@ stateDiagram-v2
 Pi owns startup and resumed selection. Installing the extension or saving an
 Auto preference does not select Auto. There is no `/automodel on` or `off`.
 
-| Setting                                     | Effect while Auto is selected                                                                     |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `model-and-effort`                          | A tier supplies both the physical model and effort.                                               |
-| `effort-only`                               | Keep the captured physical model, and choose a tier's effort. A known physical model is required. |
-| `configure`                                 | Save global mappings without changing selection or mode.                                          |
-| `temp bedrock`, `temp gemini`, `temp clear` | Replace or restore the session's effective mappings without changing selection or mode.           |
+| Setting                                                   | Effect while Auto is selected                                                                     |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `model-and-effort`                                        | A tier supplies both the physical model and effort.                                               |
+| `effort-only`                                             | Keep the captured physical model, and choose a tier's effort. A known physical model is required. |
+| `configure`                                               | Save global mappings without changing selection or mode.                                          |
+| `provider gpt`, `provider bedrock`, `provider gemini`, `provider clear` | Persist or clear the default provider preset across sessions without changing selection or mode. |
+| `temp gpt`, `temp bedrock`, `temp gemini`, `temp clear` | Replace or restore the session's effective mappings without changing selection or mode.           |
 
-Control changes wait for a safe idle point when the session is busy. Temporary
-presets follow the active branch and survive reload or resume of that session,
-but do not become global defaults. Saving global mappings leaves an active
-preset in place.
+Control changes wait for a safe idle point when the session is busy. Persisted
+provider presets apply across new sessions until changed or cleared. Temporary
+presets override a persisted provider for the active branch, survive reload or
+resume of that session, and do not become global defaults. Saving global
+mappings leaves an active persisted provider or temporary preset in place.
 
 ## Routing one request
 

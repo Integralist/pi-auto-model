@@ -362,7 +362,7 @@ test.each(["temp", "temp absent", "temp bedrock extra", "temp clear extra"])("in
   try {
     await f.session.prompt("/automodel temp bedrock");
     const before = f.session.sessionManager.getLeafId(); await f.session.prompt("/automodel " + args);
-    expect(f.display.notices.at(-1)?.text).toContain("/automodel temp bedrock|gemini|clear");
+    expect(f.display.notices.at(-1)?.text).toContain("/automodel temp gpt|bedrock|gemini|clear");
     expect(f.session.sessionManager.getLeafId()).toBe(before);
     expect(await status(f)).toContain("mappings: session preset bedrock");
   } finally { await f.owner.dispose(); f.close(); }

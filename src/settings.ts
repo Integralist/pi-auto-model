@@ -5,6 +5,21 @@ import { getSupportedThinkingLevels, type Api, type Model } from "@earendil-work
 import { validateConfiguration, type Configuration, type PhysicalPair, type RoutingRegistry } from "./policy.ts";
 
 export type Preferences = { version: 2; mode: Configuration["mode"] };
+export type ProviderPreset = "gpt" | "bedrock" | "gemini";
+export const providerPresets: readonly ProviderPreset[] = ["gpt", "bedrock", "gemini"];
+export type ProviderPreference = { version: 1; provider: ProviderPreset | null };
+
+export function validateProviderPreference(raw: unknown): ProviderPreference {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("Invalid Auto provider: expected an object.");
+  const value = raw as Record<string, unknown>;
+  const keys = Object.keys(value).sort().join(",");
+  const validProvider = value.provider === null
+    || (typeof value.provider === "string" && providerPresets.includes(value.provider as ProviderPreset));
+  if (value.version !== 1 || keys !== "provider,version" || !validProvider) {
+    throw new Error("Invalid Auto provider: expected version 1 and provider gpt, bedrock, gemini, or null.");
+  }
+  return { version: 1, provider: value.provider as ProviderPreset | null };
+}
 
 export function validatePreferences(raw: unknown): Preferences {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("Invalid Auto preferences: expected an object.");

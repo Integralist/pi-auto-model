@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { fauxProvider } from "@earendil-works/pi-ai";
 import { expect, test } from "vitest";
 import { validateConfiguration, type RoutingRegistry } from "../src/policy.ts";
-import { automaticEfforts, formatPair, physicalCatalog, readSettings, validateMappings, validatePreferences, writeSettings } from "../src/settings.ts";
+import { automaticEfforts, formatPair, physicalCatalog, readSettings, validateMappings, validatePreferences, validateProviderPreference, writeSettings } from "../src/settings.ts";
 
 function registry(): RoutingRegistry {
   const one = fauxProvider({ provider: "one", models: [{ id: "alpha", name: "Alpha writer", reasoning: true }] });
@@ -44,6 +44,15 @@ test.each(["model-and-effort", "effort-only"])("preferences retain only %s mode;
   for (const enabled of [false, true]) {
     expect(validatePreferences({ version: 1, enabled, mode })).toEqual({ version: 2, mode });
   }
+});
+
+test.each([null, [], {}, { version: 2, provider: "gemini" }, { version: 1, provider: "anthropic" },
+  { version: 1 }, { version: 1, provider: "gemini", extra: true }, { version: 1, provider: 123 }])("invalid provider preferences are actionable (%j)", (raw) => {
+  expect(() => validateProviderPreference(raw)).toThrow(/Invalid Auto provider/);
+});
+
+test.each(["gpt", "bedrock", "gemini", null] as const)("provider preferences validate %s", (provider) => {
+  expect(validateProviderPreference({ version: 1, provider })).toEqual({ version: 1, provider });
 });
 
 test.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY, "10000"])("popup duration rejects %s", (durationMs) => {

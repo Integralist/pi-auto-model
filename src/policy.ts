@@ -65,6 +65,17 @@ const defaults: Configuration = {
   },
 };
 
+export function defaultMappings(): { tiers: Configuration["tiers"]; classifier: PhysicalPair } {
+  return {
+    tiers: structuredClone(defaults.tiers),
+    classifier: {
+      provider: defaults.classifier.provider,
+      model: defaults.classifier.model,
+      effort: defaults.classifier.effort,
+    },
+  };
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
