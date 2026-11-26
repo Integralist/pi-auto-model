@@ -57,7 +57,7 @@ const defaults: Configuration = {
     trivial: { provider: "github-copilot", model: "gpt-6-luna", effort: "high" },
     moderate: { provider: "github-copilot", model: "gpt-6.2-sol", effort: "low" },
     complex: { provider: "github-copilot", model: "gpt-6.2-sol", effort: "xhigh" },
-    frontier: { provider: "github-copilot", model: "gpt-6.2-Astra", effort: "high" },
+    frontier: { provider: "github-copilot", model: "gpt-6.2-astra", effort: "high" },
   },
   classifier: {
     provider: "github-copilot", model: "gpt-6-luna", effort: "low",

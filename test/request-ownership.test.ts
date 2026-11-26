@@ -69,7 +69,7 @@ test.each(["steer", "followUp"] as const)("busy %s delivery keeps the active phy
     await started.wait;
     await f.session.prompt("draft a new PR", { streamingBehavior });
     finish.release(); await running;
-    expect(last(f).model).toBe("gpt-6.2-Astra"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6.2-astra"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2); expect(usage(f)).toEqual([]);
   } finally { finish.release(); f.close(); }
 });
@@ -182,7 +182,7 @@ test("tree navigation and fork retain only the selected branch's physical eviden
     await select(f); f.respond(); await f.session.prompt("/skill:small");
     const smallAnswer = f.session.sessionManager.getBranch().findLast((entry) => entry.type === "message" && entry.message.role === "assistant")!;
     f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6.2-Astra");
+    expect(last(f).model).toBe("gpt-6.2-astra");
     await f.session.navigateTree(smallAnswer.id, { summarize: false });
     f.respond(); await f.session.prompt("yes");
     expect(last(f).model).toBe("gpt-6-luna"); expect(last(f).thinkingLevel).toBe("high");

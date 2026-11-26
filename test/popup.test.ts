@@ -11,7 +11,7 @@ const sol: PhysicalPair = { provider: "github-copilot", model: "gpt-6.1-sol", ef
 const luna: PhysicalPair = { provider: "github-copilot", model: "gpt-6-luna", effort: "high" };
 function app(mode: "regular" | "fullscreen" = "regular") {
   const display = createUI(mode), handlers = new Map<string, (event: any, ctx: ExtensionContext) => unknown>();
-  const fake = fauxProvider({ provider: "github-copilot", models: [{ id: sol.model, reasoning: true }, { id: luna.model, reasoning: true }, { id: "gpt-6.2-sol", reasoning: true }, { id: "gpt-6.2-Astra", reasoning: true }] });
+  const fake = fauxProvider({ provider: "github-copilot", models: [{ id: sol.model, reasoning: true }, { id: luna.model, reasoning: true }, { id: "gpt-6.2-sol", reasoning: true }, { id: "gpt-6.2-astra", reasoning: true }] });
   const registry = { find: (provider: string, id: string) => fake.models.find((model) => model.provider === provider && model.id === id), getAvailable: () => fake.models, hasConfiguredAuth: () => true };
   const config = validateConfiguration(undefined, registry);
   let sessionId = "original";

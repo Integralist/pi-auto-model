@@ -20,7 +20,7 @@ const sol2: PhysicalPair = {
   provider: "github-copilot", model: "gpt-6.2-sol", effort: "xhigh",
 };
 const astra: PhysicalPair = {
-  provider: "github-copilot", model: "gpt-6.2-Astra", effort: "high",
+  provider: "github-copilot", model: "gpt-6.2-astra", effort: "high",
 };
 const solHigh: PhysicalPair = {
   provider: "github-copilot", model: "gpt-6.1-sol", effort: "high",
@@ -47,7 +47,7 @@ function configuration() {
 function fixture() {
   const provider = fauxProvider({
     provider: "github-copilot",
-    models: ["gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-sol", "gpt-6.2-Astra", "tiny", "small", "large", "huge"]
+    models: ["gpt-6-luna", "gpt-6.1-sol", "gpt-6.2-sol", "gpt-6.2-astra", "tiny", "small", "large", "huge"]
       .map((id) => ({ id, reasoning: true })),
   });
   const catalog = new Map<string, Model<Api>>();

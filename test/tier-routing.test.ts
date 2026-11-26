@@ -54,7 +54,7 @@ test("an explicit loaded trivial skill dispatches Luna/high without classificati
 
 test.each([
   ["moderate", "gpt-6.2-sol", "low"], ["  CoMpLeX  ", "gpt-6.2-sol", "xhigh"],
-  ["frontier", "gpt-6.2-Astra", "high"],
+  ["frontier", "gpt-6.2-astra", "high"],
 ])("arbitrary commit skill honors declared %s instead of its name", async (tier, model, effort) => {
   const f = await createFixture({ skills: [{ name: "commit", description: "Work", tier }] });
   try {
@@ -106,7 +106,7 @@ test("a smaller fresh typed task keeps the frontier pair while the cache is warm
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
     f.faux.setResponses([fauxAssistantMessage("moderate"), fauxAssistantMessage("same task")]);
     await f.session.prompt("now debug the failing authentication test");
-    expect(last(f).model).toBe("gpt-6.2-Astra"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6.2-astra"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(3);
   } finally { f.close(); }
 });
@@ -118,7 +118,7 @@ test.each(["compaction", "pi-shake"] as const)("%s invalidates the warm cache so
   ] });
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
-    expect(last(f).model).toBe("gpt-6.2-Astra"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6.2-astra"); expect(last(f).thinkingLevel).toBe("high");
     const branch = f.session.sessionManager.getBranch();
     if (kind === "compaction") {
       f.session.sessionManager.appendCompaction("compacted summary", branch.at(-1)!.id, 4000);
@@ -186,7 +186,7 @@ test("a skill keeps a bigger model for a smaller tier while the cache is warm", 
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
     f.respond(); await f.session.prompt("/skill:small");
-    expect(last(f).model).toBe("gpt-6.2-Astra"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6.2-astra"); expect(last(f).thinkingLevel).toBe("high");
   } finally { f.close(); }
 });
 
@@ -206,7 +206,7 @@ test.each(["yes", "OK!", "proceed", "sounds good", "approved", "implement", "app
   try {
     await select(f); f.respond(); await f.session.prompt("/skill:hard");
     f.respond("continued"); await f.session.prompt(text);
-    expect(last(f).model).toBe("gpt-6.2-Astra"); expect(last(f).thinkingLevel).toBe("high");
+    expect(last(f).model).toBe("gpt-6.2-astra"); expect(last(f).thinkingLevel).toBe("high");
     expect(f.faux.state.callCount).toBe(2);
   } finally { f.close(); }
 });

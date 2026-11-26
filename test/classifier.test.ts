@@ -46,7 +46,7 @@ function fixture(message: AssistantMessage = response()) {
       { id: "gpt-6-luna", reasoning: true },
       { id: "gpt-6.1-sol", reasoning: true },
       { id: "gpt-6.2-sol", reasoning: true },
-      { id: "gpt-6.2-Astra", reasoning: true },
+      { id: "gpt-6.2-astra", reasoning: true },
     ],
   });
   for (const model of fake.models) model.thinkingLevelMap = { low: "low", high: "high", xhigh: "xhigh" };
@@ -125,7 +125,7 @@ describe("classification and payload isolation", () => {
 
   test.each([
     ["trivial", "gpt-6-luna", "high"], ["moderate", "gpt-6.2-sol", "low"],
-    ["complex", "gpt-6.2-sol", "xhigh"], ["frontier", "gpt-6.2-Astra", "high"],
+    ["complex", "gpt-6.2-sol", "xhigh"], ["frontier", "gpt-6.2-astra", "high"],
   ])("valid metadata %s avoids classifier work", async (tier, model, effort) => {
     const f = fixture(response("trivial"));
     const result = await resolveTaskRoute(undefined, skill(`  ${tier.toUpperCase()}  `), f.registry);

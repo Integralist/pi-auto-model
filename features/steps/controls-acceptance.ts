@@ -120,7 +120,7 @@ Then("the complete choice list contains only the registered physical models", fu
   const s = state(this);
   assert.deepEqual(s.offered, ["acceptance-alt/portable-writer — Portable Writer",
     "github-copilot/gpt-6-luna — gpt-6-luna", "github-copilot/gpt-6.1-sol — gpt-6.1-sol",
-    "github-copilot/gpt-6.2-Astra — gpt-6.2-Astra", "github-copilot/gpt-6.2-sol — gpt-6.2-sol"]);
+    "github-copilot/gpt-6.2-astra — gpt-6.2-astra", "github-copilot/gpt-6.2-sol — gpt-6.2-sol"]);
   assert.deepEqual(scope(s.f), s.selectionScope); assert.equal(s.f.faux.state.callCount, 0); assert.equal(s.extra?.state.callCount, 0);
 });
 Then("the offered choices are exactly {string}", function (this: World, choice: string) {

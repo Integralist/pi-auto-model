@@ -23,7 +23,7 @@ The four tiers are ordered from smallest to hardest:
 | `trivial`  | `github-copilot/gpt-6-luna`    | `high`         |
 | `moderate` | `github-copilot/gpt-6.2-sol`   | `low`          |
 | `complex`  | `github-copilot/gpt-6.2-sol`   | `xhigh`        |
-| `frontier` | `github-copilot/gpt-6.2-Astra` | `high`         |
+| `frontier` | `github-copilot/gpt-6.2-astra` | `high`         |
 
 Users can configure all four tier mappings and the classifier pair. The default
 classifier uses `github-copilot/gpt-6-luna` at `low`, with a 12,000-character

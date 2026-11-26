@@ -81,7 +81,7 @@ The built-in defaults use the `github-copilot` provider:
 | Trivial    | `gpt-6-luna`    | `high`  |
 | Moderate   | `gpt-6.2-sol`   | `low`   |
 | Complex    | `gpt-6.2-sol`   | `xhigh` |
-| Frontier   | `gpt-6.2-Astra` | `high`  |
+| Frontier   | `gpt-6.2-astra` | `high`  |
 | Classifier | `gpt-6-luna`    | `low`   |
 
 ## Provider presets (persisted and session-only)
